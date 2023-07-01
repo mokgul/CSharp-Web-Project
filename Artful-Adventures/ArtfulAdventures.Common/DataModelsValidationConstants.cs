@@ -2,6 +2,20 @@
 
 public static class DataModelsValidationConstants
 {
+    public static class ApplicationUserConstants
+    {
+        public const int UrlMinLength = 3;
+        public const int UrlMaxLength = 2048;
+        public const int NameMinLength = 3;
+        public const int NameMaxLength = 70;
+        public const int BioMinLength = 10;
+        public const int BioMaxLength = 200;
+        public const int CityNameMinLength = 3;
+        public const int CityNameMaxLength = 60;
+        public const int AboutMinLength = 10;
+        public const int AboutMaxLength = 2000;
+        
+    }
     public static class BlogConstants
     {
         public const int TitleMinLength = 20;

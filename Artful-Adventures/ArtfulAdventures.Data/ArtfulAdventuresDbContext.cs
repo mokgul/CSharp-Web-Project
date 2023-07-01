@@ -24,18 +24,48 @@ public class ArtfulAdventuresDbContext : IdentityDbContext<ApplicationUser, Iden
 
     public DbSet<Picture> Pictures { get; set; } = null!;
 
-    public DbSet<PicturesHashTags> PicturesHashTags { get; set; } = null!;
+    public DbSet<Skill> Skills { get; set; } = null!;
+
+    public DbSet<PictureHashTag> PicturesHashTags { get; set; } = null!;
+
+    public DbSet<ApplicationUserSkill> ApplicationUsersSkills { get; set; } = null!;
+
+    public DbSet<ApplicationUserPicture> ApplicationUsersPictures { get; set; } = null!;
+
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
-        builder.Entity<PicturesHashTags>(entity =>
+        builder.Entity<PictureHashTag>(entity =>
         {
             entity.HasKey(ph => new { ph.PictureId, ph.TagId });
+        });
+
+        builder.Entity<ApplicationUserSkill>(entity =>
+        {
+            entity.HasKey(au => new { au.UserId, au.SkillId });
+        });
+
+        builder.Entity<ApplicationUserPicture>(entity =>
+        {
+            entity.HasKey(ap => new { ap.UserId, ap.PictureId });
+        });
+
+        builder.Entity<ApplicationUser>(entity =>
+        {
+            entity
+                .HasMany(a => a.Portfolio)
+                .WithOne(p => p.Owner)
+                .HasForeignKey(p => p.UserId)
+                .OnDelete(DeleteBehavior.Restrict);
         });
 
         builder
             .Entity<HashTag>()
             .HasData(new HashTagsSeed().HashTags);
+
+        builder
+            .Entity<Skill>()
+            .HasData(new SkillsSeed().Skills);
 
         base.OnModelCreating(builder);
     }

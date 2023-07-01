@@ -4,6 +4,7 @@ using ArtfulAdventures.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ArtfulAdventures.Data.Migrations
 {
     [DbContext(typeof(ArtfulAdventuresDbContext))]
-    partial class ArtfulAdventuresDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230701214404_Initial-Create-Tables")]
+    partial class InitialCreateTables
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -121,21 +123,6 @@ namespace ArtfulAdventures.Data.Migrations
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
                     b.ToTable("AspNetUsers", (string)null);
-                });
-
-            modelBuilder.Entity("ArtfulAdventures.Data.Models.ApplicationUserPicture", b =>
-                {
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("PictureId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("UserId", "PictureId");
-
-                    b.HasIndex("PictureId");
-
-                    b.ToTable("ApplicationUsersPictures");
                 });
 
             modelBuilder.Entity("ArtfulAdventures.Data.Models.ApplicationUserSkill", b =>
@@ -479,6 +466,9 @@ namespace ArtfulAdventures.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<Guid?>("ApplicationUserId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<int?>("ChallengeId")
                         .HasColumnType("int");
 
@@ -502,6 +492,8 @@ namespace ArtfulAdventures.Data.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("ApplicationUserId");
 
                     b.HasIndex("ChallengeId");
 
@@ -914,25 +906,6 @@ namespace ArtfulAdventures.Data.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("ArtfulAdventures.Data.Models.ApplicationUserPicture", b =>
-                {
-                    b.HasOne("ArtfulAdventures.Data.Models.Picture", "Picture")
-                        .WithMany()
-                        .HasForeignKey("PictureId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("ArtfulAdventures.Data.Models.ApplicationUser", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Picture");
-
-                    b.Navigation("User");
-                });
-
             modelBuilder.Entity("ArtfulAdventures.Data.Models.ApplicationUserSkill", b =>
                 {
                     b.HasOne("ArtfulAdventures.Data.Models.Skill", "Skill")
@@ -980,12 +953,16 @@ namespace ArtfulAdventures.Data.Migrations
 
             modelBuilder.Entity("ArtfulAdventures.Data.Models.Picture", b =>
                 {
+                    b.HasOne("ArtfulAdventures.Data.Models.ApplicationUser", null)
+                        .WithMany("Portfolio")
+                        .HasForeignKey("ApplicationUserId");
+
                     b.HasOne("ArtfulAdventures.Data.Models.Challenge", "Challenge")
                         .WithMany("Pictures")
                         .HasForeignKey("ChallengeId");
 
                     b.HasOne("ArtfulAdventures.Data.Models.ApplicationUser", "Owner")
-                        .WithMany("Portfolio")
+                        .WithMany("Collection")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
@@ -1068,6 +1045,8 @@ namespace ArtfulAdventures.Data.Migrations
             modelBuilder.Entity("ArtfulAdventures.Data.Models.ApplicationUser", b =>
                 {
                     b.Navigation("Blogs");
+
+                    b.Navigation("Collection");
 
                     b.Navigation("Portfolio");
                 });

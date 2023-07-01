@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ArtfulAdventures.Data.Migrations
 {
     [DbContext(typeof(ArtfulAdventuresDbContext))]
-    [Migration("20230701143803_Initial-Create-Tables")]
-    partial class InitialCreateTables
+    [Migration("20230701222056_Initial-Create-Tables-Portfolio-Collection-Fix")]
+    partial class InitialCreateTablesPortfolioCollectionFix
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -24,14 +24,41 @@ namespace ArtfulAdventures.Data.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
 
+            modelBuilder.Entity("ApplicationUserApplicationUser", b =>
+                {
+                    b.Property<Guid>("FollowersId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("FollowingId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("FollowersId", "FollowingId");
+
+                    b.HasIndex("FollowingId");
+
+                    b.ToTable("ApplicationUserApplicationUser");
+                });
+
             modelBuilder.Entity("ArtfulAdventures.Data.Models.ApplicationUser", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<string>("About")
+                        .HasMaxLength(2000)
+                        .HasColumnType("nvarchar(2000)");
+
                     b.Property<int>("AccessFailedCount")
                         .HasColumnType("int");
+
+                    b.Property<string>("Bio")
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<string>("CityName")
+                        .HasMaxLength(60)
+                        .HasColumnType("nvarchar(60)");
 
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
@@ -49,6 +76,10 @@ namespace ArtfulAdventures.Data.Migrations
 
                     b.Property<DateTimeOffset?>("LockoutEnd")
                         .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("Name")
+                        .HasMaxLength(70)
+                        .HasColumnType("nvarchar(70)");
 
                     b.Property<string>("NormalizedEmail")
                         .HasMaxLength(256)
@@ -73,6 +104,10 @@ namespace ArtfulAdventures.Data.Migrations
                     b.Property<bool>("TwoFactorEnabled")
                         .HasColumnType("bit");
 
+                    b.Property<string>("Url")
+                        .HasMaxLength(2048)
+                        .HasColumnType("nvarchar(2048)");
+
                     b.Property<string>("UserName")
                         .HasMaxLength(256)
                         .HasColumnType("nvarchar(256)");
@@ -88,6 +123,36 @@ namespace ArtfulAdventures.Data.Migrations
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
                     b.ToTable("AspNetUsers", (string)null);
+                });
+
+            modelBuilder.Entity("ArtfulAdventures.Data.Models.ApplicationUserPicture", b =>
+                {
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("PictureId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("UserId", "PictureId");
+
+                    b.HasIndex("PictureId");
+
+                    b.ToTable("ApplicationUsersPictures");
+                });
+
+            modelBuilder.Entity("ArtfulAdventures.Data.Models.ApplicationUserSkill", b =>
+                {
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("SkillId")
+                        .HasColumnType("int");
+
+                    b.HasKey("UserId", "SkillId");
+
+                    b.HasIndex("SkillId");
+
+                    b.ToTable("ApplicationUsersSkills");
                 });
 
             modelBuilder.Entity("ArtfulAdventures.Data.Models.Blog", b =>
@@ -447,7 +512,7 @@ namespace ArtfulAdventures.Data.Migrations
                     b.ToTable("Pictures");
                 });
 
-            modelBuilder.Entity("ArtfulAdventures.Data.Models.PicturesHashTags", b =>
+            modelBuilder.Entity("ArtfulAdventures.Data.Models.PictureHashTag", b =>
                 {
                     b.Property<Guid>("PictureId")
                         .HasColumnType("uniqueidentifier");
@@ -460,6 +525,245 @@ namespace ArtfulAdventures.Data.Migrations
                     b.HasIndex("TagId");
 
                     b.ToTable("PicturesHashTags");
+                });
+
+            modelBuilder.Entity("ArtfulAdventures.Data.Models.Skill", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<string>("Type")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Skills");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Type = "_3DModeling"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Type = "Abstract"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Type = "AcrylicPainting"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            Type = "AnatomyKnowledge"
+                        },
+                        new
+                        {
+                            Id = 5,
+                            Type = "AnimalAnatomyKnowledge"
+                        },
+                        new
+                        {
+                            Id = 6,
+                            Type = "ArchitectureDesign"
+                        },
+                        new
+                        {
+                            Id = 7,
+                            Type = "BrandingDesign"
+                        },
+                        new
+                        {
+                            Id = 8,
+                            Type = "BrushworkTechniques"
+                        },
+                        new
+                        {
+                            Id = 9,
+                            Type = "CartooningSkills"
+                        },
+                        new
+                        {
+                            Id = 10,
+                            Type = "CharacterDesign"
+                        },
+                        new
+                        {
+                            Id = 11,
+                            Type = "CharcoalDrawing"
+                        },
+                        new
+                        {
+                            Id = 12,
+                            Type = "ColorTheoryAndMixing"
+                        },
+                        new
+                        {
+                            Id = 13,
+                            Type = "ComicBookIllustration"
+                        },
+                        new
+                        {
+                            Id = 14,
+                            Type = "Composition"
+                        },
+                        new
+                        {
+                            Id = 15,
+                            Type = "ConceptArt"
+                        },
+                        new
+                        {
+                            Id = 16,
+                            Type = "CreatureDesign"
+                        },
+                        new
+                        {
+                            Id = 17,
+                            Type = "DigitalPainting"
+                        },
+                        new
+                        {
+                            Id = 18,
+                            Type = "DigitalSketching"
+                        },
+                        new
+                        {
+                            Id = 19,
+                            Type = "DigitalSculpting"
+                        },
+                        new
+                        {
+                            Id = 20,
+                            Type = "DrawingFromLife"
+                        },
+                        new
+                        {
+                            Id = 21,
+                            Type = "EnvironmentDesign"
+                        },
+                        new
+                        {
+                            Id = 22,
+                            Type = "GameDesign"
+                        },
+                        new
+                        {
+                            Id = 23,
+                            Type = "GraphicDesign"
+                        },
+                        new
+                        {
+                            Id = 24,
+                            Type = "Illustration"
+                        },
+                        new
+                        {
+                            Id = 25,
+                            Type = "InkDrawing"
+                        },
+                        new
+                        {
+                            Id = 26,
+                            Type = "LandscapePainting"
+                        },
+                        new
+                        {
+                            Id = 27,
+                            Type = "LayoutDesign"
+                        },
+                        new
+                        {
+                            Id = 28,
+                            Type = "LightAndShadow"
+                        },
+                        new
+                        {
+                            Id = 29,
+                            Type = "LogoDesign"
+                        },
+                        new
+                        {
+                            Id = 30,
+                            Type = "OilPainting"
+                        },
+                        new
+                        {
+                            Id = 31,
+                            Type = "PastelDrawing"
+                        },
+                        new
+                        {
+                            Id = 32,
+                            Type = "PerspectiveDrawing"
+                        },
+                        new
+                        {
+                            Id = 33,
+                            Type = "Photoshop"
+                        },
+                        new
+                        {
+                            Id = 34,
+                            Type = "PortraitPainting"
+                        },
+                        new
+                        {
+                            Id = 35,
+                            Type = "PropDesign"
+                        },
+                        new
+                        {
+                            Id = 36,
+                            Type = "ProportionsAndMeasurements"
+                        },
+                        new
+                        {
+                            Id = 37,
+                            Type = "Quicksketch"
+                        },
+                        new
+                        {
+                            Id = 38,
+                            Type = "Realistic"
+                        },
+                        new
+                        {
+                            Id = 39,
+                            Type = "ShadingTechniques"
+                        },
+                        new
+                        {
+                            Id = 40,
+                            Type = "TradiotionalArt"
+                        },
+                        new
+                        {
+                            Id = 41,
+                            Type = "VehicleDesign"
+                        },
+                        new
+                        {
+                            Id = 42,
+                            Type = "VisualEffects"
+                        },
+                        new
+                        {
+                            Id = 43,
+                            Type = "WatercolorPainting"
+                        },
+                        new
+                        {
+                            Id = 44,
+                            Type = "WeaponDesign"
+                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole<System.Guid>", b =>
@@ -597,10 +901,63 @@ namespace ArtfulAdventures.Data.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
+            modelBuilder.Entity("ApplicationUserApplicationUser", b =>
+                {
+                    b.HasOne("ArtfulAdventures.Data.Models.ApplicationUser", null)
+                        .WithMany()
+                        .HasForeignKey("FollowersId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("ArtfulAdventures.Data.Models.ApplicationUser", null)
+                        .WithMany()
+                        .HasForeignKey("FollowingId")
+                        .OnDelete(DeleteBehavior.ClientCascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("ArtfulAdventures.Data.Models.ApplicationUserPicture", b =>
+                {
+                    b.HasOne("ArtfulAdventures.Data.Models.Picture", "Picture")
+                        .WithMany()
+                        .HasForeignKey("PictureId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("ArtfulAdventures.Data.Models.ApplicationUser", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Picture");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("ArtfulAdventures.Data.Models.ApplicationUserSkill", b =>
+                {
+                    b.HasOne("ArtfulAdventures.Data.Models.Skill", "Skill")
+                        .WithMany()
+                        .HasForeignKey("SkillId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("ArtfulAdventures.Data.Models.ApplicationUser", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Skill");
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("ArtfulAdventures.Data.Models.Blog", b =>
                 {
                     b.HasOne("ArtfulAdventures.Data.Models.ApplicationUser", "Author")
-                        .WithMany()
+                        .WithMany("Blogs")
                         .HasForeignKey("AuthorId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -630,9 +987,9 @@ namespace ArtfulAdventures.Data.Migrations
                         .HasForeignKey("ChallengeId");
 
                     b.HasOne("ArtfulAdventures.Data.Models.ApplicationUser", "Owner")
-                        .WithMany()
+                        .WithMany("Portfolio")
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Challenge");
@@ -640,7 +997,7 @@ namespace ArtfulAdventures.Data.Migrations
                     b.Navigation("Owner");
                 });
 
-            modelBuilder.Entity("ArtfulAdventures.Data.Models.PicturesHashTags", b =>
+            modelBuilder.Entity("ArtfulAdventures.Data.Models.PictureHashTag", b =>
                 {
                     b.HasOne("ArtfulAdventures.Data.Models.Picture", "Picture")
                         .WithMany()
@@ -708,6 +1065,13 @@ namespace ArtfulAdventures.Data.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("ArtfulAdventures.Data.Models.ApplicationUser", b =>
+                {
+                    b.Navigation("Blogs");
+
+                    b.Navigation("Portfolio");
                 });
 
             modelBuilder.Entity("ArtfulAdventures.Data.Models.Blog", b =>

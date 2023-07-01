@@ -28,6 +28,11 @@ namespace ArtfulAdventures.Data.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Url = table.Column<string>(type: "nvarchar(2048)", maxLength: 2048, nullable: true),
+                    Name = table.Column<string>(type: "nvarchar(70)", maxLength: 70, nullable: true),
+                    Bio = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: true),
+                    CityName = table.Column<string>(type: "nvarchar(60)", maxLength: 60, nullable: true),
+                    About = table.Column<string>(type: "nvarchar(2000)", maxLength: 2000, nullable: true),
                     UserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     NormalizedUserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     Email = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
@@ -80,6 +85,19 @@ namespace ArtfulAdventures.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Skills",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Type = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Skills", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "AspNetRoleClaims",
                 columns: table => new
                 {
@@ -98,6 +116,29 @@ namespace ArtfulAdventures.Data.Migrations
                         principalTable: "AspNetRoles",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "ApplicationUserApplicationUser",
+                columns: table => new
+                {
+                    FollowersId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    FollowingId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ApplicationUserApplicationUser", x => new { x.FollowersId, x.FollowingId });
+                    table.ForeignKey(
+                        name: "FK_ApplicationUserApplicationUser_AspNetUsers_FollowersId",
+                        column: x => x.FollowersId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_ApplicationUserApplicationUser_AspNetUsers_FollowingId",
+                        column: x => x.FollowingId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -218,22 +259,52 @@ namespace ArtfulAdventures.Data.Migrations
                     CreatedOn = table.Column<DateTime>(type: "datetime2", nullable: false),
                     Likes = table.Column<int>(type: "int", nullable: false),
                     Description = table.Column<string>(type: "nvarchar(1000)", maxLength: 1000, nullable: false),
-                    ChallengeId = table.Column<int>(type: "int", nullable: true)
+                    ChallengeId = table.Column<int>(type: "int", nullable: true),
+                    ApplicationUserId = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Pictures", x => x.Id);
                     table.ForeignKey(
+                        name: "FK_Pictures_AspNetUsers_ApplicationUserId",
+                        column: x => x.ApplicationUserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id");
+                    table.ForeignKey(
                         name: "FK_Pictures_AspNetUsers_UserId",
                         column: x => x.UserId,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_Pictures_Challenges_ChallengeId",
                         column: x => x.ChallengeId,
                         principalTable: "Challenges",
                         principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "ApplicationUsersSkills",
+                columns: table => new
+                {
+                    UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    SkillId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ApplicationUsersSkills", x => new { x.UserId, x.SkillId });
+                    table.ForeignKey(
+                        name: "FK_ApplicationUsersSkills_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_ApplicationUsersSkills_Skills_SkillId",
+                        column: x => x.SkillId,
+                        principalTable: "Skills",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -333,6 +404,74 @@ namespace ArtfulAdventures.Data.Migrations
                     { 38, "UnrealEngine" }
                 });
 
+            migrationBuilder.InsertData(
+                table: "Skills",
+                columns: new[] { "Id", "Type" },
+                values: new object[,]
+                {
+                    { 1, "_3DModeling" },
+                    { 2, "Abstract" },
+                    { 3, "AcrylicPainting" },
+                    { 4, "AnatomyKnowledge" }
+                });
+
+            migrationBuilder.InsertData(
+                table: "Skills",
+                columns: new[] { "Id", "Type" },
+                values: new object[,]
+                {
+                    { 5, "AnimalAnatomyKnowledge" },
+                    { 6, "ArchitectureDesign" },
+                    { 7, "BrandingDesign" },
+                    { 8, "BrushworkTechniques" },
+                    { 9, "CartooningSkills" },
+                    { 10, "CharacterDesign" },
+                    { 11, "CharcoalDrawing" },
+                    { 12, "ColorTheoryAndMixing" },
+                    { 13, "ComicBookIllustration" },
+                    { 14, "Composition" },
+                    { 15, "ConceptArt" },
+                    { 16, "CreatureDesign" },
+                    { 17, "DigitalPainting" },
+                    { 18, "DigitalSketching" },
+                    { 19, "DigitalSculpting" },
+                    { 20, "DrawingFromLife" },
+                    { 21, "EnvironmentDesign" },
+                    { 22, "GameDesign" },
+                    { 23, "GraphicDesign" },
+                    { 24, "Illustration" },
+                    { 25, "InkDrawing" },
+                    { 26, "LandscapePainting" },
+                    { 27, "LayoutDesign" },
+                    { 28, "LightAndShadow" },
+                    { 29, "LogoDesign" },
+                    { 30, "OilPainting" },
+                    { 31, "PastelDrawing" },
+                    { 32, "PerspectiveDrawing" },
+                    { 33, "Photoshop" },
+                    { 34, "PortraitPainting" },
+                    { 35, "PropDesign" },
+                    { 36, "ProportionsAndMeasurements" },
+                    { 37, "Quicksketch" },
+                    { 38, "Realistic" },
+                    { 39, "ShadingTechniques" },
+                    { 40, "TradiotionalArt" },
+                    { 41, "VehicleDesign" },
+                    { 42, "VisualEffects" },
+                    { 43, "WatercolorPainting" },
+                    { 44, "WeaponDesign" }
+                });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ApplicationUserApplicationUser_FollowingId",
+                table: "ApplicationUserApplicationUser",
+                column: "FollowingId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ApplicationUsersSkills_SkillId",
+                table: "ApplicationUsersSkills",
+                column: "SkillId");
+
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
                 table: "AspNetRoleClaims",
@@ -388,6 +527,11 @@ namespace ArtfulAdventures.Data.Migrations
                 column: "PictureId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Pictures_ApplicationUserId",
+                table: "Pictures",
+                column: "ApplicationUserId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Pictures_ChallengeId",
                 table: "Pictures",
                 column: "ChallengeId");
@@ -405,6 +549,12 @@ namespace ArtfulAdventures.Data.Migrations
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropTable(
+                name: "ApplicationUserApplicationUser");
+
+            migrationBuilder.DropTable(
+                name: "ApplicationUsersSkills");
+
             migrationBuilder.DropTable(
                 name: "AspNetRoleClaims");
 
@@ -425,6 +575,9 @@ namespace ArtfulAdventures.Data.Migrations
 
             migrationBuilder.DropTable(
                 name: "PicturesHashTags");
+
+            migrationBuilder.DropTable(
+                name: "Skills");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");
