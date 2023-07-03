@@ -1,17 +1,23 @@
 ﻿namespace ArtfulAdventures.Web.Controllers;
 
+using System.Diagnostics;
+
+using ArtfulAdventures.Data;
 using ArtfulAdventures.Web.ViewModels.Home;
 
 using Microsoft.AspNetCore.Mvc;
 
-using System.Diagnostics;
-
 public class HomeController : Controller
 {
+    private readonly ArtfulAdventuresDbContext _data;
 
-    public HomeController()
+    public HomeController(ArtfulAdventuresDbContext data)
     {
+        _data = data;
     }
+
+
+    
 
     public IActionResult Index()
     {

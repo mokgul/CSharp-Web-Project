@@ -1,5 +1,7 @@
 ﻿namespace ArtfulAdventures.Web.Areas.Identity.Pages.Account;
 
+using ArtfulAdventures.Data.Models;
+
 #nullable disable
 
 using Microsoft.AspNetCore.Authentication;
@@ -11,9 +13,9 @@ using System.ComponentModel.DataAnnotations;
 
 public class LoginModel : PageModel
 {
-    private readonly SignInManager<IdentityUser> _signInManager;
+    private readonly SignInManager<ApplicationUser> _signInManager;
 
-    public LoginModel(SignInManager<IdentityUser> signInManager)
+    public LoginModel(SignInManager<ApplicationUser> signInManager)
     {
         _signInManager = signInManager;
     }

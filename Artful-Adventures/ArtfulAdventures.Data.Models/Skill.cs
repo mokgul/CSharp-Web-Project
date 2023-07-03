@@ -7,7 +7,7 @@ public class Skill
 {
     public Skill()
     {
-
+        ApplicationUsersSkills = new HashSet<ApplicationUserSkill>();
     }
     public Skill(SkillType type)
     {
@@ -19,5 +19,7 @@ public class Skill
 
     [Required]
     public string Type { get; set; } = null!;
+
+    public ICollection<ApplicationUserSkill> ApplicationUsersSkills { get; set; }
 }
 

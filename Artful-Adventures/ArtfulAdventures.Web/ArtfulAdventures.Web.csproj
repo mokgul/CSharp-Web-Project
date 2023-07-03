@@ -26,4 +26,8 @@
     <ProjectReference Include="..\ArtfulAdventures.Web.ViewModels\ArtfulAdventures.Web.ViewModels.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="wwwroot\images\" />
+  </ItemGroup>
+
 </Project>

@@ -1,4 +1,6 @@
 ﻿namespace ArtfulAdventures.Web.Areas.Identity.Pages.Account;
+
+using ArtfulAdventures.Data.Models;
 #nullable disable
 
 using Microsoft.AspNetCore.Identity;
@@ -9,14 +11,14 @@ using System.ComponentModel.DataAnnotations;
 
 public class RegisterModel : PageModel
 {
-    private readonly SignInManager<IdentityUser> _signInManager;
-    private readonly UserManager<IdentityUser> _userManager;
-    private readonly IUserStore<IdentityUser> _userStore;
+    private readonly SignInManager<ApplicationUser> _signInManager;
+    private readonly UserManager<ApplicationUser> _userManager;
+    private readonly IUserStore<ApplicationUser> _userStore;
 
     public RegisterModel(
-        UserManager<IdentityUser> userManager,
-        IUserStore<IdentityUser> userStore,
-        SignInManager<IdentityUser> signInManager)
+        UserManager<ApplicationUser> userManager,
+        IUserStore<ApplicationUser> userStore,
+        SignInManager<ApplicationUser> signInManager)
     {
         _userManager = userManager;
         _userStore = userStore;
@@ -60,7 +62,11 @@ public class RegisterModel : PageModel
         returnUrl ??= Url.Content("~/");
         if (ModelState.IsValid)
         {
-            var user = CreateUser();
+            var user = new ApplicationUser()
+            {
+                UserName = Input.Username,
+                Email = Input.Email
+            };
 
             await _userStore.SetUserNameAsync(user, Input.Username, CancellationToken.None);
             var result = await _userManager.CreateAsync(user, Input.Password);
@@ -82,17 +88,4 @@ public class RegisterModel : PageModel
         return Page();
     }
 
-    private IdentityUser CreateUser()
-    {
-        try
-        {
-            return Activator.CreateInstance<IdentityUser>();
-        }
-        catch
-        {
-            throw new InvalidOperationException($"Can't create an instance of '{nameof(IdentityUser)}'. " +
-                                                $"Ensure that '{nameof(IdentityUser)}' is not an abstract class and has a parameterless constructor, or alternatively " +
-                                                $"override the register page in /Areas/Identity/Pages/Account/Register.cshtml");
-        }
-    }
 }

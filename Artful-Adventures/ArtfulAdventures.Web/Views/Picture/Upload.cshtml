@@ -1,0 +1,36 @@
+﻿@model PictureAddFormModel
+
+@{
+    ViewBag.Title = "Add Picture";
+}
+
+@{
+    <div class="row">
+        <div class="col-sm-12 offset-lg-2 col-lg-8 offset-xl-3 col-xl-6">
+
+            <div class="mb-3">
+                @using (Html.BeginForm("Upload", "Picture", FormMethod.Post, new { enctype = "multipart/form-data", style = "display: inline-block; flex-direction: column; align-items: center;" }))
+                {
+                    <input class="btn btn-primary" type="file" name="file" id="file" style="background:none; border: none; width: 30%;" />
+                    <input class="btn btn-primary btn-sm" type="submit" value="Upload" />
+
+                    <label asp-for="@Model.Description" class="form-label-add-edit">Description</label>
+                    <textarea asp-for="@Model.Description" class="form-control" aria-required="true" rows="5"></textarea>
+                    <span asp-validation-for="Description" class="text-danger"></span>
+                    <div class="mb-3">
+                    </div>
+                    <div class="mb-3">
+                        <label asp-for="@Model.HashTags" class="form-label-add-edit">Medium </label>
+                        <select asp-for="@Model.HashTagId" class="form-control" aria-required="true">
+                            @foreach (var tag in Model.HashTags)
+                            {
+                                <option value="@tag.Id">@tag.Name</option>
+                            }
+                        </select>
+                        <span asp-validation-for="@Model.HashTags" class="text-danger"></span>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+}

@@ -12,6 +12,8 @@ public class ApplicationUser : IdentityUser<Guid>
     public ApplicationUser()
     {
         this.Id = Guid.NewGuid();
+        ApplicationUsersSkills = new HashSet<ApplicationUserSkill>();
+        ApplicationUsersPictures = new HashSet<ApplicationUserPicture>();
     }
 
     [MaxLength(UrlMaxLength)]
@@ -37,6 +39,10 @@ public class ApplicationUser : IdentityUser<Guid>
     public ICollection<ApplicationUser> Followers { get; set; } = new HashSet<ApplicationUser>();
 
     public ICollection<ApplicationUser> Following { get; set; } = new HashSet<ApplicationUser>();
+
+    public ICollection<ApplicationUserSkill> ApplicationUsersSkills { get; set; }
+
+    public ICollection<ApplicationUserPicture> ApplicationUsersPictures { get; set; }
 
 
     //Collection And Skills are stored in Mapping Tables

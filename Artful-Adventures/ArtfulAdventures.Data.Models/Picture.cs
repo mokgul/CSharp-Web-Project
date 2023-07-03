@@ -10,6 +10,8 @@ public class Picture
     public Picture()
     {
         this.Id = Guid.NewGuid();
+        PicturesHashTags = new HashSet<PictureHashTag>();
+        ApplicationUsersPictures = new HashSet<ApplicationUserPicture>();
     }
 
     [Key]
@@ -40,6 +42,10 @@ public class Picture
     [ForeignKey(nameof(Challenge))]
     public int? ChallengeId { get; set; }
 
-    public Challenge? Challenge { get; set; } 
+    public Challenge? Challenge { get; set; }
+
+    public ICollection<PictureHashTag> PicturesHashTags { get; set; }
+
+    public ICollection<ApplicationUserPicture> ApplicationUsersPictures { get; set; }
 }
 

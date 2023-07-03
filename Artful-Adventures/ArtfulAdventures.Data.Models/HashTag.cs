@@ -8,7 +8,7 @@ public class HashTag
 {
     public HashTag()
     {
-        
+        PicturesHashTags = new HashSet<PictureHashTag>();
     }
     public HashTag(HashTagType type)
     {
@@ -20,5 +20,7 @@ public class HashTag
 
     [Required]
     public string Type { get; set; } = null!;
+
+    public ICollection<PictureHashTag> PicturesHashTags { get; set; } 
 }
 

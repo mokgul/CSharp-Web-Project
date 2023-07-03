@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 
 using ArtfulAdventures.Data.Models;
 using ArtfulAdventures.Data.Seeding;
+using ArtfulAdventures.Data.Configuration;
 
 public class ArtfulAdventuresDbContext : IdentityDbContext<ApplicationUser, IdentityRole<Guid>, Guid>
 {
@@ -35,37 +36,18 @@ public class ArtfulAdventuresDbContext : IdentityDbContext<ApplicationUser, Iden
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
-        builder.Entity<PictureHashTag>(entity =>
-        {
-            entity.HasKey(ph => new { ph.PictureId, ph.TagId });
-        });
+        var mappingConfigurer = new MappingTablesConfiguration();
+        var oneToManyConfigurer = new OneToManyConfiguration();
+        var enumSeedConfigurer = new EnumsSeedingConfiguration();
 
-        builder.Entity<ApplicationUserSkill>(entity =>
-        {
-            entity.HasKey(au => new { au.UserId, au.SkillId });
-        });
+        builder.ApplyConfiguration<PictureHashTag>(mappingConfigurer);
+        builder.ApplyConfiguration<ApplicationUserSkill>(mappingConfigurer);
+        builder.ApplyConfiguration<ApplicationUserPicture>(mappingConfigurer);
 
-        builder.Entity<ApplicationUserPicture>(entity =>
-        {
-            entity.HasKey(ap => new { ap.UserId, ap.PictureId });
-        });
-
-        builder.Entity<ApplicationUser>(entity =>
-        {
-            entity
-                .HasMany(a => a.Portfolio)
-                .WithOne(p => p.Owner)
-                .HasForeignKey(p => p.UserId)
-                .OnDelete(DeleteBehavior.Restrict);
-        });
-
-        builder
-            .Entity<HashTag>()
-            .HasData(new HashTagsSeed().HashTags);
-
-        builder
-            .Entity<Skill>()
-            .HasData(new SkillsSeed().Skills);
+        builder.ApplyConfiguration<ApplicationUser>(oneToManyConfigurer);
+        
+        builder.ApplyConfiguration<HashTag>(enumSeedConfigurer);
+        builder.ApplyConfiguration<Skill>(enumSeedConfigurer);
 
         base.OnModelCreating(builder);
     }
