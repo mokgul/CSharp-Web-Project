@@ -13,8 +13,8 @@ public class PictureAddFormModel
     public string Description { get; set; } = null!;
 
     [Required]
-    public int HashTagId { get; set; }
+    //public int[] HashTagIds { get; set; }
 
-    public IEnumerable<HashTagViewModel> HashTags { get; set; } = new List<HashTagViewModel>();
+    public List<HashTagViewModel> HashTags { get; set; } = new List<HashTagViewModel>();
 }
 

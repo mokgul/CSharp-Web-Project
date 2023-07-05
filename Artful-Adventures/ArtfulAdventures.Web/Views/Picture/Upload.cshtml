@@ -1,4 +1,6 @@
 ﻿@model PictureAddFormModel
+@using Microsoft.AspNetCore.Http
+<link rel="stylesheet" href="https://cdn.rawgit.com/bantikyan/icheck-bootstrap/master/icheck-bootstrap.min.css">
 
 @{
     ViewBag.Title = "Add Picture";
@@ -11,24 +13,35 @@
             <div class="mb-3">
                 @using (Html.BeginForm("Upload", "Picture", FormMethod.Post, new { enctype = "multipart/form-data", style = "display: inline-block; flex-direction: column; align-items: center;" }))
                 {
-                    <input class="btn btn-primary" type="file" name="file" id="file" style="background:none; border: none; width: 30%;" />
-                    <input class="btn btn-primary btn-sm" type="submit" value="Upload" />
+                    <div>
+                        <input class="btn btn-primary" type="file" name="file" id="file" style="background:none; border: none;" />
+                    </div>
 
-                    <label asp-for="@Model.Description" class="form-label-add-edit">Description</label>
-                    <textarea asp-for="@Model.Description" class="form-control" aria-required="true" rows="5"></textarea>
-                    <span asp-validation-for="Description" class="text-danger"></span>
                     <div class="mb-3">
+                        <label asp-for="@Model.Description" class="form-label-add-edit">Description</label>
+                        <textarea asp-for="@Model.Description" class="form-control" aria-required="true" rows="5"></textarea>
+                        <span asp-validation-for="Description" class="text-danger"></span>
                     </div>
                     <div class="mb-3">
                         <label asp-for="@Model.HashTags" class="form-label-add-edit">Medium </label>
-                        <select asp-for="@Model.HashTagId" class="form-control" aria-required="true">
-                            @foreach (var tag in Model.HashTags)
-                            {
-                                <option value="@tag.Id">@tag.Name</option>
-                            }
-                        </select>
-                        <span asp-validation-for="@Model.HashTags" class="text-danger"></span>
                     </div>
+                    <form asp-formethod="post">
+                        @for (int i = 0; i < Model.HashTags.Count(); i++)
+                        {
+                            <div class="checkbox icheck-turquoise form-check-inline">
+                                @Html.HiddenFor(m => m.HashTags[i].Id)
+                                @Html.CheckBoxFor(m => m.HashTags[i].IsSelected)
+                                @Html.LabelFor(m => m.HashTags[i].IsSelected, 
+                                    string.Join(" ", Model.HashTags[i].Name.Split('_')),
+                                    new { @class = "pl-0", style = "padding-left: 0!important;" })
+                            </div>
+                        }
+                        <div class="mb-3">
+                            <button type="submit">Save</button>
+                        </div>
+                    </form>
+
+                    <span asp-validation-for="@Model.HashTags" class="text-danger"></span>
                 }
             </div>
         </div>

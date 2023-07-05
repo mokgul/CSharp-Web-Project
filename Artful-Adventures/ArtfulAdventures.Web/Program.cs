@@ -2,6 +2,8 @@ namespace ArtfulAdventures.Web;
 
 using ArtfulAdventures.Data;
 using ArtfulAdventures.Data.Models;
+using ArtfulAdventures.Services.Data;
+using ArtfulAdventures.Services.Data.Interfaces;
 
 using Microsoft.EntityFrameworkCore;
 
@@ -25,6 +27,8 @@ public class Program
             .AddEntityFrameworkStores<ArtfulAdventuresDbContext>();
 
         builder.Services.AddControllersWithViews();
+
+        builder.Services.AddScoped<IPictureService,PictureService>();
 
         var app = builder.Build();
 

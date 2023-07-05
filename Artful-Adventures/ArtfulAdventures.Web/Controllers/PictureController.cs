@@ -4,6 +4,7 @@
 
     using ArtfulAdventures.Data;
     using ArtfulAdventures.Data.Models;
+    using ArtfulAdventures.Services.Data.Interfaces;
     using ArtfulAdventures.Web.ViewModels.HashTag;
     using ArtfulAdventures.Web.ViewModels.Picture;
 
@@ -12,11 +13,11 @@
 
     public class PictureController : Controller
     {
-        private readonly ArtfulAdventuresDbContext _data;
+        private readonly IPictureService _pictureService;
 
-        public PictureController(ArtfulAdventuresDbContext data)
+        public PictureController(IPictureService pictureService)
         {
-            _data = data;
+            _pictureService = pictureService;
         }
 
         public IActionResult Index()
@@ -28,22 +29,38 @@
         [HttpGet]
         public async Task<IActionResult> Upload()
         {
-
-            var hashtags = await _data.HashTags.Select(h => new HashTagViewModel()
-            {
-                Id = h.Id,
-                Name = h.Type
-            }).ToListAsync();
-
-            PictureAddFormModel model = new PictureAddFormModel()
-            {
-                HashTags = hashtags
-            };
+            var model = await _pictureService.GetPictureAddFormModelAsync();
+            
             return View(model);
         }
 
         [HttpPost]
         public async Task<ActionResult> Upload(PictureAddFormModel model)
+        {
+            string userId = GetUserId();
+
+            try
+            {
+                if (ModelState.IsValid)
+                {
+                    var path = await UploadFile();
+                    await _pictureService.UploadPictureAsync(model, userId, path);
+                }
+            }
+            catch (Exception)
+            {
+                return RedirectToAction("Error", "Home");
+            }
+            
+            return RedirectToAction("Index", "Home");
+        }
+
+        private string GetUserId()
+        {
+            return this.User.FindFirst(ClaimTypes.NameIdentifier)!.Value;
+        }
+
+        private async Task<string> UploadFile()
         {
             var form = await Request.ReadFormAsync();
             var file = form.Files.First();
@@ -54,51 +71,8 @@
             {
                 await file.CopyToAsync(stream);
             }
-            string userId = GetUserId();
-            //INCLUDE IS A MUST IF I WANT TO USE THE NAVIGATION PROPERTIES
-            var user = await _data.Users.Include(m => m.ApplicationUsersPictures).FirstOrDefaultAsync(u => u.Id.ToString() == userId);
-            try
-            {
-                if (ModelState.IsValid)
-                {
-                    Picture picture = new Picture()
-                    {
-                        Url = path,
-                        UserId = user.Id,
-                        Owner = user,
-                        CreatedOn = DateTime.UtcNow,
-                        Likes = 0,
-                        Description = model.Description,
-                    };
-                    picture.PicturesHashTags.Add(new PictureHashTag()
-                    {
-                        Picture = picture,
-                        PictureId = picture.Id,
-                        Tag = await _data.HashTags.FirstOrDefaultAsync(h => h.Id == model.HashTagId),
-                        TagId = model.HashTagId
-                    });
-                    picture.ApplicationUsersPictures.Add(new ApplicationUserPicture()
-                    {
-                        Picture = picture,
-                        PictureId = picture.Id,
-                        User = user,
-                        UserId = user.Id
-                    });
-
-                    await _data.Pictures.AddAsync(picture);
-                    await _data.SaveChangesAsync();
-                }
-            }
-            catch (Exception e)
-            {
-                throw;
-            }
-            return RedirectToAction("Index", "Home");
+            return path;
         }
 
-        private string GetUserId()
-        {
-            return this.User.FindFirst(ClaimTypes.NameIdentifier)!.Value;
-        }
     }
 }
