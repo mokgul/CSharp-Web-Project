@@ -2,48 +2,72 @@
 @using Microsoft.AspNetCore.Http
 <link rel="stylesheet" href="https://cdn.rawgit.com/bantikyan/icheck-bootstrap/master/icheck-bootstrap.min.css">
 
+
 @{
     ViewBag.Title = "Add Picture";
 }
 
 @{
+    <h2 class="text-center">@ViewBag.Title</h2>
+
     <div class="row">
         <div class="col-sm-12 offset-lg-2 col-lg-8 offset-xl-3 col-xl-6">
 
-            <div class="mb-3">
+            <div class="mb-3 text-center">
                 @using (Html.BeginForm("Upload", "Picture", FormMethod.Post, new { enctype = "multipart/form-data", style = "display: inline-block; flex-direction: column; align-items: center;" }))
                 {
-                    <div>
-                        <input class="btn btn-primary" type="file" name="file" id="file" style="background:none; border: none;" />
-                    </div>
-
-                    <div class="mb-3">
-                        <label asp-for="@Model.Description" class="form-label-add-edit">Description</label>
-                        <textarea asp-for="@Model.Description" class="form-control" aria-required="true" rows="5"></textarea>
-                        <span asp-validation-for="Description" class="text-danger"></span>
-                    </div>
-                    <div class="mb-3">
-                        <label asp-for="@Model.HashTags" class="form-label-add-edit">Medium </label>
-                    </div>
-                    <form asp-formethod="post">
-                        @for (int i = 0; i < Model.HashTags.Count(); i++)
-                        {
-                            <div class="checkbox icheck-turquoise form-check-inline">
-                                @Html.HiddenFor(m => m.HashTags[i].Id)
-                                @Html.CheckBoxFor(m => m.HashTags[i].IsSelected)
-                                @Html.LabelFor(m => m.HashTags[i].IsSelected, 
-                                    string.Join(" ", Model.HashTags[i].Name.Split('_')),
-                                    new { @class = "pl-0", style = "padding-left: 0!important;" })
+                    <div class="row">
+                        <div class="col-md-8">
+                            <div class="mb-3 pt-3 pb-3">
+                                <label asp-for="@Model.Description" class="form-label-add-edit" style="font-size: 20px;">Description</label>
+                                <textarea asp-for="@Model.Description" class="form-control" aria-required="true" rows="15"></textarea>
+                                <span asp-validation-for="Description" class="text-danger"></span>
                             </div>
-                        }
-                        <div class="mb-3">
-                            <button type="submit">Save</button>
                         </div>
-                    </form>
+                        <div class="col-md-4">
+                            <div class="mb-3 pt-3 pb-3">
+                                <br />
+                                <label class="form-label" for="file">Upload your media file here</label>
+                                <input class="form-control mb-2" type="file" name="file" id="file" style="width: 180%" />
+                                <br />
+                                <br />
+                                <input type="submit" class="form-control" value="Save" />
+                            </div>
+                        </div>
+                    </div>
 
-                    <span asp-validation-for="@Model.HashTags" class="text-danger"></span>
+
+
+
+
+                    <div class="mb-3 pt-3 pb-3">
+                        <label asp-for="@Model.HashTags" class="form-label-add-edit" style="font-size: 20px;">Select tags related to your artwork</label>
+                    </div>
                 }
             </div>
         </div>
     </div>
+    <form asp-formethod="post">
+        <div class="text-center">
+            @for (int i = 0; i < Model.HashTags.Count(); i++)
+            {
+                <div class="btn btn-info checkbox icheck-turquoise form-check-inline ">
+                    @Html.HiddenFor(m => m.HashTags[i].Id)
+                    @Html.CheckBoxFor(m => m.HashTags[i].IsSelected, new { style = "margin-left: 10px;"})
+                    @Html.LabelFor(m => m.HashTags[i].IsSelected,
+            string.Join(" ", Model.HashTags[i].Name.Split('_')),
+            new { @class = "pl-0 align-items-center", style = "padding-left: 0!important;" })
+                </div>
+                <style>
+                    input[type=checkbox]:checked {
+                        accent-color: black;
+                    }
+                </style>
+            }
+
+        </div>
+    </form>
+
+
+    <span asp-validation-for="@Model.HashTags" class="text-danger"></span>
 }
