@@ -1,0 +1,39 @@
+﻿@model ExploreViewModel
+@using Microsoft.AspNetCore.Http
+
+@{
+    ViewBag.Title = "Explore";
+
+    <h2 class="text-center">@ViewBag.Title</h2>
+
+    @foreach (var image in Model.PicturesIds)
+    {
+        <img class="block" id="u730_img" src="~/images/@image.PictureUrl" alt="" width="20%" height="auto" />
+
+    }
+    //@foreach (var file in Model.Files)
+    //{
+    //    <img src="@Html.Raw(file)" />
+    //}
+
+
+    <form asp-formethod="post">
+        <div class="text-center">
+            @for (int i = 0; i < Model.HashTags.Count(); i++)
+            {
+                <div class="btn btn-info checkbox icheck-turquoise form-check-inline ">
+                    @Html.HiddenFor(m => m.HashTags[i].Id)
+                    @Html.CheckBoxFor(m => m.HashTags[i].IsSelected, new { style = "margin-left: 10px;"})
+                    @Html.LabelFor(m => m.HashTags[i].IsSelected,
+            string.Join(" ", Model.HashTags[i].Name.Split('_')),
+            new { @class = "pl-0 align-items-center", style = "padding-left: 0!important;" })
+                </div>
+                <style>
+                    input[type=checkbox]:checked {
+                        accent-color: black;
+                    }
+                </style>
+            }
+        </div>
+    </form>
+}

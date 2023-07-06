@@ -12,9 +12,9 @@ public class PictureAddFormModel
     [StringLength(DescriptionMaxLength, MinimumLength = DescriptionMinLength)]
     public string Description { get; set; } = null!;
 
-    [Required]
-    //public int[] HashTagIds { get; set; }
 
     public List<HashTagViewModel> HashTags { get; set; } = new List<HashTagViewModel>();
+
+   
 }
 

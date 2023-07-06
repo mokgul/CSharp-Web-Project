@@ -1,23 +1,18 @@
 ﻿namespace ArtfulAdventures.Web.Controllers
 {
+    using System;
     using System.Drawing;
     using System.IO;
-    using System.IO.Pipes;
     using System.Net;
     using System.Security.Claims;
-    using System.Text;
 
-    using ArtfulAdventures.Data;
-    using ArtfulAdventures.Data.Models;
     using ArtfulAdventures.Services.Data.Interfaces;
-    using ArtfulAdventures.Web.ViewModels.HashTag;
     using ArtfulAdventures.Web.ViewModels.Picture;
 
     using FluentFTP;
     using FluentFTP.Client.BaseClient;
 
     using Microsoft.AspNetCore.Mvc;
-    using Microsoft.EntityFrameworkCore;
 
     using static ArtfulAdventures.Common.GeneralApplicationConstants;
 
@@ -80,11 +75,35 @@
             var fileName = file.FileName;
             var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "images", fileName);
 
-            //Copy the file to the wwwroot/images folder
-            using (var stream = new FileStream(filePath, FileMode.Create))
+            //Resize the image
+            Image image = Image.FromStream(file.OpenReadStream(), true, true);
+            var newWidth = image.Width;
+            var newHeight = image.Height;
+            if(image.Width > 200 && image.Height > 200)
             {
-                await file.CopyToAsync(stream);
+                newWidth = (int)(image.Width * 0.5);
+                newHeight = (int)(image.Height * 0.5);
             }
+            
+            var newImage = new Bitmap(image, new Size(newWidth, newHeight));
+            using (var stream = new MemoryStream())
+            {
+                newImage.Save(stream, System.Drawing.Imaging.ImageFormat.Jpeg);
+
+                var imageBytes = stream.ToArray();
+
+                //Save the file to the local folder
+                using (var str = new FileStream(
+        filePath, FileMode.Create, FileAccess.Write, FileShare.Write, 4096))
+                {
+                    str.Write(imageBytes, 0, imageBytes.Length);
+                }
+            }
+            //Copy the file to the wwwroot/images folder
+            //using (var stream = new FileStream(filePath, FileMode.Create))
+            //{
+            //    await file.CopyToAsync(stream);
+            //}
 
             //Get the URL of the file to be uploaded
             var url = Path.Combine(ftpServerUrl, fileName);
