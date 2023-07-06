@@ -1,39 +1,71 @@
 ﻿@model ExploreViewModel
 @using Microsoft.AspNetCore.Http
-
+<link rel="stylesheet" href="https://cdn.rawgit.com/bantikyan/icheck-bootstrap/master/icheck-bootstrap.min.css">
 @{
     ViewBag.Title = "Explore";
 
     <h2 class="text-center">@ViewBag.Title</h2>
 
-    @foreach (var image in Model.PicturesIds)
-    {
-        <img class="block" id="u730_img" src="~/images/@image.PictureUrl" alt="" width="20%" height="auto" />
-
-    }
-    //@foreach (var file in Model.Files)
-    //{
-    //    <img src="@Html.Raw(file)" />
-    //}
 
 
-    <form asp-formethod="post">
-        <div class="text-center">
-            @for (int i = 0; i < Model.HashTags.Count(); i++)
-            {
-                <div class="btn btn-info checkbox icheck-turquoise form-check-inline ">
-                    @Html.HiddenFor(m => m.HashTags[i].Id)
-                    @Html.CheckBoxFor(m => m.HashTags[i].IsSelected, new { style = "margin-left: 10px;"})
-                    @Html.LabelFor(m => m.HashTags[i].IsSelected,
-            string.Join(" ", Model.HashTags[i].Name.Split('_')),
-            new { @class = "pl-0 align-items-center", style = "padding-left: 0!important;" })
-                </div>
-                <style>
-                    input[type=checkbox]:checked {
-                        accent-color: black;
+    //<section class="row col-md-2" style="display: inline-block;">
+
+    //    <form asp-formethod="post">
+    //        <div class="text-left">
+    //            @for (int i = 0; i < Model.HashTags.Count(); i++)
+    //            {
+    //                <div class="btn-sm btn-info checkbox icheck-turquoise form-check-inline ">
+    //                    @Html.HiddenFor(m => m.HashTags[i].Id)
+    //                    @Html.CheckBoxFor(m => m.HashTags[i].IsSelected, new { style = "margin-left: 10px;"})
+    //                    @Html.LabelFor(m => m.HashTags[i].IsSelected,
+    //            string.Join(" ", Model.HashTags[i].Name.Split('_')),
+    //            new { @class = "pl-0 align-items-center", style = "padding-left: 0!important;" })
+    //                </div>
+    //                <style>
+    //                    input[type=checkbox]:checked {
+    //                        accent-color: black;
+    //                    }
+    //                </style>
+    //            }
+    //        </div>
+    //    </form>
+    //</section>
+    //<section class="image-container" style="display: inline-block; width:80%">
+    //    @foreach (var image in Model.PicturesIds)
+    //    {
+    //        <img class="block" id="@image.PictureUrl" src="~/images/@image.PictureUrl" alt="" style="width:20%; height:auto;" />
+
+    //    }
+    //</section>
+
+    <div class="container">
+        <div class="top-section" style="border: 1px solid black;">
+            <form asp-formethod="post">
+                <div class="text-left">
+                    @for (int i = 0; i < Model.HashTags.Count(); i++)
+                    {
+                        <div class="btn-sm btn-info checkbox icheck-turquoise form-check-inline ">
+                            @Html.HiddenFor(m => m.HashTags[i].Id)
+                            @Html.CheckBoxFor(m => m.HashTags[i].IsSelected, new { style = "margin-left: 10px;"})
+                            @Html.LabelFor(m => m.HashTags[i].IsSelected,
+                    string.Join(" ", Model.HashTags[i].Name.Split('_')),
+                    new { @class = "pl-0 align-items-center", style = "padding-left: 0!important;" })
+                        </div>
+                        <style>
+                            input[type=checkbox]:checked {
+                                accent-color: black;
+                            }
+                        </style>
                     }
-                </style>
+                </div>
+            </form>
+        </div>
+        <div class="bottom-section">
+            @foreach (var image in Model.PicturesIds)
+            {
+                <img class="block" id="@image.PictureUrl" src="~/images/@image.PictureUrl" alt="" style="width:20%; height:auto;" />
+
             }
         </div>
-    </form>
+    </div>
 }

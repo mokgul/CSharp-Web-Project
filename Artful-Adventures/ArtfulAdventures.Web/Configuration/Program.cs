@@ -1,10 +1,9 @@
-namespace ArtfulAdventures.Web;
+namespace ArtfulAdventures.Web.Configuration;
 
 using ArtfulAdventures.Data;
 using ArtfulAdventures.Data.Models;
 using ArtfulAdventures.Services.Data;
 using ArtfulAdventures.Services.Data.Interfaces;
-
 using Microsoft.EntityFrameworkCore;
 
 public class Program
@@ -28,9 +27,12 @@ public class Program
 
         builder.Services.AddControllersWithViews();
 
-        builder.Services.AddScoped<IPictureService,PictureService>();
+        builder.Services.AddScoped<IPictureService, PictureService>();
+        builder.Services.AddScoped<IExploreService, ExploreService>();
 
         var app = builder.Build();
+
+        DownloadFromFtpServer.DownloadData();
 
         // Configure the HTTP request pipeline.
         if (app.Environment.IsDevelopment())

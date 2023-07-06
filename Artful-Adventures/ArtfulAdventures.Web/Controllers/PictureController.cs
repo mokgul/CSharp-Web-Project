@@ -7,6 +7,7 @@
     using System.Security.Claims;
 
     using ArtfulAdventures.Services.Data.Interfaces;
+    using ArtfulAdventures.Web.Configuration;
     using ArtfulAdventures.Web.ViewModels.Picture;
 
     using FluentFTP;
@@ -76,16 +77,24 @@
             var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "images", fileName);
 
             //Resize the image
-            Image image = Image.FromStream(file.OpenReadStream(), true, true);
-            var newWidth = image.Width;
-            var newHeight = image.Height;
-            if(image.Width > 200 && image.Height > 200)
-            {
-                newWidth = (int)(image.Width * 0.5);
-                newHeight = (int)(image.Height * 0.5);
-            }
-            
-            var newImage = new Bitmap(image, new Size(newWidth, newHeight));
+            Bitmap newImage = ResizeImage(file);
+            SaveFileLocal(filePath, newImage);
+
+            //Get the URL of the file to be uploaded
+            var url = Path.Combine(ftpServerUrl, fileName);
+
+            //Upload the file to the FTP server
+            await UploadToFtpServer.UploadFile(fileName, filePath);
+
+            //Delete the file from the local folder
+            if (System.IO.File.Exists(filePath))
+                System.IO.File.Delete(filePath);
+
+            return url;
+        }
+
+        private static void SaveFileLocal(string filePath, Bitmap newImage)
+        {
             using (var stream = new MemoryStream())
             {
                 newImage.Save(stream, System.Drawing.Imaging.ImageFormat.Jpeg);
@@ -99,50 +108,21 @@
                     str.Write(imageBytes, 0, imageBytes.Length);
                 }
             }
-            //Copy the file to the wwwroot/images folder
-            //using (var stream = new FileStream(filePath, FileMode.Create))
-            //{
-            //    await file.CopyToAsync(stream);
-            //}
-
-            //Get the URL of the file to be uploaded
-            var url = Path.Combine(ftpServerUrl, fileName);
-
-            //Upload the file to the FTP server
-            UploadToFtpServer(fileName, filePath);
-
-            //Delete the file from the local folder
-            if (System.IO.File.Exists(filePath))
-                System.IO.File.Delete(filePath);
-
-            return url;
         }
 
-        private static void UploadToFtpServer(string fileName, string filePath)
+        private static Bitmap ResizeImage(IFormFile file)
         {
-            FtpClient client = new FtpClient();
-            client.Credentials = new NetworkCredential(ftpUserName, ftpPassword);
-            client.Host = ftpServerUrl;
-            client.Port = ftpPort;
-            client.Config.EncryptionMode = FtpEncryptionMode.Explicit;
-            client.ValidateCertificate += new FtpSslValidation(OnValidateCertificate);
-
-            client.Connect();
-            client.UploadFile(filePath, fileName);
-            client.Disconnect();
-        }
-
-        private static void OnValidateCertificate(BaseFtpClient control, FtpSslValidationEventArgs e)
-        {
-            if (e.PolicyErrors != System.Net.Security.SslPolicyErrors.None)
+            Image image = Image.FromStream(file.OpenReadStream(), true, true);
+            var newWidth = image.Width;
+            var newHeight = image.Height;
+            if (image.Width > 200 && image.Height > 200)
             {
-                // invalid cert, do you want to accept it?
-                e.Accept = true;
+                newWidth = (int)(image.Width * 0.5);
+                newHeight = (int)(image.Height * 0.5);
             }
-            else
-            {
-                e.Accept = true;
-            }
+
+            var newImage = new Bitmap(image, new Size(newWidth, newHeight));
+            return newImage;
         }
     }
 }

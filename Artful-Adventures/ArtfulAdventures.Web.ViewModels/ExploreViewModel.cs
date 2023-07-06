@@ -9,7 +9,5 @@ public class ExploreViewModel
 {
     public ICollection<PictureVisualizeViewModel> PicturesIds { get; set; } = new HashSet<PictureVisualizeViewModel>();
     public List<HashTagViewModel> HashTags { get; set; } = new List<HashTagViewModel>();
-    
-    public List<string> Files { get; set; } = new List<string>();
 }
 
