@@ -1,18 +1,38 @@
 html {
-  font-size: 14px;
+	font-size: 14px;
 }
 
 @media (min-width: 768px) {
-  html {
-    font-size: 16px;
-  }
+	html {
+		font-size: 16px;
+	}
 }
 
 html {
-  position: relative;
-  min-height: 100%;
+	position: relative;
+	min-height: 100%;
 }
 
 body {
-  margin-bottom: 60px;
+	background: radial-gradient(circle at -4% -12.9%, rgb(74, 98, 110) 0.3%, rgb(30, 33, 48) 90.2%);
 }
+
+.navbar {
+	background-image: url("https://cdn.discordapp.com/attachments/979101848361377914/1126964927702257684/Dark-Blue-Gray-Background.png");
+	background-repeat: no-repeat;
+	background-size: cover;
+	box-shadow: 0 0 10px #ccc, 0 0 20px #ccc, 0 0 30px #ccc, 0 0 20px #00f;
+	position: relative;
+	z-index: 1;
+	margin-bottom: 70px
+}
+
+.navbar-nav li a,
+a.nav-link.dropdown-toggle {
+	color: #6b8cce;
+}
+
+	.navbar-nav li a:hover,
+	a.nav-link.dropdown-toggle:hover {
+		color: rgb(95, 209, 249);
+	}
