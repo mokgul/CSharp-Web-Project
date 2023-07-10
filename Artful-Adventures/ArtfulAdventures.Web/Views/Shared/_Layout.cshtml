@@ -17,7 +17,7 @@
             <div class="container-fluid">
                 <a class="navbar-brand" href="/Home">
                     <img src="~/images/gamer-logo-small.png" width="50" height="50" class="d-inline-block align-top" alt="">
-                    </a>
+                </a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarColor02" aria-controls="navbarColor02" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
@@ -65,7 +65,7 @@
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">User Profile</a>
                             <div class="dropdown-menu">
-                                <a class="dropdown-item" asp-area="" asp-controller="UserProfile" asp-action="Profile">Profile</a>
+                                <a class="dropdown-item" asp-area="" asp-controller="UserProfile" asp-action="Profile" asp-route-username="@User.Identity.Name">Profile</a>
                                 <a class="dropdown-item" href="#">Another action</a>
                                 <a class="dropdown-item" href="#">Something else here</a>
                                 <div class="dropdown-divider"></div>

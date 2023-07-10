@@ -36,9 +36,9 @@ public class ApplicationUser : IdentityUser<Guid>
 
     public ICollection<Blog> Blogs { get; set; } = new HashSet<Blog>();
 
-    public ICollection<ApplicationUser> Followers { get; set; } = new HashSet<ApplicationUser>();
+    public ICollection<FollowerFollowing> Followers { get; set; } = new HashSet<FollowerFollowing>();
 
-    public ICollection<ApplicationUser> Following { get; set; } = new HashSet<ApplicationUser>();
+    public ICollection<FollowerFollowing> Following { get; set; } = new HashSet<FollowerFollowing>();
 
     public ICollection<ApplicationUserSkill> ApplicationUsersSkills { get; set; }
 

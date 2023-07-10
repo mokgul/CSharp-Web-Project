@@ -1,0 +1,57 @@
+﻿@model ProfilePartialView
+
+<div class="card mb-4" style="width: 20rem;background: radial-gradient(circle at 10% 20%, rgba(218, 203, 246,0.3) 10%, rgba(192, 192, 245,0.1) 33.1%, rgba(218, 203, 246,0.5) 90%); border-color:rgb(218, 203, 246)">
+    <div class="card-body text-center">
+        @if (Model.ProfilePictureUrl != null)
+        {
+            <img src="~/images/@Model.ProfilePictureUrl" alt=" "
+                 class="block" style="width: 100%; height: 100%; object-fit: cover;">
+        }
+        else
+        {
+            <img src="~/images/no-profile-picture.jpg" alt=" "
+                 class="block" style="width: 150px;">
+        }
+        @if (Model.Username != null)
+        {
+            <h5 class="my-3">@Model.Username</h5>
+        }
+        @if (Model.Name != null)
+        {
+            <p class="mb-1 text-black">@Model.Name</p>
+        }
+        @if (Model.CityName != null)
+        {
+            <p class="mb-1 text-black">@Model.CityName</p>
+        }
+        @if (Model.Bio != null)
+        {
+            <p class="mb-4 text-black">@Model.Bio</p>
+        }
+        <div class="d-flex justify-content-center mb-2">
+            @if (Model.isFollowed == true)
+            {
+                <form method="post" asp-area="" asp-controller="UserProfile" asp-action="Unfollow" asp-route-username="@Model.Username">
+                    <button type="submit" class="btn btn-primary" style=" border-color:rgb(218, 203, 246)">
+                        Unfollow
+                    </button>
+                </form>
+            }
+            else
+            {
+                <form method="post" asp-area="" asp-controller="UserProfile" asp-action="Follow" asp-route-username="@Model.Username">
+                    <button type="submit" class="btn btn-primary" style=" border-color:rgb(218, 203, 246)">
+                        Follow
+                    </button>
+                </form>
+            }
+            <button type="button" class="btn btn-outline-primary ms-1" style="color:white; border-color:rgb(218, 203, 246)">Message</button>
+        </div>
+        <style>
+            .btn-outline-primary:hover,
+            .btn-primary:hover {
+                background-color: #6b8cce;
+            }
+        </style>
+    </div>
+</div>

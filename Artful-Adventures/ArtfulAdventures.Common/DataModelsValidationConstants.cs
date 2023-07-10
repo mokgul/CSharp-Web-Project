@@ -9,11 +9,11 @@ public static class DataModelsValidationConstants
         public const int NameMinLength = 3;
         public const int NameMaxLength = 70;
         public const int BioMinLength = 10;
-        public const int BioMaxLength = 200;
+        public const int BioMaxLength = 100;
         public const int CityNameMinLength = 3;
         public const int CityNameMaxLength = 60;
         public const int AboutMinLength = 10;
-        public const int AboutMaxLength = 2000;
+        public const int AboutMaxLength = 200;
         
     }
     public static class BlogConstants

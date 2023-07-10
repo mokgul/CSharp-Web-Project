@@ -1,12 +1,13 @@
 ﻿namespace ArtfulAdventures.Data;
 
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
+using System.Reflection.Emit;
 
-using ArtfulAdventures.Data.Models;
-using ArtfulAdventures.Data.Seeding;
 using ArtfulAdventures.Data.Configuration;
+using ArtfulAdventures.Data.Models;
+
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 
 public class ArtfulAdventuresDbContext : IdentityDbContext<ApplicationUser, IdentityRole<Guid>, Guid>
 {
@@ -33,6 +34,7 @@ public class ArtfulAdventuresDbContext : IdentityDbContext<ApplicationUser, Iden
 
     public DbSet<ApplicationUserPicture> ApplicationUsersPictures { get; set; } = null!;
 
+    public DbSet<FollowerFollowing> Follows { get; set; } = null!;
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
@@ -48,6 +50,8 @@ public class ArtfulAdventuresDbContext : IdentityDbContext<ApplicationUser, Iden
         
         builder.ApplyConfiguration<HashTag>(enumSeedConfigurer);
         builder.ApplyConfiguration<Skill>(enumSeedConfigurer);
+
+        builder.ApplyConfiguration<FollowerFollowing>(new FollowTableConfiguration());
 
         base.OnModelCreating(builder);
     }
