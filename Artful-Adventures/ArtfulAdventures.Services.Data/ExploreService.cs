@@ -4,11 +4,14 @@ using System.Threading.Tasks;
 using System.Xml.Linq;
 
 using ArtfulAdventures.Data;
+using ArtfulAdventures.Data.Models;
 using ArtfulAdventures.Services.Data.Interfaces;
 using ArtfulAdventures.Web.ViewModels;
 using ArtfulAdventures.Web.ViewModels.HashTag;
 using ArtfulAdventures.Web.ViewModels.Picture;
 
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 public class ExploreService : IExploreService

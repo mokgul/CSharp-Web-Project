@@ -11,6 +11,7 @@ html {
 html {
 	position: relative;
 	min-height: 100%;
+	box-sizing: border-box;
 }
 
 body {
@@ -18,8 +19,7 @@ body {
 }
 
 .navbar {
-	background-image: url("https://cdn.discordapp.com/attachments/979101848361377914/1126964927702257684/Dark-Blue-Gray-Background.png");
-	background-repeat: no-repeat;
+	background: linear-gradient(to top, rgb(9, 32, 63) 0%, rgb(83, 120, 149) 100%);
 	background-size: cover;
 	box-shadow: 0 0 10px #ccc, 0 0 20px #ccc, 0 0 30px #ccc, 0 0 20px #00f;
 	position: relative;
@@ -32,7 +32,30 @@ a.nav-link.dropdown-toggle {
 	color: #6b8cce;
 }
 
+ul.nav-item.mt-3 {
+	list-style-type: none;
+}
+
 	.navbar-nav li a:hover,
 	a.nav-link.dropdown-toggle:hover {
 		color: rgb(95, 209, 249);
 	}
+
+
+*,
+*:before,
+*:after {
+	box-sizing: inherit; /* enable the "border-box effect" everywhere */
+}
+
+.body-for-sticky {
+	position: relative; /* for the footer to move with the page size */
+	min-height: 100%; /* for the footer to be at the bottom */
+	padding-bottom: 6rem; /* Space available between last element and bottom border of the page */
+}
+
+.sticky-footer {
+	position: absolute; /* for it to disappear under last body element */
+	bottom: 0; /* so the footer can stick to the bottom*/
+}
+

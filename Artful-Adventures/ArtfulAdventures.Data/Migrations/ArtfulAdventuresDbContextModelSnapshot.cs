@@ -34,7 +34,7 @@ namespace ArtfulAdventures.Data.Migrations
 
                     b.HasIndex("FollowingId");
 
-                    b.ToTable("ApplicationUserApplicationUser");
+                    b.ToTable("ApplicationUserApplicationUser", (string)null);
                 });
 
             modelBuilder.Entity("ArtfulAdventures.Data.Models.ApplicationUser", b =>
@@ -135,7 +135,7 @@ namespace ArtfulAdventures.Data.Migrations
 
                     b.HasIndex("PictureId");
 
-                    b.ToTable("ApplicationUsersPictures");
+                    b.ToTable("ApplicationUsersPictures", (string)null);
                 });
 
             modelBuilder.Entity("ArtfulAdventures.Data.Models.ApplicationUserSkill", b =>
@@ -150,7 +150,7 @@ namespace ArtfulAdventures.Data.Migrations
 
                     b.HasIndex("SkillId");
 
-                    b.ToTable("ApplicationUsersSkills");
+                    b.ToTable("ApplicationUsersSkills", (string)null);
                 });
 
             modelBuilder.Entity("ArtfulAdventures.Data.Models.Blog", b =>
@@ -186,7 +186,7 @@ namespace ArtfulAdventures.Data.Migrations
 
                     b.HasIndex("AuthorId");
 
-                    b.ToTable("Blogs");
+                    b.ToTable("Blogs", (string)null);
                 });
 
             modelBuilder.Entity("ArtfulAdventures.Data.Models.Challenge", b =>
@@ -225,7 +225,7 @@ namespace ArtfulAdventures.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Challenges");
+                    b.ToTable("Challenges", (string)null);
                 });
 
             modelBuilder.Entity("ArtfulAdventures.Data.Models.Comment", b =>
@@ -261,7 +261,7 @@ namespace ArtfulAdventures.Data.Migrations
 
                     b.HasIndex("PictureId");
 
-                    b.ToTable("Comments");
+                    b.ToTable("Comments", (string)null);
                 });
 
             modelBuilder.Entity("ArtfulAdventures.Data.Models.HashTag", b =>
@@ -278,7 +278,7 @@ namespace ArtfulAdventures.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("HashTags");
+                    b.ToTable("HashTags", (string)null);
 
                     b.HasData(
                         new
@@ -507,7 +507,7 @@ namespace ArtfulAdventures.Data.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Pictures");
+                    b.ToTable("Pictures", (string)null);
                 });
 
             modelBuilder.Entity("ArtfulAdventures.Data.Models.PictureHashTag", b =>
@@ -522,7 +522,7 @@ namespace ArtfulAdventures.Data.Migrations
 
                     b.HasIndex("TagId");
 
-                    b.ToTable("PicturesHashTags");
+                    b.ToTable("PicturesHashTags", (string)null);
                 });
 
             modelBuilder.Entity("ArtfulAdventures.Data.Models.Skill", b =>
@@ -539,7 +539,7 @@ namespace ArtfulAdventures.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Skills");
+                    b.ToTable("Skills", (string)null);
 
                     b.HasData(
                         new

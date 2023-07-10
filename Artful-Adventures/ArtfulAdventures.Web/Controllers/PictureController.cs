@@ -86,10 +86,6 @@
             //Upload the file to the FTP server
             await UploadToFtpServer.UploadFile(fileName, filePath);
 
-            //Delete the file from the local folder
-            if (System.IO.File.Exists(filePath))
-                System.IO.File.Delete(filePath);
-
             return url;
         }
 

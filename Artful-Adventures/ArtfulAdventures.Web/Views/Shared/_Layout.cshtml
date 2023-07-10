@@ -10,13 +10,13 @@
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/ArtfulAdventures.Web.styles.css" asp-append-version="true" />
 </head>
-<body>
+<body class="body-for-sticky">
     <header>
 
         <nav class="navbar navbar-expand-lg bg-dark" data-bs-theme="dark">
             <div class="container-fluid">
                 <a class="navbar-brand" href="/Home">
-                    <img src="https://cdn.discordapp.com/attachments/979101848361377914/1126958939007885442/gamer-logo-small.png" width="60" height="60" class="d-inline-block align-top" alt="">
+                    <img src="~/images/gamer-logo-small.png" width="50" height="50" class="d-inline-block align-top" alt="">
                     </a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarColor02" aria-controls="navbarColor02" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
@@ -65,7 +65,7 @@
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">User Profile</a>
                             <div class="dropdown-menu">
-                                <a class="dropdown-item" href="#">Action</a>
+                                <a class="dropdown-item" asp-area="" asp-controller="UserProfile" asp-action="Profile">Profile</a>
                                 <a class="dropdown-item" href="#">Another action</a>
                                 <a class="dropdown-item" href="#">Something else here</a>
                                 <div class="dropdown-divider"></div>
@@ -74,6 +74,7 @@
                         </li>
                     </ul>
                 </div>
+                <partial name="_LoginPartial" />
             </div>
         </nav>
     </header>
@@ -83,7 +84,7 @@
         </main>
     </div>
 
-    <footer class="border-top footer text-muted">
+    <footer class="footer sticky-footer border-top footer text-muted">
         <div class="container">
             &copy; Artful Adventures @releaseYear
             @if (DateTime.UtcNow.Year != releaseYear)

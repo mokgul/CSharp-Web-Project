@@ -1,0 +1,178 @@
+﻿@model ProfileViewModel
+
+@*
+<div class="wrapper">
+    <section class="profile-picture">
+        @if (Model.ProfilePictureUrl != null)
+        {
+            <img class="block" id="@Model.ProfilePictureUrl" src="~/images/@Model.ProfilePictureUrl" alt="" style="width:20%; height:auto;" />
+        }
+    </section>
+
+    <section class="profile-info">
+        <h1>@Model.Username</h1>
+
+        <p>@Model.Email</p>
+
+        @if (Model.Name != null)
+        {
+            <p>Name: @Model.Name</p>
+        }
+
+        @if (Model.Bio != null)
+        {
+            <p>Bio: @Model.Bio</p>
+        }
+
+        @if (Model.CityName != null)
+        {
+            <p>City: @Model.CityName</p>
+        }
+    </section>
+
+    <section class="profile-portfolio">
+        @if (Model.Pictures != null && Model.Pictures.Count > 0)
+        {
+            <h2>Pictures</h2>
+
+            @foreach (var picture in Model.Pictures)
+            {
+                <div>
+                    <img class="block" id="@picture.PictureUrl" src="~/images/@picture.PictureUrl" alt="" style="width:20%; height:auto;" />
+                </div>
+            }
+        }
+    </section>
+
+    <section class="profile-skills">
+        @if (Model.Skills != null && Model.Skills.Count > 0)
+        {
+            <h2>Skills</h2>
+
+            @foreach (var skill in Model.Skills)
+            {
+                <div>
+                    <p>@skill.Name</p>
+                </div>
+            }
+        }
+    </section>
+
+    <section class="profile-contact"><p>Contact: @Model.Contact</p></section>
+
+</div>*@
+
+
+<section>
+    <div class="container py-3">
+        <div class="card mb-4 mb-lg-0" style="max-width: 20rem; background: none; border: none;">
+            <div class="card-body p-0">
+                <div class="d-flex  mb-3">
+                    <button type="button" class="btn btn-outline-secondary" style="margin-right: 13px; color: white; border-color:rgb(218, 203, 246)">Portfolio</button>
+                    <button type="button" class="btn btn-outline-secondary" style="margin-right: 13px; color: white; border-color:rgb(218, 203, 246)">Collections</button>
+                    <button type="button" class="btn btn-outline-secondary" style="margin-right: 13px; color: white; border-color:rgb(218, 203, 246)">Followers</button>
+                    <button type="button" class="btn btn-outline-secondary" style="margin-right: 13px; color: white; border-color:rgb(218, 203, 246)">Following</button>
+                </div>
+                <style>
+                    .btn-outline-secondary:hover {
+                        background-color: #6b8cce;
+                        color: white;
+                    }
+                </style>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-4">
+                <div class="card mb-4" style="width: 20rem;background: radial-gradient(circle at 10% 20%, rgba(218, 203, 246,0.3) 10%, rgba(192, 192, 245,0.1) 33.1%, rgba(218, 203, 246,0.5) 90%); border-color:rgb(218, 203, 246)">
+                    <div class="card-body text-center">
+                        @if (Model.ProfilePictureUrl != null)
+                        {
+                            <img src="~/images/@Model.ProfilePictureUrl" alt=" "
+                                 class="block" style="width: 100%; height: 100%; object-fit: cover;">
+                        }
+                        else
+                        {
+                            <img src="~/images/no-profile-picture.jpg" alt=" "
+                                 class="block" style="width: 150px;">
+                        }
+                        @if (Model.Username != null)
+                        {
+                            <h5 class="my-3">@Model.Username</h5>
+                        }
+                        @if (Model.Name != null)
+                        {
+                            <p class="mb-1 text-black">@Model.Name</p>
+                        }
+                        @if (Model.CityName != null)
+                        {
+                            <p class="mb-1 text-black">@Model.CityName</p>
+                        }
+                        @if (Model.Bio != null)
+                        {
+                            <p class="mb-4 text-black">@Model.Bio</p>
+                        }
+                        <div class="d-flex justify-content-center mb-2">
+                            <button type="button" class="btn btn-primary" style=" border-color:rgb(218, 203, 246)">Follow</button>
+                            <button type="button" class="btn btn-outline-primary ms-1" style="color:white; border-color:rgb(218, 203, 246)">Message</button>
+                        </div>
+                        <style>
+                            .btn-outline-primary:hover,
+                            .btn-primary:hover{
+                                background-color: #6b8cce;
+                            }
+                        </style>
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    <div class="card mb-4" style="width: 20rem;background: radial-gradient(circle at 10% 20%, rgba(218, 203, 246,0.3) 10%, rgba(192, 192, 245,0.1) 33.1%, rgba(218, 203, 246,0.5) 90%);border-color:rgb(218, 203, 246)">
+                        <div class="card-body text-center">
+                            @if (Model.About != null)
+                            {
+                                <h5 class="my-3">About</h5>
+                                <p class="mb-4 text-black">@Model.About</p>
+                            }
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="col-lg-8">
+                <div class="card mb-4" style="background: radial-gradient(circle at 10% 20%, rgba(218, 203, 246,0.3) 10%, rgba(192, 192, 245,0.1) 33.1%, rgba(218, 203, 246,0.5) 90%);border-color:rgb(218, 203, 246)">
+                    <div class="card-body">
+                        @if (Model.Pictures != null && Model.Pictures.Count > 0)
+                        {
+                            <div style="display: flex; flex-wrap: wrap;">
+                                @foreach (var picture in Model.Pictures.Take(9))
+                                {
+                                    <div style="flex-basis: 33.33%; padding: 5px; max-height: 100%;">
+                                        <div style="width: 200px; height: 200px; overflow: hidden;">
+                                            <img src="~/images/@picture.PictureUrl" alt=" "
+                                                 class="block" style="width: 100%; height: 100%; object-fit: cover; border: 1px solid black">
+                                        </div>
+                                    </div>
+                                }
+                            </div>
+                        }
+                    </div>
+                </div>
+                <div class="col-lg-12">
+                    <div class="card mb-5" style="background: radial-gradient(circle at 10% 20%, rgba(218, 203, 246,0.3) 10%, rgba(192, 192, 245,0.1) 33.1%, rgba(218, 203, 246,0.5) 90%);border-color:rgb(218, 203, 246)">
+                        <div class="card-body" style="padding:0">
+                            <div class="card-body" style="display: flex; flex-wrap: wrap;">
+                                @if (Model.Skills != null && Model.Skills.Count > 0)
+                                {
+                                    @foreach (var item in Model.Skills)
+                                    {
+                                        <div class="card mb-2" style="margin-right:10px;border-color:rgb(218, 203, 246)">
+                                            <div class="d-inline p-2 bg-dark text-white"> @item.Name</div>
+                                        </div>
+                                    }
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
