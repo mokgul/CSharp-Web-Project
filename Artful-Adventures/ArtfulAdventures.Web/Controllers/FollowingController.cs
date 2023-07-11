@@ -26,7 +26,7 @@
         [HttpGet]
         public async Task<IActionResult> All()
         {
-
+            await DownloadFromFtpServer.DownloadData();
             var user = await _data.Users.Include(f => f.Following).FirstOrDefaultAsync(u => u.UserName == User.Identity.Name);
 
             var hashtags = await _data.HashTags.Select(h => new HashTagViewModel()
