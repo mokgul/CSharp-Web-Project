@@ -52,13 +52,17 @@
                     var path = await UploadFile();
                     await _pictureService.UploadPictureAsync(model, userId, path);
                 }
+                else
+                {
+                    ModelState.AddModelError(string.Empty, "An error occurred while uploading the picture.");
+                }
             }
             catch (Exception)
             {
                 return RedirectToAction("Error", "Home");
             }
 
-            return RedirectToAction("Index", "Home");
+            return RedirectToAction("Upload", "Picture");
         }
 
         private string GetUserId()
