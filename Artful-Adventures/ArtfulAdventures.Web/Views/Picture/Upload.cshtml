@@ -1,74 +1,73 @@
 ﻿@model PictureAddFormModel
 @using Microsoft.AspNetCore.Http
-<link rel="stylesheet" href="https://cdn.rawgit.com/bantikyan/icheck-bootstrap/master/icheck-bootstrap.min.css">
-
+@using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 
 @{
     ViewBag.Title = "Add Picture";
 }
 
-@{
-    <h2 class="text-center">@ViewBag.Title</h2>
-    <iframe src="index.html" title="map"></iframe>
-
-    <div asp-validation-summary="All" class="text-danger"></div>
-
-
-    <div class="row">
-        <div class="col-sm-12 offset-lg-2 col-lg-8 offset-xl-3 col-xl-6">
-
-            <div class="mb-3 text-center">
-                @using (Html.BeginForm("Upload", "Picture", FormMethod.Post, new { enctype = "multipart/form-data", style = "display: inline-block; flex-direction: column; align-items: center;" }))
-                {
-                    <div class="row">
-                        <div class="col-md-8">
-                            <div class="mb-3 pt-3 pb-3">
-                                <label asp-for="@Model.Description" class="form-label-add-edit" style="font-size: 20px;">Description</label>
-                                <textarea asp-for="@Model.Description" class="form-control" aria-required="true" rows="15"></textarea>
-                                <span asp-validation-for="@Model.Description" class="text-danger"></span>
-                            </div>
-                        </div>
-                        <div class="col-md-4">
-                            <div class="mb-3 pt-3 pb-3">
-                                <br />
-                                <label class="form-label" for="file" style="white-space: nowrap;">Upload your media file here</label>
-
-                                <input class="form-control mb-2" type="file" name="file" id="file" style="width: 180%" />
-                                <br />
-                                <br />
-                                <input type="submit" class="form-control" value="Save" />
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="mb-3 pt-3 pb-3">
-                        <label asp-for="@Model.HashTags" class="form-label-add-edit" style="font-size: 20px;">Select tags related to your artwork</label>
-                    </div>
-                }
-            </div>
-        </div>
+@if (TempData["Success"] != null)
+{
+    <div class="alert alert-success text-black" role="alert">
+        @TempData["Success"]
     </div>
-    <form asp-formethod="post">
-        <div class="text-center">
-            @for (int i = 0; i < Model.HashTags.Count(); i++)
+}
+@{
+    var errors = ViewData.ModelState.Where(n => n.Value.Errors.Count > 0).ToList();
+}
+
+@if (errors.Count > 0)
+{
+
+    @foreach (var error in errors)
+    {
+        foreach (var errorMessage in error.Value.Errors)
+        {
+            <div class="alert alert-danger bg-dark text-white" role="alert">
+                @errorMessage.ErrorMessage
+            </div>
+        }
+    }
+
+}
+
+
+
+<div class="row">
+    <div class="col-sm-12 offset-lg-2 col-lg-8 offset-xl-3 col-xl-6">
+        <div class="mb-3 text-center">
+            @using (Html.BeginForm("Upload", "Picture", FormMethod.Post, new { enctype = "multipart/form-data", style = "display: inline-block; flex-direction: column; align-items: center;" }))
             {
-                <div class="btn btn-info checkbox icheck-turquoise form-check-inline ">
-                    @Html.HiddenFor(m => m.HashTags[i].Id)
-                    @Html.CheckBoxFor(m => m.HashTags[i].IsSelected, new { style = "margin-left: 10px;"})
-                    @Html.LabelFor(m => m.HashTags[i].IsSelected,
-            string.Join(" ", Model.HashTags[i].Name.Split('_')),
-            new { @class = "pl-0 align-items-center", style = "padding-left: 0!important;" })
+                <div class="row">
+                    <div class="col-md-8">
+                        <div class="mb-3 pt-3 pb-3">
+                            <label asp-for="@Model.Description" class="form-label-add-edit" style="font-size: 20px;">Description</label>
+                            <textarea asp-for="@Model.Description" class="form-control" aria-required="true" rows="15"></textarea>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="mb-3 pt-3 pb-3">
+                            <input class="form-control mb-2" type="file" name="file" id="file" style="width: 180%" />
+                            <input type="submit" class="form-control" value="Save" />
+                        </div>
+                    </div>
                 </div>
-                <style>
-                    input[type=checkbox]:checked {
-                        accent-color: black;
+                <div>
+                    @for (int i = 0; i < Model.HashTags.Count(); i++)
+                    {
+                        @Html.HiddenFor(m => m.HashTags[i].Id)
+                        @Html.HiddenFor(m => m.HashTags[i].Name)
+                        <div class="form-check">
+                            @Html.CheckBoxFor(m => m.HashTags[i].IsSelected, new { @class = "form-check-input", id = $"HashTags_{i}__IsSelected" })
+                            <label class="form-check-label" for="@($"HashTags_{i}__IsSelected")">@Model.HashTags[i].Name</label>
+                        </div>
                     }
-                </style>
+                    <button type="submit">Submit</button>
+                </div>
             }
         </div>
-    </form>
+    </div>
+</div>
+<span asp-validation-for="@Model.HashTags" class="text-danger"></span>
 
-
-    <span asp-validation-for="@Model.HashTags" class="text-danger"></span>
-}

@@ -14,6 +14,8 @@
     using FluentFTP.Client.BaseClient;
 
     using Microsoft.AspNetCore.Mvc;
+    using Microsoft.AspNetCore.Mvc.ModelBinding;
+    using Microsoft.AspNetCore.Mvc.RazorPages;
 
     using static ArtfulAdventures.Common.GeneralApplicationConstants;
 
@@ -24,11 +26,6 @@
         public PictureController(IPictureService pictureService)
         {
             _pictureService = pictureService;
-        }
-
-        public IActionResult Index()
-        {
-            return View();
         }
 
 
@@ -44,26 +41,35 @@
         public async Task<ActionResult> Upload(PictureAddFormModel model)
         {
             string userId = GetUserId();
-
+            var messages = new List<string>();
             try
             {
-                if (ModelState.IsValid)
+                var path = await UploadFile();
+                if (String.IsNullOrEmpty(path))
                 {
-                    var path = await UploadFile();
-                    await _pictureService.UploadPictureAsync(model, userId, path);
+                    ModelState.AddModelError("path", "Please select a file to upload.");
                 }
-                else
+                if (!ModelState.IsValid)
                 {
-                    ModelState.AddModelError(string.Empty, "An error occurred while uploading the picture.");
+                    //foreach (var modelState in ModelState.Values)
+                    //{
+                    //    foreach (var error in modelState.Errors)
+                    //    {
+                    //        messages.Add(error.ErrorMessage);
+                    //    }
+                    //}
+                    return View(model);
                 }
+                await _pictureService.UploadPictureAsync(model, userId, path);
             }
             catch (Exception)
             {
                 return RedirectToAction("Error", "Home");
             }
-
+            TempData["Success"] = "Your picture was uploaded successfully!";
             return RedirectToAction("Upload", "Picture");
         }
+
 
         private string GetUserId()
         {
@@ -74,7 +80,10 @@
         {
             //Reads the form data from the request body.
             var form = await Request.ReadFormAsync();
-
+            if (form.Files.Count == 0)
+            {
+                return string.Empty;
+            }
             //Gets the first file and saves it to the specified path.
             var file = form.Files.First();
             var fileName = file.FileName;

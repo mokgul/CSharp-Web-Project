@@ -14,7 +14,5 @@ public class PictureAddFormModel
 
 
     public List<HashTagViewModel> HashTags { get; set; } = new List<HashTagViewModel>();
-
-   
 }
 
