@@ -4,6 +4,7 @@ using ArtfulAdventures.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ArtfulAdventures.Data.Migrations
 {
     [DbContext(typeof(ArtfulAdventuresDbContext))]
-    partial class ArtfulAdventuresDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230713161137_db-fix")]
+    partial class dbfix
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -120,7 +122,7 @@ namespace ArtfulAdventures.Data.Migrations
 
                     b.HasIndex("PictureId");
 
-                    b.ToTable("Collection", (string)null);
+                    b.ToTable("Collection");
                 });
 
             modelBuilder.Entity("ArtfulAdventures.Data.Models.ApplicationUserPicture", b =>
@@ -135,7 +137,7 @@ namespace ArtfulAdventures.Data.Migrations
 
                     b.HasIndex("PictureId");
 
-                    b.ToTable("Portfolio", (string)null);
+                    b.ToTable("Portfolio");
                 });
 
             modelBuilder.Entity("ArtfulAdventures.Data.Models.ApplicationUserSkill", b =>
@@ -150,7 +152,7 @@ namespace ArtfulAdventures.Data.Migrations
 
                     b.HasIndex("SkillId");
 
-                    b.ToTable("ApplicationUsersSkills", (string)null);
+                    b.ToTable("ApplicationUsersSkills");
                 });
 
             modelBuilder.Entity("ArtfulAdventures.Data.Models.Blog", b =>
@@ -186,7 +188,7 @@ namespace ArtfulAdventures.Data.Migrations
 
                     b.HasIndex("AuthorId");
 
-                    b.ToTable("Blogs", (string)null);
+                    b.ToTable("Blogs");
                 });
 
             modelBuilder.Entity("ArtfulAdventures.Data.Models.Challenge", b =>
@@ -225,7 +227,7 @@ namespace ArtfulAdventures.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Challenges", (string)null);
+                    b.ToTable("Challenges");
                 });
 
             modelBuilder.Entity("ArtfulAdventures.Data.Models.Comment", b =>
@@ -261,7 +263,7 @@ namespace ArtfulAdventures.Data.Migrations
 
                     b.HasIndex("PictureId");
 
-                    b.ToTable("Comments", (string)null);
+                    b.ToTable("Comments");
                 });
 
             modelBuilder.Entity("ArtfulAdventures.Data.Models.FollowerFollowing", b =>
@@ -276,7 +278,7 @@ namespace ArtfulAdventures.Data.Migrations
 
                     b.HasIndex("FollowedId");
 
-                    b.ToTable("Follows", (string)null);
+                    b.ToTable("Follows");
                 });
 
             modelBuilder.Entity("ArtfulAdventures.Data.Models.HashTag", b =>
@@ -293,7 +295,7 @@ namespace ArtfulAdventures.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("HashTags", (string)null);
+                    b.ToTable("HashTags");
 
                     b.HasData(
                         new
@@ -522,7 +524,7 @@ namespace ArtfulAdventures.Data.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Pictures", (string)null);
+                    b.ToTable("Pictures");
                 });
 
             modelBuilder.Entity("ArtfulAdventures.Data.Models.PictureHashTag", b =>
@@ -537,7 +539,7 @@ namespace ArtfulAdventures.Data.Migrations
 
                     b.HasIndex("TagId");
 
-                    b.ToTable("PicturesHashTags", (string)null);
+                    b.ToTable("PicturesHashTags");
                 });
 
             modelBuilder.Entity("ArtfulAdventures.Data.Models.Skill", b =>
@@ -554,7 +556,7 @@ namespace ArtfulAdventures.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Skills", (string)null);
+                    b.ToTable("Skills");
 
                     b.HasData(
                         new

@@ -22,10 +22,15 @@ public class Comment
     [DisplayFormat(DataFormatString = DateFormat)]
     public DateTime CreatedOn { get; set; }
 
-    [Required]
+    
     [ForeignKey(nameof(Blog))]
-    public Guid BlogId { get; set; }
+    public Guid? BlogId { get; set; }
 
-    public Blog Blog { get; set; } = null!;
+    public Blog? Blog { get; set; }
+
+    [ForeignKey(nameof(Picture))]
+    public Guid? PictureId { get; set; }
+
+    public Picture? Picture { get; set; }
 }
 

@@ -11,7 +11,8 @@ public class Picture
     {
         this.Id = Guid.NewGuid();
         PicturesHashTags = new HashSet<PictureHashTag>();
-        ApplicationUsersPictures = new HashSet<ApplicationUserPicture>();
+        Portfolio = new HashSet<ApplicationUserPicture>();
+        Collection = new HashSet<ApplicationUserCollection>();
     }
 
     [Key]
@@ -46,6 +47,8 @@ public class Picture
 
     public ICollection<PictureHashTag> PicturesHashTags { get; set; }
 
-    public ICollection<ApplicationUserPicture> ApplicationUsersPictures { get; set; }
+    public ICollection<ApplicationUserPicture> Portfolio { get; set; }
+
+    public ICollection<ApplicationUserCollection> Collection { get; set; }
 }
 

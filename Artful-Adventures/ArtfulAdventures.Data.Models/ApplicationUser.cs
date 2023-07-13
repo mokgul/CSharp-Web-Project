@@ -13,7 +13,7 @@ public class ApplicationUser : IdentityUser<Guid>
     {
         this.Id = Guid.NewGuid();
         ApplicationUsersSkills = new HashSet<ApplicationUserSkill>();
-        ApplicationUsersPictures = new HashSet<ApplicationUserPicture>();
+        Portfolio = new HashSet<ApplicationUserPicture>();
     }
 
     [MaxLength(UrlMaxLength)]
@@ -32,7 +32,7 @@ public class ApplicationUser : IdentityUser<Guid>
     [MaxLength(AboutMaxLength)]
     public string? About { get; set; }
 
-    public ICollection<Picture> Portfolio { get; set; } = new HashSet<Picture>();
+    //public ICollection<Picture> Portfolio { get; set; } = new HashSet<Picture>();
 
     public ICollection<Blog> Blogs { get; set; } = new HashSet<Blog>();
 
@@ -42,7 +42,9 @@ public class ApplicationUser : IdentityUser<Guid>
 
     public ICollection<ApplicationUserSkill> ApplicationUsersSkills { get; set; }
 
-    public ICollection<ApplicationUserPicture> ApplicationUsersPictures { get; set; }
+    public ICollection<ApplicationUserPicture> Portfolio { get; set; }
+
+    public ICollection<ApplicationUserCollection> Collection { get; set; }
 
 
     //Collection And Skills are stored in Mapping Tables

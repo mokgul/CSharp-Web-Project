@@ -32,21 +32,22 @@ public class ArtfulAdventuresDbContext : IdentityDbContext<ApplicationUser, Iden
 
     public DbSet<ApplicationUserSkill> ApplicationUsersSkills { get; set; } = null!;
 
-    public DbSet<ApplicationUserPicture> ApplicationUsersPictures { get; set; } = null!;
+    public DbSet<ApplicationUserPicture> Portfolio { get; set; } = null!;
+
+    public DbSet<ApplicationUserCollection> Collection { get; set; } = null!;
 
     public DbSet<FollowerFollowing> Follows { get; set; } = null!;
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
         var mappingConfigurer = new MappingTablesConfiguration();
-        var oneToManyConfigurer = new OneToManyConfiguration();
+       
         var enumSeedConfigurer = new EnumsSeedingConfiguration();
 
         builder.ApplyConfiguration<PictureHashTag>(mappingConfigurer);
         builder.ApplyConfiguration<ApplicationUserSkill>(mappingConfigurer);
         builder.ApplyConfiguration<ApplicationUserPicture>(mappingConfigurer);
-
-        builder.ApplyConfiguration<ApplicationUser>(oneToManyConfigurer);
+        builder.ApplyConfiguration<ApplicationUserCollection>(mappingConfigurer);
         
         builder.ApplyConfiguration<HashTag>(enumSeedConfigurer);
         builder.ApplyConfiguration<Skill>(enumSeedConfigurer);

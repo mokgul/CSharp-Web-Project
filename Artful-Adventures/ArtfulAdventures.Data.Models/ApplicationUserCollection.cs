@@ -2,9 +2,9 @@
 using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
 
-public class ApplicationUserPicture
+public class ApplicationUserCollection
 {
-    //Mapping table for portfolio property of ApplicationUser
+    //Mapping table for Collection property of ApplicationUser
     [Required]
     [ForeignKey(nameof(User))]
     public Guid UserId { get; set; }

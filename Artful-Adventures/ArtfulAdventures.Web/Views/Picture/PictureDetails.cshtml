@@ -1,0 +1,41 @@
+﻿@model ArtfulAdventures.Web.ViewModels.Picture.PictureDetailsViewModel
+
+<h1>@Model.Description</h1>
+
+<img src="~/images/@Model.Url" alt="picture">
+
+<p>Owner: @Model.Owner</p>
+
+@if (Model.OwnerPictureUrl != null)
+{
+    <img src="~/images/@Model.OwnerPictureUrl" alt="Owner picture">
+}
+
+<p>Likes: @Model.Likes</p>
+
+@if (Model.HashTags != null)
+{
+    <p>Hash tags:</p>
+    <ul>
+        @foreach (var hashTag in Model.HashTags)
+        {
+            <li>@hashTag.Name</li>
+        }
+    </ul>
+}
+
+@if (Model.Comments != null)
+{
+    <p>Comments:</p>
+    <ul>
+        @foreach (var comment in Model.Comments)
+        {
+            <div>
+                <p>@comment.Content</p>
+                <p>Author: @comment.Author</p>
+
+                <p>Created on: @comment.CreatedOn</p>
+            </div>
+        }
+    </ul>
+}

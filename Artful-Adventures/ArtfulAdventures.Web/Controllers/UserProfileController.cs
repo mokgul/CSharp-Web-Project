@@ -26,7 +26,7 @@
             var user = await _data.Users
                 .Include(m => m.Followers)
                 .Include(s => s.Following)
-                .Include(p => p.ApplicationUsersPictures)
+                .Include(p => p.Portfolio)
                 .Include(s => s.ApplicationUsersSkills)
                 .FirstOrDefaultAsync(u => u.UserName == username);
             if (user == null)
@@ -46,7 +46,7 @@
                 Name = _data.Skills.FirstOrDefault(s => s.Id == sa.SkillId)!.Type,
             }).ToList();
 
-            ICollection<PictureVisualizeViewModel> pictures = user!.ApplicationUsersPictures.Select(p => new PictureVisualizeViewModel()
+            ICollection<PictureVisualizeViewModel> pictures = user!.Portfolio.Select(p => new PictureVisualizeViewModel()
             {
                 PictureUrl = Path.GetFileName(_data.Pictures.FirstOrDefault(i => i.Id == p.PictureId)!.Url),
             }).ToList();
@@ -174,16 +174,16 @@
             var user = await _data.Users
                 .Include(m => m.Followers)
                 .Include(s => s.Following)
-                .Include(p => p.ApplicationUsersPictures)
+                .Include(p => p.Portfolio)
                 .Include(s => s.ApplicationUsersSkills)
                 .FirstOrDefaultAsync(u => u.UserName == username);
-            if (user.ApplicationUsersPictures.Count == 0)
+            if (user.Portfolio.Count == 0)
             {
                 TempData["Message"] = "No portfolio yet.";
                 return RedirectToAction("Profile", new { username = username });
             }
 
-            var pictures = user!.ApplicationUsersPictures.Select(p => new PictureVisualizeViewModel()
+            var pictures = user!.Portfolio.Select(p => new PictureVisualizeViewModel()
             {
                 PictureUrl = Path.GetFileName(_data.Pictures.FirstOrDefault(i => i.Id == p.PictureId)!.Url),
             }).ToList();

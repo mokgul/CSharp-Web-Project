@@ -51,13 +51,6 @@
                 }
                 if (!ModelState.IsValid)
                 {
-                    //foreach (var modelState in ModelState.Values)
-                    //{
-                    //    foreach (var error in modelState.Errors)
-                    //    {
-                    //        messages.Add(error.ErrorMessage);
-                    //    }
-                    //}
                     return View(model);
                 }
                 await _pictureService.UploadPictureAsync(model, userId, path);
@@ -68,6 +61,14 @@
             }
             TempData["Success"] = "Your picture was uploaded successfully!";
             return RedirectToAction("Upload", "Picture");
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> PictureDetails(string id)
+        {
+            var picture = await _pictureService.GetPictureDetailsAsync(id);
+
+            return View(picture);
         }
 
 

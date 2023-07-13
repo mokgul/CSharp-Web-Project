@@ -4,8 +4,11 @@ using ArtfulAdventures.Web.ViewModels.Picture;
 
 public interface IPictureService
 {
-    public Task<PictureAddFormModel> GetPictureAddFormModelAsync();
+    Task<PictureAddFormModel> GetPictureAddFormModelAsync();
+
     Task UploadPictureAsync(PictureAddFormModel model, string id, string path);
+
+    Task <PictureDetailsViewModel> GetPictureDetailsAsync(string id);
 
 }
 
