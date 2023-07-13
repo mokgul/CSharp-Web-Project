@@ -28,12 +28,7 @@
                             <div style="display: flex; flex-wrap: wrap;">
                                 @foreach (var picture in Model.Pictures)
                                 {
-                                    <div style="flex-basis: 20%; padding: 5px; max-height: 100%;">
-                                        <div style="width: 200px; height: 200px; overflow: hidden;">
-                                            <img src="~/images/@picture.PictureUrl" alt=" "
-                                                 class="block" style="width: 100%; height: 100%; object-fit: cover; border: 1px solid black">
-                                        </div>
-                                    </div>
+                                    @await Html.PartialAsync("_PictureDisplayPartial", picture)
                                 }
                             </div>
                         }

@@ -48,8 +48,11 @@
 
             ICollection<PictureVisualizeViewModel> pictures = user!.Portfolio.Select(p => new PictureVisualizeViewModel()
             {
+                Id = p.PictureId.ToString(),
                 PictureUrl = Path.GetFileName(_data.Pictures.FirstOrDefault(i => i.Id == p.PictureId)!.Url),
             }).ToList();
+            //when i move this to the service i need to uncomment the line below
+            //pictures = await FilterBrokenUrls.FilterAsync(pictures);
 
             var model = new ProfileViewModel()
             {
@@ -185,9 +188,11 @@
 
             var pictures = user!.Portfolio.Select(p => new PictureVisualizeViewModel()
             {
+                Id = p.PictureId.ToString(),
                 PictureUrl = Path.GetFileName(_data.Pictures.FirstOrDefault(i => i.Id == p.PictureId)!.Url),
             }).ToList();
-
+            //when i move this to the service i need to uncomment the line below
+            //pictures = await FilterBrokenUrls.FilterAsync(pictures);
             var model = new PortfolioViewModel()
             {
                 Pictures = pictures,

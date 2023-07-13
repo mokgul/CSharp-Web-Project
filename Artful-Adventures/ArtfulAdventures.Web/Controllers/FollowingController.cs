@@ -38,24 +38,17 @@
             var usersFollowed = user.Following.Select(p => p.FollowedId).ToList();
             var pictures = await _data.Pictures.Where(p => usersFollowed.Contains(p.Owner.Id)).Select(p => new PictureVisualizeViewModel()
             {
-                PictureUrl = p.Url,
+                Id = p.Id.ToString(),
+                PictureUrl = Path.GetFileName(p.Url),
             }).ToArrayAsync();
-            var ftpRemotePaths = new List<string>();
-            foreach (var url in pictures)
-            {
-                var path = Path.GetFileName(url.PictureUrl);
-                if (!ftpRemotePaths.Contains(path))
-                    ftpRemotePaths.Add(path);
-            }
+            
             ExploreViewModel model = new ExploreViewModel()
             {
                 HashTags = hashtags,
-                PicturesIds = ftpRemotePaths.ToArray().Select(p => new PictureVisualizeViewModel()
-                {
-                    PictureUrl = p
-                }).ToArray(),
+                PicturesIds = pictures
             };
-
+            //when i move this to the service i need to uncomment the line below
+            //model.PicturesIds = await FilterBrokenUrls.FilterAsync(model.PicturesIds);
             return View(model);
 
         }

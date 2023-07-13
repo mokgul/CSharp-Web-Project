@@ -13,6 +13,7 @@ using ArtfulAdventures.Web.ViewModels.Picture;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
 
 public class ExploreService : IExploreService
 {
@@ -22,6 +23,8 @@ public class ExploreService : IExploreService
     {
         _data = data;
     }
+
+
     public async Task<ExploreViewModel> GetExploreViewModelAsync()
     {
         var hashtags = await _data.HashTags.Select(h => new HashTagViewModel()
@@ -29,27 +32,18 @@ public class ExploreService : IExploreService
             Id = h.Id,
             Name = h.Type
         }).ToListAsync();
-
-        var urls = await _data.Pictures.Select(p => new PictureVisualizeViewModel()
+        var pictures = await _data.Pictures.Select(p => new PictureVisualizeViewModel()
         {
-            PictureUrl = p.Url,
+            Id = p.Id.ToString(),
+            PictureUrl = Path.GetFileName(p.Url),
         }).ToArrayAsync();
 
-        var ftpRemotePaths = new List<string>();
-        foreach (var url in urls)
-        {
-            var path = Path.GetFileName(url.PictureUrl);
-            if (!ftpRemotePaths.Contains(path))
-                ftpRemotePaths.Add(path);
-        }
         ExploreViewModel model = new ExploreViewModel()
         {
             HashTags = hashtags,
-            PicturesIds = ftpRemotePaths.ToArray().Select(p => new PictureVisualizeViewModel()
-            {
-                PictureUrl = p
-            }).ToArray(),
+            PicturesIds = pictures
         };
+        model.PicturesIds = await FilterBrokenUrls.FilterAsync(model.PicturesIds);
         return model;
     }
 }
