@@ -32,7 +32,7 @@ public class Program
 
         var app = builder.Build();
 
-        DownloadFromFtpServer.DownloadData();
+        SyncData.ExecuteAsync();
 
         // Configure the HTTP request pipeline.
         if (app.Environment.IsDevelopment())
@@ -59,6 +59,8 @@ public class Program
             pattern: "{controller=Home}/{action=Index}/{id?}");
         app.MapRazorPages();
 
+        
         app.Run();
+
     }
 }

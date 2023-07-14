@@ -4,7 +4,7 @@ using ArtfulAdventures.Web.ViewModels.Picture;
 
 public static class FilterBrokenUrls
 {
-    public static async Task<ICollection<PictureVisualizeViewModel>> FilterAsync(ICollection<PictureVisualizeViewModel> pictures)
+    public static List<PictureVisualizeViewModel> FilterAsync(List<PictureVisualizeViewModel> pictures)
     {
         string[] files = Directory.GetFiles(@"wwwroot\images");
         files = files.Select(x => Path.GetFileName(x)).ToArray();

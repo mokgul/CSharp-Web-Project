@@ -11,6 +11,9 @@
     using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Mvc;
+    using System.Diagnostics;
+    using FluentFTP;
+    using static ArtfulAdventures.Common.GeneralApplicationConstants;
 
     public class ExploreController : Controller
     {
@@ -22,16 +25,20 @@
         }
 
         [HttpGet]
-        public async Task<IActionResult> All()
+        public async Task<IActionResult> All(int page)
         {
+
+            //await DownloadFromFtpServer.DownloadData();
             
-            await DownloadFromFtpServer.DownloadData();
-            ExploreViewModel model = await  _exploreService.GetExploreViewModelAsync();
+            ExploreViewModel model = await _exploreService.GetExploreViewModelAsync(page);
+
+            ViewBag.CurrentPage = page;
+
 
             return View(model);
 
         }
-        
+
     }
 }
 

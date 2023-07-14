@@ -2,41 +2,18 @@
 @using Microsoft.AspNetCore.Http
 <link rel="stylesheet" href="https://cdn.rawgit.com/bantikyan/icheck-bootstrap/master/icheck-bootstrap.min.css">
 @{
+    int currentPage = ViewBag.CurrentPage ?? 1;
+    int previousPage = currentPage > 1 ? currentPage - 1 : 1;
+    int nextPage = currentPage + 1;
+}
+@if (currentPage > 1)
+{
+    <a asp-action="All" asp-route-page="@previousPage">Previous</a>
+}
+<a asp-action="All" asp-route-page="@nextPage">Next</a>
+@{
     ViewBag.Title = "Explore";
 
-    <h2 class="text-center">@ViewBag.Title</h2>
-
-
-
-    //<section class="row col-md-2" style="display: inline-block;">
-
-    //    <form asp-formethod="post">
-    //        <div class="text-left">
-    //            @for (int i = 0; i < Model.HashTags.Count(); i++)
-    //            {
-    //                <div class="btn-sm btn-info checkbox icheck-turquoise form-check-inline ">
-    //                    @Html.HiddenFor(m => m.HashTags[i].Id)
-    //                    @Html.CheckBoxFor(m => m.HashTags[i].IsSelected, new { style = "margin-left: 10px;"})
-    //                    @Html.LabelFor(m => m.HashTags[i].IsSelected,
-    //            string.Join(" ", Model.HashTags[i].Name.Split('_')),
-    //            new { @class = "pl-0 align-items-center", style = "padding-left: 0!important;" })
-    //                </div>
-    //                <style>
-    //                    input[type=checkbox]:checked {
-    //                        accent-color: black;
-    //                    }
-    //                </style>
-    //            }
-    //        </div>
-    //    </form>
-    //</section>
-    //<section class="image-container" style="display: inline-block; width:80%">
-    //    @foreach (var image in Model.PicturesIds)
-    //    {
-    //        <img class="block" id="@image.PictureUrl" src="~/images/@image.PictureUrl" alt="" style="width:20%; height:auto;" />
-
-    //    }
-    //</section>
 
     <div class="container">
         <div class="top-section" style="border: 1px solid black;">

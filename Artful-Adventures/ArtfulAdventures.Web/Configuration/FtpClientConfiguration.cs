@@ -14,8 +14,8 @@
             client.Credentials = new NetworkCredential(ftpUserName, ftpPassword);
             client.Host = ftpServerUrl;
             client.Port = ftpPort;
-            client.Config.TransferChunkSize = 4000000;
-            client.Config.LocalFileBufferSize = 4000000;
+            client.Config.TransferChunkSize = 8000000;
+            client.Config.LocalFileBufferSize = 8000000;
             client.Config.EncryptionMode = FtpEncryptionMode.Explicit;
             client.ValidateCertificate += new FtpSslValidation(OnValidateCertificate);
 

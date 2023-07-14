@@ -4,6 +4,6 @@ using ArtfulAdventures.Web.ViewModels;
 
 public interface IExploreService
 {
-    Task<ExploreViewModel> GetExploreViewModelAsync();
+    Task<ExploreViewModel> GetExploreViewModelAsync(int page);
 }
 

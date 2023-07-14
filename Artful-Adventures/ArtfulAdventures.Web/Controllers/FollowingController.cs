@@ -24,9 +24,11 @@
             return View();
         }
         [HttpGet]
-        public async Task<IActionResult> All()
+        public async Task<IActionResult> All(int page)
         {
-            await DownloadFromFtpServer.DownloadData();
+            //await DownloadFromFtpServer.DownloadData();
+            int pageSize = 20;
+            int skip = (page - 1) * pageSize;
             var user = await _data.Users.Include(f => f.Following).FirstOrDefaultAsync(u => u.UserName == User.Identity.Name);
 
             var hashtags = await _data.HashTags.Select(h => new HashTagViewModel()
@@ -40,17 +42,27 @@
             {
                 Id = p.Id.ToString(),
                 PictureUrl = Path.GetFileName(p.Url),
-            }).ToArrayAsync();
+            }).ToListAsync();
             
+            //when i move this to the service i need to uncomment the line below
+            //pictures = FilterBrokenUrls.FilterAsync(pictures);
+
             ExploreViewModel model = new ExploreViewModel()
             {
                 HashTags = hashtags,
-                PicturesIds = pictures
+                PicturesIds = pictures.Skip(skip).Take(pageSize).ToList()
             };
-            //when i move this to the service i need to uncomment the line below
-            //model.PicturesIds = await FilterBrokenUrls.FilterAsync(model.PicturesIds);
+            ViewBag.CurrentPage = page;
             return View(model);
 
+        }
+
+        private async IAsyncEnumerable<PictureVisualizeViewModel> GetPicturesAsync(List<PictureVisualizeViewModel> pictures)
+        {
+            foreach (var picture in pictures)
+            {
+                yield return picture;
+            }
         }
     }
 }

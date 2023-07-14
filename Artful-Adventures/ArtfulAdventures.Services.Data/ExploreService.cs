@@ -25,26 +25,32 @@ public class ExploreService : IExploreService
     }
 
 
-    public async Task<ExploreViewModel> GetExploreViewModelAsync()
+    public async Task<ExploreViewModel> GetExploreViewModelAsync(int page = 1)
     {
+        int pageSize = 20;
+        int skip = (page - 1) * pageSize;
         var hashtags = await _data.HashTags.Select(h => new HashTagViewModel()
         {
             Id = h.Id,
             Name = h.Type
         }).ToListAsync();
+
         var pictures = await _data.Pictures.Select(p => new PictureVisualizeViewModel()
         {
             Id = p.Id.ToString(),
-            PictureUrl = Path.GetFileName(p.Url),
-        }).ToArrayAsync();
+            PictureUrl = Path.GetFileName(p.Url)
+        }).ToListAsync();
+        
+        pictures = FilterBrokenUrls.FilterAsync(pictures);
 
         ExploreViewModel model = new ExploreViewModel()
         {
             HashTags = hashtags,
-            PicturesIds = pictures
+            PicturesIds = pictures.Skip(skip).Take(pageSize).ToList()
         };
-        model.PicturesIds = await FilterBrokenUrls.FilterAsync(model.PicturesIds);
+
         return model;
     }
+
 }
 

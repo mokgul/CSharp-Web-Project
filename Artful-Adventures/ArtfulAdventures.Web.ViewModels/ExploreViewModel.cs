@@ -7,7 +7,9 @@ using System.Drawing;
 
 public class ExploreViewModel
 {
-    public ICollection<PictureVisualizeViewModel> PicturesIds { get; set; } = new HashSet<PictureVisualizeViewModel>();
+
+    public ICollection<PictureVisualizeViewModel> PicturesIds { get; set; }
+
     public List<HashTagViewModel> HashTags { get; set; } = new List<HashTagViewModel>();
 }
 

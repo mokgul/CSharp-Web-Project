@@ -2,6 +2,17 @@
 @using Microsoft.AspNetCore.Http
 <link rel="stylesheet" href="https://cdn.rawgit.com/bantikyan/icheck-bootstrap/master/icheck-bootstrap.min.css">
 @{
+    int currentPage = ViewBag.CurrentPage ?? 1;
+    int previousPage = currentPage > 1 ? currentPage - 1 : 1;
+    int nextPage = currentPage + 1;
+}
+@if (currentPage > 1)
+{
+    <a asp-action="All" asp-route-page="@previousPage">Previous</a>
+}
+<a asp-action="All" asp-route-page="@nextPage">Next</a>
+
+@{
     ViewBag.Title = "Artwork - Followed";
 
     <h2 class="text-center">@ViewBag.Title</h2>
