@@ -89,8 +89,11 @@ public class PictureService : IPictureService
     {
         var picture = await _data.Pictures
             .Include(p => p.PicturesHashTags)
-            .Include(p => p.Portfolio)
+            .Include(p => p.Comments)
             .Include(p => p.Owner)
+            .Include(p => p.Owner.Followers)
+            .Include(p => p.Owner.Following)
+            .Include(p => p.Owner.Portfolio)
             .FirstOrDefaultAsync(p => p.Id.ToString() == id);
 
         var hashtags = picture.PicturesHashTags.Select(h => new HashTagViewModel()
@@ -113,6 +116,9 @@ public class PictureService : IPictureService
             Url = Path.GetFileName(picture.Url),
             Owner = picture.Owner.UserName,
             OwnerPictureUrl = Path.GetFileName(picture.Owner.Url),
+            OwnerPicturesCount = picture.Owner.Portfolio.Count,
+            OwnerFollowersCount = picture.Owner.Followers.Count,
+            OwnerFollowingCount = picture.Owner.Following.Count,
             Likes = picture.Likes,
             Description = picture.Description,
             HashTags = hashtags,

@@ -3,19 +3,13 @@
     using System;
     using System.Drawing;
     using System.IO;
-    using System.Net;
     using System.Security.Claims;
 
     using ArtfulAdventures.Services.Data.Interfaces;
     using ArtfulAdventures.Web.Configuration;
     using ArtfulAdventures.Web.ViewModels.Picture;
 
-    using FluentFTP;
-    using FluentFTP.Client.BaseClient;
-
     using Microsoft.AspNetCore.Mvc;
-    using Microsoft.AspNetCore.Mvc.ModelBinding;
-    using Microsoft.AspNetCore.Mvc.RazorPages;
 
     using static ArtfulAdventures.Common.GeneralApplicationConstants;
 
@@ -41,7 +35,6 @@
         public async Task<ActionResult> Upload(PictureAddFormModel model)
         {
             string userId = GetUserId();
-            var messages = new List<string>();
             try
             {
                 var path = await UploadFile();
