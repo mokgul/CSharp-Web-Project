@@ -4,6 +4,8 @@
 
     using ArtfulAdventures.Data;
     using ArtfulAdventures.Data.Models;
+    using ArtfulAdventures.Services.Data;
+    using ArtfulAdventures.Services.Data.Interfaces;
     using ArtfulAdventures.Web.ViewModels.Picture;
     using ArtfulAdventures.Web.ViewModels.Skill;
     using ArtfulAdventures.Web.ViewModels.UserProfile;
@@ -13,60 +15,21 @@
 
     public class UserProfileController : Controller
     {
-        private readonly ArtfulAdventuresDbContext _data;
+        private readonly IProfileService _profileService;
 
-        public UserProfileController(ArtfulAdventuresDbContext data)
+        public UserProfileController(IProfileService service)
         {
-            _data = data;
+            _profileService = service;
         }
 
         [HttpGet]
         public async Task<IActionResult> Profile(string username)
         {
-            var user = await _data.Users
-                .Include(m => m.Followers)
-                .Include(s => s.Following)
-                .Include(p => p.Portfolio)
-                .Include(s => s.ApplicationUsersSkills)
-                .FirstOrDefaultAsync(u => u.UserName == username);
-            if (user == null)
+            var model = _profileService.GetProfileViewModelAsync(username);
+            if (model == null)
             {
                 return RedirectToAction("NonExistingProfile");
-            };
-
-            var visitor = await _data.Users.Include(m => m.Followers).Include(s => s.Following).FirstOrDefaultAsync(u => u.Id.ToString() == GetUserId());
-            var followed = false;
-            if(user.Id != visitor!.Id) 
-            {
-                followed = visitor.Following.Any(f => f.FollowedId == user.Id);
-             }
-            ICollection<SkillViewModel> skills = user!.ApplicationUsersSkills.Select(sa => new SkillViewModel()
-            {
-                Id = sa.SkillId,
-                Name = _data.Skills.FirstOrDefault(s => s.Id == sa.SkillId)!.Type,
-            }).ToList();
-
-            ICollection<PictureVisualizeViewModel> pictures = user!.Portfolio.Select(p => new PictureVisualizeViewModel()
-            {
-                Id = p.PictureId.ToString(),
-                PictureUrl = Path.GetFileName(_data.Pictures.FirstOrDefault(i => i.Id == p.PictureId)!.Url),
-            }).ToList();
-            //when i move this to the service i need to uncomment the line below
-            //pictures = await FilterBrokenUrls.FilterAsync(pictures);
-
-            var model = new ProfileViewModel()
-            {
-                Username = user.UserName,
-                Email = user.Email,
-                ProfilePictureUrl = user.Url,
-                Name = user.Name,
-                Bio = user.Bio,
-                About = user.About,
-                CityName = user.CityName,
-                Skills = skills,
-                Pictures = pictures,
-                isFollowed = followed,
-            };
+            }
             return View(model);
         }
 
@@ -80,7 +43,7 @@
         {
             var userVisited = await _data.Users.Include(m => m.Followers).Include(s => s.Following).FirstOrDefaultAsync(u => u.UserName == username);
             var userVisitor = await _data.Users.Include(m => m.Followers).Include(s => s.Following).FirstOrDefaultAsync(u => u.Id.ToString() == GetUserId());
-            if(userVisited!.Id == userVisitor!.Id)
+            if (userVisited!.Id == userVisitor!.Id)
             {
                 TempData["Message"] = "You cannot follow yourself.";
                 return RedirectToAction("Profile", new { username = username });
@@ -92,7 +55,7 @@
                 Followed = userVisited,
                 FollowedId = userVisited!.Id,
             };
-            if (!userVisited!.Followers.Any(f => f.FollowerId == userVisitor!.Id) 
+            if (!userVisited!.Followers.Any(f => f.FollowerId == userVisitor!.Id)
                 && !userVisitor!.Following.Any(f => f.FollowedId == userVisited!.Id))
             {
                 userVisited!.Followers.Add(userFollow);
@@ -107,8 +70,8 @@
         {
             var userVisited = await _data.Users.Include(m => m.Followers).Include(s => s.Following).FirstOrDefaultAsync(u => u.UserName == username);
             var userVisitor = await _data.Users.Include(m => m.Followers).Include(s => s.Following).FirstOrDefaultAsync(u => u.Id.ToString() == GetUserId());
-            
-            
+
+
             if (userVisited!.Followers.Any(f => f.FollowerId == userVisitor!.Id)
                 && userVisitor!.Following.Any(f => f.FollowedId == userVisited!.Id))
             {
@@ -117,16 +80,16 @@
                 userVisitor!.Following.Remove(userFollow!);
                 await _data.SaveChangesAsync();
             };
-            
+
             return RedirectToAction("Profile", new { username = username });
         }
 
         [HttpGet]
         public async Task<IActionResult> Followers(string username)
         {
-            
+
             var user = await _data.Users.Include(m => m.Followers).Include(m => m.Following).FirstOrDefaultAsync(u => u.UserName == username);
-            if(user.Followers.Count == 0)
+            if (user.Followers.Count == 0)
             {
                 TempData["Message"] = "No followers yet.";
                 return RedirectToAction("Profile", new { username = username });
@@ -201,9 +164,6 @@
             return View(model);
         }
 
-        private string GetUserId()
-        {
-            return this.User.FindFirst(ClaimTypes.NameIdentifier)!.Value;
-        }
+
     }
 }

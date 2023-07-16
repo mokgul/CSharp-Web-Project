@@ -11,6 +11,8 @@ public class PictureDetailsViewModel
 
     public string Owner { get; set; } = null!;
 
+    public string? OwnerLevel { get; set; } = null!;
+
     public string? OwnerPictureUrl { get; set; }
 
     public int OwnerPicturesCount { get; set; }

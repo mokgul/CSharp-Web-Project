@@ -1,5 +1,6 @@
 ﻿namespace ArtfulAdventures.Services.Data;
 
+using System.Diagnostics;
 using System.IO;
 using System.Security.Claims;
 using System.Threading.Tasks;
@@ -87,14 +88,19 @@ public class PictureService : IPictureService
 
     public async Task<PictureDetailsViewModel> GetPictureDetailsAsync(string id)
     {
+        //Get picture with comments and hashtags
         var picture = await _data.Pictures
             .Include(p => p.PicturesHashTags)
             .Include(p => p.Comments)
-            .Include(p => p.Owner)
-            .Include(p => p.Owner.Followers)
-            .Include(p => p.Owner.Following)
-            .Include(p => p.Owner.Portfolio)
             .FirstOrDefaultAsync(p => p.Id.ToString() == id);
+
+        //Get picture owner with followers and following
+        //Since the picture object has a foreign key relationship with the User table (through the UserId property), Entity Framework Core will automatically populate the Owner property of the picture
+        var owner = await _data.Users
+            .Include(p => p.Followers)
+            .Include(p => p.Following)
+            .Include(p => p.Portfolio)
+            .FirstOrDefaultAsync(u => u.Id == picture.UserId);
 
         var hashtags = picture.PicturesHashTags.Select(h => new HashTagViewModel()
         {
@@ -116,6 +122,7 @@ public class PictureService : IPictureService
             Url = Path.GetFileName(picture.Url),
             Owner = picture.Owner.UserName,
             OwnerPictureUrl = Path.GetFileName(picture.Owner.Url),
+            OwnerLevel = "Artist",
             OwnerPicturesCount = picture.Owner.Portfolio.Count,
             OwnerFollowersCount = picture.Owner.Followers.Count,
             OwnerFollowingCount = picture.Owner.Following.Count,

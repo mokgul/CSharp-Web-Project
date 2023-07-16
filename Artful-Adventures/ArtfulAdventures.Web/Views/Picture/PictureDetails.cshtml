@@ -4,8 +4,6 @@
 
 <img src="~/images/@Model.Url" alt="picture">
 
-<p>Owner: @Model.Owner</p>
-
 <p>Likes: @Model.Likes</p>
 
 @if (Model.HashTags != null)
@@ -36,54 +34,56 @@
 }
 
 <section class="profile-view">
-        <div class="d-flex justify-content-center align-items-center">
-            <div class="col col-md-9 col-lg-7 col-xl-5">
-                <div class="card" style="border-radius: 15px;">
-                    <div class="card-body p-4">
-                        <div class="d-flex text-black">
-                            <div class="flex-shrink-0">
+    <div class="d-flex justify-content-center align-items-center">
+        <div class="col col-md-9 col-lg-7 col-xl-5">
+            <div class="card" style="border-radius: 15px;">
+                <div class="card-body p-2">
+                    <div class="d-flex text-black">
+                        <div class="flex-shrink-0">
                             @if (Model.OwnerPictureUrl != null)
                             {
                                 <img src="~/images/@Model.OwnerPictureUrl" alt="image"
-                                class="img-fluid" style="width: 180px; border-radius: 10px;"
-                                >
+                                     class="img-fluid" style="width: 180px; border-radius: 10px;">
 
-                            }else
+                            }
+                            else
                             {
                                 <img src="~/images/default-user.png" alt="image"
-                                class="img-fluid" style="width: 180px; border-radius: 10px;"
-                                >
+                                     class="img-fluid" style="width: 180px; border-radius: 10px;">
                             }
                         </div>
-                            <div class="flex-grow-1 ms-3">
-                                <h5 class="mb-1">@Model.Owner</h5>
-                                <div class="d-flex justify-content-start rounded-3 p-2 mb-2"
-                                     style="background-color: #efefef;">
-                                    <div>
-                                        <p class="small text-muted mb-1">Followers</p>
-                                        <p class="mb-0">@Model.OwnerFollowersCount</p>
-                                    </div>
-                                    <div class="px-3">
-                                        <p class="small text-muted mb-1">Following</p>
-                                        <p class="mb-0">@Model.OwnerFollowingCount</p>
-                                    </div>
-                                    <div>
-                                        <p class="small text-muted mb-1">Uploads</p>
-                                        <p class="mb-0">@Model.OwnerPicturesCount</p>
-                                    </div>
+                        <div class="flex-grow-1 ms-3">
+                            <h5 class="mb-1">@Model.Owner</h5>
+                            <p class="mb-2 pb-1" style="color: #2b2a2a;">@Model.OwnerLevel</p>
+                            <div class="d-flex justify-content-start rounded-3 p-2 mb-2"
+                                 style="background-color: #efefef;">
+                                <div>
+                                    <p class="small text-muted mb-1">Followers</p>
+                                    <p class="mb-0">@Model.OwnerFollowersCount</p>
                                 </div>
-                                <div class="d-flex pt-1">
+                                <div class="px-3">
+                                    <p class="small text-muted mb-1">Following</p>
+                                    <p class="mb-0">@Model.OwnerFollowingCount</p>
+                                </div>
+                                <div>
+                                    <p class="small text-muted mb-1">Uploads</p>
+                                    <p class="mb-0">@Model.OwnerPicturesCount</p>
+                                </div>
+                            </div>
+                            <div class="d-flex pt-4">
                                 <form method="get" asp-area="" asp-controller="UserProfile" asp-action="Profile" asp-route-username="@Model.Owner">
                                     <input type="hidden" name="username" value="@Model.Owner" />
-                                    <button type="submit" class="btn btn-primary" style=" border-color:rgb(218, 203, 246)">
+                                    <button type="submit" class="btn btn-outline-primary me-1 flex-grow-1">
                                         Profile
                                     </button>
                                 </form>
-                                    <button type="button" class="btn btn-outline-primary me-1 flex-grow-1">Chat</button>
+                                <button type="button" class="btn btn-outline-primary me-1 flex-grow-1">Chat</button>
+                                <button type="button" class="btn btn-outline-primary me-1 flex-grow-1">Like</button>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
+    </div>
 </section>
