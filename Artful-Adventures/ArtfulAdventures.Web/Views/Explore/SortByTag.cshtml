@@ -8,9 +8,9 @@
 }
 @if (currentPage > 1)
 {
-    <a asp-action="All" asp-route-page="@previousPage">Previous</a>
+    <a asp-action="SortByTag" asp-route-page="@previousPage">Previous</a>
 }
-<a asp-action="All" asp-route-page="@nextPage">Next</a>
+<a asp-action="SortByTag" asp-route-page="@nextPage">Next</a>
 @{
     ViewBag.Title = "Explore";
 

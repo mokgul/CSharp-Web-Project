@@ -52,5 +52,25 @@ public class ExploreService : IExploreService
         return model;
     }
 
+    public async Task<ExploreViewModel> SortByTagAsync(ExploreViewModel model, int page = 1)
+    {
+       var selectedHashTags = model.HashTags.Where(h => h.IsSelected).ToList();
+        var selectedHashTagsIds = selectedHashTags.Select(h => h.Id).ToList();
+
+        int pageSize = 20;
+        int skip = (page - 1) * pageSize;
+        var pictureIds = await _data.PicturesHashTags.Where(p => selectedHashTagsIds.Contains(p.TagId)).Select(p => p.PictureId).ToListAsync();
+        var pictures = await _data.Pictures.Where(p => pictureIds.Contains(p.Id)).Select(pv => new PictureVisualizeViewModel()
+        {
+            Id = pv.Id.ToString(),
+            PictureUrl = Path.GetFileName(pv.Url)
+        }).ToListAsync();
+
+        pictures = FilterBrokenUrls.FilterAsync(pictures);
+        model.HashTags = selectedHashTags;
+        model.PicturesIds = pictures.Skip(skip).Take(pageSize).ToList();
+
+        return model;
+    }
 }
 
