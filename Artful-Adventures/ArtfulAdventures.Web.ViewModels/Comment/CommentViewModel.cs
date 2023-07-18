@@ -8,6 +8,8 @@ public class CommentViewModel
 
     public string Author { get; set; } = null!;
 
+    public string? AuthorPictureUrl { get; set; }
+
     public DateTime CreatedOn { get; set; }
 }
 

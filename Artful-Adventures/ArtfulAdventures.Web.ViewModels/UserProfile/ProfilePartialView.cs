@@ -13,6 +13,12 @@ public class ProfilePartialView
 
     public string? CityName { get; set; }
 
+    public int FollowersCount { get; set; }
+
+    public int FollowingCount { get; set; }
+
+    public int PicturesCount { get; set; }
+
     public bool isFollowed { get; set; }
 }
 

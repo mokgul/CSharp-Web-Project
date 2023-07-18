@@ -65,9 +65,9 @@ public class RegisterModel : PageModel
             var user = new ApplicationUser()
             {
                 UserName = Input.Username,
-                Email = Input.Email
+                Email = Input.Email,
             };
-
+            
             await _userStore.SetUserNameAsync(user, Input.Username, CancellationToken.None);
             var result = await _userManager.CreateAsync(user, Input.Password);
 

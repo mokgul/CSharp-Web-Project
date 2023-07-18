@@ -29,6 +29,7 @@ public class Program
 
         builder.Services.AddScoped<IPictureService, PictureService>();
         builder.Services.AddScoped<IExploreService, ExploreService>();
+        builder.Services.AddScoped<IProfileService, ProfileService>();
 
         var app = builder.Build();
 

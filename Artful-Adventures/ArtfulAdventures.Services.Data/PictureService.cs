@@ -113,8 +113,12 @@ public class PictureService : IPictureService
             Id = c.Id,
             Content = c.Content,
             CreatedOn = c.CreatedOn,
-            Author = c.Author
+            Author = c.Author,
         }).ToList();
+        //foreach(var comment in comments)
+        //{
+        //    comment.AuthorPictureUrl = Path.GetFileName(_data.Users.FirstOrDefault(u => u.UserName == comment.Author).Url);
+        //}
 
         var model = new PictureDetailsViewModel()
         {
@@ -133,6 +137,32 @@ public class PictureService : IPictureService
             Comments = comments
         };
         return model;
+    }
+
+    public async Task<string> AddToCollectionAsync(string id, string userId)
+    {
+        var picture = _data.Pictures.FirstOrDefault(p => p.Id.ToString() == id);
+        var user = _data.Users.Include(p => p.Collection).FirstOrDefault(u => u.Id.ToString() == userId);
+        if(user!.Collection.Any(c => c.PictureId == picture!.Id))
+        {
+            return string.Empty;
+        }
+        user!.Collection.Add(new ApplicationUserCollection()
+        {
+            UserId = user.Id,
+            User = user,
+            PictureId = picture!.Id,
+            Picture = picture
+        });
+        await  _data.SaveChangesAsync();
+        return "You added this picture to your collection.";
+    }
+
+    public async Task LikePictureAsync(string pictureId)
+    {
+        var picture = _data.Pictures.FirstOrDefault(p => p.Id.ToString() == pictureId);
+        picture!.Likes++;
+        await _data.SaveChangesAsync();
     }
 }
 

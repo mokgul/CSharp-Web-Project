@@ -32,7 +32,7 @@
         }
 
         [HttpPost]
-        public async Task<ActionResult> Upload(PictureAddFormModel model)
+        public async Task<IActionResult> Upload(PictureAddFormModel model)
         {
             string userId = GetUserId();
             try
@@ -62,6 +62,28 @@
             var picture = await _pictureService.GetPictureDetailsAsync(id);
 
             return View(picture);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> AddToCollection(string pictureId)
+        {
+            var userId = GetUserId();
+            var result = await _pictureService.AddToCollectionAsync(pictureId, userId);
+            if (string.IsNullOrEmpty(result))
+            {
+                TempData["Message"] = "You already have this picture in your collection.";
+                return RedirectToAction("PictureDetails", new { id = pictureId });
+            }
+            TempData["Success"] = result;
+            return RedirectToAction("PictureDetails", new { id = pictureId });
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> LikePicture(string pictureId)
+        {
+            await _pictureService.LikePictureAsync(pictureId);
+
+            return RedirectToAction("PictureDetails", new { id = pictureId });
         }
 
 

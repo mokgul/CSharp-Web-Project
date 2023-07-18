@@ -57,12 +57,5 @@
 
         }
 
-        private async IAsyncEnumerable<PictureVisualizeViewModel> GetPicturesAsync(List<PictureVisualizeViewModel> pictures)
-        {
-            foreach (var picture in pictures)
-            {
-                yield return picture;
-            }
-        }
     }
 }

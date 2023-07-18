@@ -44,7 +44,7 @@ public class ApplicationUser : IdentityUser<Guid>
 
     public ICollection<ApplicationUserPicture> Portfolio { get; set; }
 
-    public ICollection<ApplicationUserCollection> Collection { get; set; }
+    public ICollection<ApplicationUserCollection> Collection { get; set; } = new HashSet<ApplicationUserCollection>();
 
 
     //Collection And Skills are stored in Mapping Tables

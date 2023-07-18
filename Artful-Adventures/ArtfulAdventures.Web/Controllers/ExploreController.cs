@@ -28,8 +28,6 @@
         public async Task<IActionResult> All(int page)
         {
 
-            //await DownloadFromFtpServer.DownloadData();
-            
             ExploreViewModel model = await _exploreService.GetExploreViewModelAsync(page);
 
             ViewBag.CurrentPage = page;
