@@ -29,45 +29,31 @@
         }
 
         [HttpGet]
-        public async Task<IActionResult> All(int page)
+        public async Task<IActionResult> All(int[] tagsIds, int page)
         {
-
             ExploreViewModel model = await _exploreService.GetExploreViewModelAsync(page);
-
-            ViewBag.CurrentPage = page;
-
-            return View(model);
-
-        }
-
-        [HttpPost]
-        public async Task<IActionResult> SortByTag(int page)
-        {
-            var form = Request.Form;
-
-            List<HashTagViewModel> selectedHashTags = new List<HashTagViewModel>();
-            foreach (var item in form)
+            if (tagsIds.Length > 0)
             {
-                if (item.Key.Contains("IsSelected") && item.Value.Contains("true"))
-                {
-                    HashTagViewModel tag = new HashTagViewModel();
-                    string baseKey = item.Key.Substring(0, item.Key.IndexOf(".IsSelected"));
-                    tag.Id = int.Parse(form[baseKey + ".Id"]);
-                    tag.Name = form[baseKey + ".Name"];
-                    tag.IsSelected = true;
-                    selectedHashTags.Add(tag);
-                }
+                model = await _exploreService.SortByTagAsync(tagsIds, page);
             }
-            var model = new ExploreViewModel()
-            {
-                HashTags = selectedHashTags
-            };
-            model = await _exploreService.SortByTagAsync(model, page);
 
             ViewBag.CurrentPage = page;
 
             return View(model);
+
         }
+
+        //[HttpGet]
+        //public async Task<IActionResult> SortByTag(int[] tagsIds, int page)
+        //{
+
+        //    ExploreViewModel model = await _exploreService.SortByTagAsync(tagsIds, page);
+
+        //    ViewBag.CurrentPage = page;
+
+        //    return PartialView("_SortByTagPartial", model);
+
+        //}
     }
 }
 

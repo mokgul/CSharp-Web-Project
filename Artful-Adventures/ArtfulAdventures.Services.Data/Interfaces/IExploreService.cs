@@ -7,6 +7,6 @@ public interface IExploreService
 {
     Task<ExploreViewModel> GetExploreViewModelAsync(int page);
 
-    Task<ExploreViewModel> SortByTagAsync(ExploreViewModel model, int page);
+    Task<ExploreViewModel> SortByTagAsync(int[] tagsIds, int page);
 }
 

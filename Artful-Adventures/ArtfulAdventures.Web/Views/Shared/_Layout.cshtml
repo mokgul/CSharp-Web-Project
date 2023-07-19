@@ -12,9 +12,10 @@
 </head>
 <body class="body-for-sticky">
     <header>
-
-        <nav class="navbar navbar-expand-lg bg-dark" data-bs-theme="dark">
-            <div class="container-fluid">
+        @if (!Context.Request.Headers["X-Requested-With"].Equals("XMLHttpRequest"))
+        {
+            <nav class="navbar navbar-expand-lg bg-dark" data-bs-theme="dark">
+                <div class="container-fluid">
                 <a class="navbar-brand" href="/Home">
                     <img src="~/local/gamer-logo-small.png" width="50" height="50" class="d-inline-block align-top" alt="">
                 </a>
@@ -77,6 +78,7 @@
                 <partial name="_LoginPartial" />
             </div>
         </nav>
+        }
     </header>
     <div class="container">
         <main role="main" class="pb-3">

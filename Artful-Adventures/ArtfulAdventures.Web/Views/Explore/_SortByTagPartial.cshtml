@@ -12,12 +12,12 @@
 }
 <a asp-action="SortByTag" asp-route-page="@nextPage">Next</a>
 @{
-    ViewBag.Title = "Explore";
+    ViewBag.Title = "Sorted";
 
 
     <div class="container">
         <div class="top-section" style="border: 1px solid black;">
-            <form method="post" asp-area="" asp-controller="Explore" asp-action="SortByTag">
+            <form method="get" asp-area="" asp-controller="Explore" asp-action="SortByTag">
                 <div class="text-left">
                     <style>
                         .form-check {

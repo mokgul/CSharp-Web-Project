@@ -1,23 +1,24 @@
 ﻿@model ExploreViewModel
 @using Microsoft.AspNetCore.Http
 <link rel="stylesheet" href="https://cdn.rawgit.com/bantikyan/icheck-bootstrap/master/icheck-bootstrap.min.css">
-@{
-    int currentPage = ViewBag.CurrentPage ?? 1;
-    int previousPage = currentPage > 1 ? currentPage - 1 : 1;
-    int nextPage = currentPage + 1;
-}
-@if (currentPage > 1)
-{
-    <a asp-action="All" asp-route-page="@previousPage">Previous</a>
-}
-<a asp-action="All" asp-route-page="@nextPage">Next</a>
-@{
-    ViewBag.Title = "Explore";
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<div id="content">
+    @{
+        int currentPage = ViewBag.CurrentPage ?? 1;
+        int previousPage = currentPage > 1 ? currentPage - 1 : 1;
+        int nextPage = currentPage + 1;
+    }
+    @if (currentPage > 1)
+    {
+        <a href="#" class="page-link" data-page="@previousPage">Previous</a>
+    }
+    <a href="#" class="page-link" data-page="@nextPage">Next</a>
+    @{
+        ViewBag.Title = "Explore";
 
 
-    <div class="container">
-        <div class="top-section" style="border: 1px solid black;">
-            <form method="post" asp-area="" asp-controller="Explore" asp-action="SortByTag">
+        <div class="container">
+            <div class="top-section" style="border: 1px solid black;">
                 <div class="text-left">
                     <style>
                         .form-check {
@@ -25,36 +26,103 @@
                             width: 30%;
                         }
                     </style>
-
-                    @for (int i = 0; i < Model.HashTags.Count(); i++)
+                    @foreach (var item in @Model.HashTags)
                     {
-                        @Html.HiddenFor(m => m.HashTags[i].Id)
-                        @Html.HiddenFor(m => m.HashTags[i].Name)
-                        <div class="form-check">
-                            @Html.CheckBoxFor(m => m.HashTags[i].IsSelected, new { @class = "form-check-input", id = $"HashTags_{i}__IsSelected" })
-                            <label class="form-check-label" for="@($"HashTags_{i}__IsSelected")">@Model.HashTags[i].Name</label>
-                        </div>
+                        <tr id="row-@item.Id">
+                            <td><input type="checkbox" name="SelectedTags" value="@item.Id" /></td>
+                            <td>@item.Name</td>
+                        </tr>
                     }
-                    <button type="submit">Submit</button>
+                    <button id="filterButton" type="submit">Submit</button>
 
                 </div>
-            </form>
-        </div>
-        <div class="col-lg-12">
-            <div class="card mb-4">
-                <div class="card-body">
-                    @if (Model.PicturesIds != null && Model.PicturesIds.Count > 0)
-                    {
-                        <div style="display: flex; flex-wrap: wrap;">
-                            @foreach (var picture in Model.PicturesIds)
-                            {
-                                @await Html.PartialAsync("_PictureGalleryPartial", picture)
-                            }
-                        </div>
-                    }
+            </div>
+            <div class="col-lg-12">
+                <div class="card mb-4">
+                    <div class="card-body">
+                        @if (Model.PicturesIds != null && Model.PicturesIds.Count > 0)
+                        {
+                            <div style="display: flex; flex-wrap: wrap;">
+                                @foreach (var picture in Model.PicturesIds)
+                                {
+                                    @await Html.PartialAsync("_PictureGalleryPartial", picture)
+                                }
+                            </div>
+                        }
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
+    }
+</div>
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            $('#filterButton').click(function (event) {
+                event.preventDefault();
+                // Store the state of the checkboxes
+                var checkboxState = $('input[name="SelectedTags"]').map(function () {
+                    return this.checked;
+                }).get();
+                var selectedTags = $('input[name="SelectedTags"]:checked').map(function () {
+                    return this.value;
+                }).get();
+                $.ajax({
+                    url: '@Url.Action("All", "Explore")',
+                    type: 'GET',
+                    data: $.param({ tagsIds: selectedTags }, true),
+                    traditional: true,
+                    success: function (result) {
+                        // Update the page content with the new view
+                        $('#content').html(result);
+                        // Restore the state of the checkboxes
+                        $('input[name="SelectedTags"]').each(function (index) {
+                            this.checked = checkboxState[index];
+                        });
+                        // Update the URL to reflect the current page number
+                        var newUrl = '@Url.Action("All", "Explore")' + '?page=' + page;
+                        history.pushState(null, null, newUrl);
+                    },
+                    error: function (xhr, status, error) {
+                        // handle error
+                    }
+                });
+            });
+
+            $('.page-link').click(function (event) {
+                event.preventDefault();
+                var page = $(this).data('page');
+                // Store the state of the checkboxes
+                var checkboxState = $('input[name="SelectedTags"]').map(function () {
+                    return this.checked;
+                }).get();
+                var selectedTags = $('input[name="SelectedTags"]:checked').map(function () {
+                    return this.value;
+                }).get();
+                $.ajax({
+                    url: '@Url.Action("All", "Explore")',
+                    type: 'GET',
+                    data: $.param({ page: page, tagsIds: selectedTags }, true),
+                    traditional: true,
+                    success: function (result) {
+                        // Update the page content with the new view
+                        $('#content').html(result);
+                        // Restore the state of the checkboxes
+                        $('input[name="SelectedTags"]').each(function (index) {
+                            this.checked = checkboxState[index];
+                        });
+                        // Update the URL to reflect the current page number
+                        var newUrl = '@Url.Action("All", "Explore")' + '?page=' + page;
+                        history.pushState(null, null, newUrl);
+                    },
+                    error: function (xhr, status, error) {
+                        // handle error
+                    }
+                });
+            });
+        });
+
+    </script>
 }
+
 

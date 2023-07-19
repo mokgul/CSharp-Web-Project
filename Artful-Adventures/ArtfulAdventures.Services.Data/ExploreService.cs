@@ -52,10 +52,10 @@ public class ExploreService : IExploreService
         return model;
     }
 
-    public async Task<ExploreViewModel> SortByTagAsync(ExploreViewModel model, int page = 1)
+    public async Task<ExploreViewModel> SortByTagAsync(int[] tagsIds, int page = 1)
     {
-       var selectedHashTags = model.HashTags.Where(h => h.IsSelected).ToList();
-        var selectedHashTagsIds = selectedHashTags.Select(h => h.Id).ToList();
+
+        var selectedHashTagsIds = tagsIds;
 
         int pageSize = 20;
         int skip = (page - 1) * pageSize;
@@ -65,9 +65,13 @@ public class ExploreService : IExploreService
             Id = pv.Id.ToString(),
             PictureUrl = Path.GetFileName(pv.Url)
         }).ToListAsync();
-
+        ExploreViewModel model = new ExploreViewModel();
         pictures = FilterBrokenUrls.FilterAsync(pictures);
-        model.HashTags = selectedHashTags;
+        model.HashTags = await _data.HashTags.Select(h => new HashTagViewModel()
+        {
+            Id = h.Id,
+            Name = h.Type
+        }).ToListAsync();
         model.PicturesIds = pictures.Skip(skip).Take(pageSize).ToList();
 
         return model;
