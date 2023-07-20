@@ -31,7 +31,7 @@
                             </a>
                         </li>
                         <li class="nav-item" style="font-size: 1.3rem">
-                            <a class="nav-link active" asp-area="" asp-controller="Following" asp-action="All" asp-route-page="1">
+                                <a class="nav-link active" asp-area="" asp-controller="Following" asp-action="All" asp-route-page="1" asp-route-username="@User.Identity.Name">
                                 Following
                                 <span class="visually-hidden">(current)</span>
                             </a>

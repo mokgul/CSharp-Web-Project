@@ -24,9 +24,9 @@
             return View();
         }
         [HttpGet]
-        public async Task<IActionResult> All(int page)
+        public async Task<IActionResult> All(int page, string username  )
         {
-            //await DownloadFromFtpServer.DownloadData();
+            
             int pageSize = 20;
             int skip = (page - 1) * pageSize;
             var user = await _data.Users.Include(f => f.Following).FirstOrDefaultAsync(u => u.UserName == User.Identity.Name);

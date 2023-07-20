@@ -1,25 +1,20 @@
 ﻿namespace ArtfulAdventures.Services.Data;
 
 using System.Threading.Tasks;
-using System.Xml.Linq;
 
 using ArtfulAdventures.Data;
-using ArtfulAdventures.Data.Models;
 using ArtfulAdventures.Services.Data.Interfaces;
 using ArtfulAdventures.Web.ViewModels;
 using ArtfulAdventures.Web.ViewModels.HashTag;
 using ArtfulAdventures.Web.ViewModels.Picture;
 
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using System.Collections.Generic;
 
-public class ExploreService : IExploreService
+public class ExploreService2 : IExploreService
 {
     private readonly ArtfulAdventuresDbContext _data;
 
-    public ExploreService(ArtfulAdventuresDbContext data)
+    public ExploreService2(ArtfulAdventuresDbContext data)
     {
         _data = data;
     }
@@ -40,7 +35,7 @@ public class ExploreService : IExploreService
             Id = p.Id.ToString(),
             PictureUrl = Path.GetFileName(p.Url)
         }).ToListAsync();
-        
+
         pictures = FilterBrokenUrls.FilterAsync(pictures);
 
         ExploreViewModel model = new ExploreViewModel()
