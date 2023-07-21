@@ -10,11 +10,11 @@ using ArtfulAdventures.Web.ViewModels.Picture;
 
 using Microsoft.EntityFrameworkCore;
 
-public class ExploreService2 : IExploreService
+public class ExploreService : IExploreService
 {
     private readonly ArtfulAdventuresDbContext _data;
 
-    public ExploreService2(ArtfulAdventuresDbContext data)
+    public ExploreService(ArtfulAdventuresDbContext data)
     {
         _data = data;
     }

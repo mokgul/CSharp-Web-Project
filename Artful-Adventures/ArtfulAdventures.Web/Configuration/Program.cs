@@ -28,8 +28,9 @@ public class Program
         builder.Services.AddControllersWithViews();
 
         builder.Services.AddScoped<IPictureService, PictureService>();
-        builder.Services.AddScoped<IExploreService, ExploreService2>();
+        builder.Services.AddScoped<IExploreService, ExploreService>();
         builder.Services.AddScoped<IProfileService, ProfileService>();
+        builder.Services.AddScoped<IFollowingService, FollowingService>();
 
         var app = builder.Build();
 

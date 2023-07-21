@@ -3,6 +3,7 @@
     using System.Xml.Linq;
 
     using ArtfulAdventures.Data;
+    using ArtfulAdventures.Services.Data.Interfaces;
     using ArtfulAdventures.Web.Configuration;
     using ArtfulAdventures.Web.ViewModels;
     using ArtfulAdventures.Web.ViewModels.HashTag;
@@ -13,45 +14,26 @@
 
     public class FollowingController : Controller
     {
-        private readonly ArtfulAdventuresDbContext _data;
+        private readonly IFollowingService _followingService;
 
-        public FollowingController(ArtfulAdventuresDbContext data)
+        public FollowingController(IFollowingService service)
         {
-            _data = data;
+            _followingService = service;
         }
         public IActionResult Index()
         {
             return View();
         }
         [HttpGet]
-        public async Task<IActionResult> All(int page, string username  )
+        public async Task<IActionResult> All(int[] tagsIds, int page)
         {
-            
-            int pageSize = 20;
-            int skip = (page - 1) * pageSize;
-            var user = await _data.Users.Include(f => f.Following).FirstOrDefaultAsync(u => u.UserName == User.Identity.Name);
-
-            var hashtags = await _data.HashTags.Select(h => new HashTagViewModel()
+            string username = User.Identity.Name;
+            ExploreViewModel model = await _followingService.GetExploreViewModelAsync(page, username);
+            if (tagsIds.Length > 0)
             {
-                Id = h.Id,
-                Name = h.Type
-            }).ToListAsync();
+                model = await _followingService.SortByTagAsync(tagsIds, page, username);
+            }
 
-            var usersFollowed = user.Following.Select(p => p.FollowedId).ToList();
-            var pictures = await _data.Pictures.Where(p => usersFollowed.Contains(p.Owner.Id)).Select(p => new PictureVisualizeViewModel()
-            {
-                Id = p.Id.ToString(),
-                PictureUrl = Path.GetFileName(p.Url),
-            }).ToListAsync();
-            
-            //when i move this to the service i need to uncomment the line below
-            //pictures = FilterBrokenUrls.FilterAsync(pictures);
-
-            ExploreViewModel model = new ExploreViewModel()
-            {
-                HashTags = hashtags,
-                PicturesIds = pictures.Skip(skip).Take(pageSize).ToList()
-            };
             ViewBag.CurrentPage = page;
             return View(model);
 

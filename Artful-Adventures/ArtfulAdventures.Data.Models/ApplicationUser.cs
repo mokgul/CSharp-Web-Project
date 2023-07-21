@@ -32,8 +32,6 @@ public class ApplicationUser : IdentityUser<Guid>
     [MaxLength(AboutMaxLength)]
     public string? About { get; set; }
 
-    //public ICollection<Picture> Portfolio { get; set; } = new HashSet<Picture>();
-
     public ICollection<Blog> Blogs { get; set; } = new HashSet<Blog>();
 
     public ICollection<FollowerFollowing> Followers { get; set; } = new HashSet<FollowerFollowing>();

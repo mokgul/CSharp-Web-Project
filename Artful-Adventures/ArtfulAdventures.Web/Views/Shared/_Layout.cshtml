@@ -1,4 +1,8 @@
 ﻿@using static ArtfulAdventures.Common.GeneralApplicationConstants
+@using Microsoft.AspNetCore.Identity
+@using ArtfulAdventures.Data.Models
+@inject SignInManager<ApplicationUser> SignInManager
+@inject UserManager<ApplicationUser> UserManager
 
 <!DOCTYPE html>
 <html lang="en">
@@ -16,68 +20,75 @@
         {
             <nav class="navbar navbar-expand-lg bg-dark" data-bs-theme="dark">
                 <div class="container-fluid">
-                <a class="navbar-brand" href="/Home">
-                    <img src="~/local/gamer-logo-small.png" width="50" height="50" class="d-inline-block align-top" alt="">
-                </a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarColor02" aria-controls="navbarColor02" aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="collapse navbar-collapse" id="navbarColor02">
-                    <ul class="navbar-nav me-auto">
-                        <li class="nav-item" style="font-size: 1.3rem">
-                            <a class="nav-link active" asp-area="" asp-controller="Explore" asp-action="All" asp-route-page="1">
-                                Explore
-                                <span class="visually-hidden">(current)</span>
-                            </a>
-                        </li>
-                        <li class="nav-item" style="font-size: 1.3rem">
-                                <a class="nav-link active" asp-area="" asp-controller="Following" asp-action="All" asp-route-page="1" asp-route-username="@User.Identity.Name">
-                                Following
-                                <span class="visually-hidden">(current)</span>
-                            </a>
-                        </li>
-                        <li class="nav-item" style="font-size: 1.3rem">
-                            <a class="nav-link active" asp-area="" asp-controller="Picture" asp-action="Upload">
-                                Upload
-                                <span class="visually-hidden">(current)</span>
-                            </a>
-                        </li>
+                    <a class="navbar-brand" href="/Home">
+                        <img src="~/local/gamer-logo-small.png" width="50" height="50" class="d-inline-block align-top" alt="">
+                    </a>
+                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarColor02" aria-controls="navbarColor02" aria-expanded="false" aria-label="Toggle navigation">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+                    <div class="collapse navbar-collapse" id="navbarColor02">
+                        <ul class="navbar-nav me-auto">
+                            <li class="nav-item" style="font-size: 1.3rem">
+                                <a class="nav-link active" asp-area="" asp-controller="Explore" asp-action="All" asp-route-page="1">
+                                    Explore
+                                    <span class="visually-hidden">(current)</span>
+                                </a>
+                            </li>
+                            <li class="nav-item" style="font-size: 1.3rem">
+                                <a class="nav-link active" asp-area="" asp-controller="Following" asp-action="All" asp-route-page="1">
+                                    Following
+                                    <span class="visually-hidden">(current)</span>
+                                </a>
+                            </li>
+                            <li class="nav-item" style="font-size: 1.3rem">
+                                <a class="nav-link active" asp-area="" asp-controller="Picture" asp-action="Upload">
+                                    Upload
+                                    <span class="visually-hidden">(current)</span>
+                                </a>
+                            </li>
 
-                        <li class="nav-item" style="font-size: 1.3rem">
-                            <a class="nav-link active" asp-area="" asp-controller="" asp-action="">
-                                Blogs
-                                <span class="visually-hidden">(current)</span>
-                            </a>
-                        </li>
-                        <li class="nav-item" style="font-size: 1.3rem">
-                            <a class="nav-link active" asp-area="" asp-controller="" asp-action="">
-                                Challenges
-                                <span class="visually-hidden">(current)</span>
-                            </a>
-                        </li>
-                        <li class="nav-item mt-2" style="margin-left: 10rem; font-size:1.3rem;">
-                            <form class="d-flex">
-                                <input class="form-control" type="search" placeholder="Search">
-                                <button class="btn btn-secondary my-2 my-sm-0" type="submit">Search</button>
-                            </form>
-                        </li>
-                    </ul>
-                    <ul class="nav-item mt-3" style="font-size: 1.3rem">
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">User Profile</a>
-                            <div class="dropdown-menu">
-                                <a class="dropdown-item" asp-area="" asp-controller="UserProfile" asp-action="Profile" asp-route-username="@User.Identity.Name">Profile</a>
-                                <a class="dropdown-item" href="#">Another action</a>
-                                <a class="dropdown-item" href="#">Something else here</a>
-                                <div class="dropdown-divider"></div>
-                                <a class="dropdown-item" href="#">Separated link</a>
-                            </div>
-                        </li>
-                    </ul>
+                            <li class="nav-item" style="font-size: 1.3rem">
+                                <a class="nav-link active" asp-area="" asp-controller="" asp-action="">
+                                    Blogs
+                                    <span class="visually-hidden">(current)</span>
+                                </a>
+                            </li>
+                            <li class="nav-item" style="font-size: 1.3rem">
+                                <a class="nav-link active" asp-area="" asp-controller="" asp-action="">
+                                    Challenges
+                                    <span class="visually-hidden">(current)</span>
+                                </a>
+                            </li>
+                            <li class="nav-item mt-2" style="margin-left: 10rem; font-size:1.3rem;">
+                                <form class="d-flex">
+                                    <input class="form-control" type="search" placeholder="Search">
+                                    <button class="btn btn-secondary my-2 my-sm-0" type="submit">Search</button>
+                                </form>
+                            </li>
+                        </ul>
+                        @if (SignInManager.IsSignedIn(User))
+                        {
+                            <ul class="nav-item mt-3" style="font-size: 1.3rem">
+                                <li class="nav-item dropdown">
+                                    <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">User Profile</a>
+                                    <div class="dropdown-menu">
+                                        <a class="dropdown-item" asp-area="" asp-controller="UserProfile" asp-action="Profile" asp-route-username="@User.Identity.Name">Profile</a>
+                                        <a class="dropdown-item" href="#">Another action</a>
+                                        <a class="dropdown-item" href="#">Something else here</a>
+                                        <div class="dropdown-divider"></div>
+                                        <a class="dropdown-item" href="#">Separated link</a>
+                                        <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">Settings</a>
+                                        <form class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
+                                            <button type="submit" class="nav-link btn btn-link text-dark">Logout</button>
+                                        </form>
+                                    </div>
+                                </li>
+
+                            </ul>
+                        }
+                    </div>
                 </div>
-                <partial name="_LoginPartial" />
-            </div>
-        </nav>
+            </nav>
         }
     </header>
     <div class="container">

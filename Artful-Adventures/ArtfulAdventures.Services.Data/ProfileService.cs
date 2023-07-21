@@ -2,6 +2,7 @@
 
 using System.Security.Claims;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 
 using ArtfulAdventures.Data;
 using ArtfulAdventures.Data.Models;
@@ -84,11 +85,14 @@ public class ProfileService : IProfileService
         }
         var followers = user!.Followers.Select(f => new ProfilePartialView()
         {
-            Username = _data.Users.FirstOrDefault(u => u.Id == f.FollowerId)?.UserName!,
+            Username = _data.Users.FirstOrDefault(u => u.Id == f.FollowerId)!.UserName!,
             ProfilePictureUrl = f.Follower.Url,
             Name = f.Follower.Name,
             Bio = f.Follower.Bio,
             CityName = f.Follower.CityName,
+            FollowersCount = _data.Users.Include(p => p.Followers).FirstOrDefault(u => u.Id == f.FollowerId)!.Followers.Count(),
+            FollowingCount = _data.Users.Include(p => p.Following).FirstOrDefault(u => u.Id == f.FollowerId)!.Following.Count(),
+            PicturesCount = _data.Users.Include(p => p.Portfolio).FirstOrDefault(u => u.Id == f.FollowerId)!.Portfolio.Count(),
         }).ToList();
 
         var model = new FollowViewModel()
@@ -113,6 +117,9 @@ public class ProfileService : IProfileService
             Name = f.Followed.Name,
             Bio = f.Followed.Bio,
             CityName = f.Followed.CityName,
+            FollowersCount = _data.Users.Include(p => p.Followers).FirstOrDefault(u => u.Id == f.FollowedId)!.Followers.Count(),
+            FollowingCount = _data.Users.Include(p => p.Following).FirstOrDefault(u => u.Id == f.FollowedId)!.Following.Count(),
+            PicturesCount = _data.Users.Include(p => p.Portfolio).FirstOrDefault(u => u.Id == f.FollowedId)!.Portfolio.Count(),
         }).ToList();
 
         var model = new FollowViewModel()
