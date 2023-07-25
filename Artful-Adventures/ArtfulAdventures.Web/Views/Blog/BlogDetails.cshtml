@@ -1,0 +1,94 @@
+﻿@model BlogDetailsViewModel
+
+@{
+    ViewData["Title"] = "Blog Details";
+}
+
+<div class="card px-3 pt-3" style="max-width: 100%;">
+    <!-- News block -->
+    <div>
+        <!-- Featured image -->
+        <style>
+            .center {
+                display: block;
+                margin-left: auto;
+                margin-right: auto;
+                width: 40%;
+            }
+
+        </style>
+        <div class="bg-image hover-overlay shadow-1-strong ripple rounded-5 mb-4" data-mdb-ripple-color="light">
+            <img src="~/images/@Model.ImageUrl" class="img-fluid center" />
+            <a href="#!">
+                <div class="mask" style="background-color: rgba(251, 251, 251, 0.15);"></div>
+            </a>
+        </div>
+
+        <!-- Article data -->
+        <div class="row mb-3">
+            <div class="col-6">
+                <a href="" class="text-info">
+                    <i class="fas fa-plane"></i>
+                    By @Model.Author
+                </a>
+            </div>
+
+            <div class="col-6 text-end">
+                <u> @Model.CreatedOn</u>
+            </div>
+        </div>
+
+        <!-- Article title and description -->
+        <a href="" class="text-dark">
+            <h5 style="color:lightsteelblue;font-size: 23px;text-align:center;">@Model.Title</h5>
+
+            <p style="color:whitesmoke; font-family: monospace, sans-serif; font-size: 18px;">
+                @Model.Content
+            </p>
+
+        </a>
+
+        <hr />
+    </div>
+</div>
+@*<section>
+    <div class="row">
+        <div class="col-sm-5" style="padding-right:30px;">
+
+            <img class="img-responsive" src="~/images/@Model.ImageUrl" style="width:100%; height:auto; float:left!important; margin-right: 20px;">
+        </div>
+        <div class="col-sm-7" style="height: 100px;">
+            <div class="row">
+                <div class="col-sm-12">
+                    <h2>@Model.Title</h2>
+                </div>
+                <div class="col-sm-12">
+                    <h3>
+                        By @Model.Author on @Model.CreatedOn
+                    </h3>
+                </div>
+            </div>
+        </div>
+        <div class=" d-flex">
+
+            @Model.Content
+        </div>
+        <div class="col-sm-12">
+            <hr />
+        </div>
+
+
+        <p>@Model.Likes Likes | @Model.CommentsCount Comments</p>
+
+        <h3>Comments</h3>
+        @foreach (var comment in Model.Comments)
+        {
+            <div class="card mb-3">
+                <div class="card-body">
+                    <h5 class="card-title">@comment.Author</h5>
+                    <p class="card-text">@comment.Content</p>
+                </div>
+            </div>
+        }
+    </div>
+</section>*@

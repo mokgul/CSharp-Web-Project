@@ -192,7 +192,7 @@ public class ProfileService : IProfileService
         {
             Username = user.UserName,
             Email = user.Email,
-            ProfilePictureUrl = user.Url,
+            ProfilePictureUrl = Path.GetFileName(user.Url),
             Name = user.Name,
             Bio = user.Bio,
             About = user.About,

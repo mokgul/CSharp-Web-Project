@@ -41,6 +41,7 @@ public class FollowingService : IFollowingService
         }).ToListAsync();
 
         pictures = FilterBrokenUrls.FilterAsync(pictures);
+        pictures = pictures.OrderByDescending(p => p.CreatedOn).ToList();
 
         ExploreViewModel model = new ExploreViewModel()
         {

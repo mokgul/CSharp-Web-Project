@@ -115,10 +115,10 @@ public class PictureService : IPictureService
             CreatedOn = c.CreatedOn,
             Author = c.Author,
         }).ToList();
-        //foreach(var comment in comments)
-        //{
-        //    comment.AuthorPictureUrl = Path.GetFileName(_data.Users.FirstOrDefault(u => u.UserName == comment.Author).Url);
-        //}
+        foreach (var comment in comments)
+        {
+            comment.AuthorPictureUrl = Path.GetFileName(_data.Users.FirstOrDefault(u => u.UserName == comment.Author).Url);
+        }
 
         var model = new PictureDetailsViewModel()
         {
@@ -134,6 +134,7 @@ public class PictureService : IPictureService
             Description = picture.Description,
             HashTags = hashtags,
             CreatedOn = picture.CreatedOn,
+            CommentsCount = comments.Count,
             Comments = comments
         };
         return model;

@@ -1,0 +1,57 @@
+﻿@model ArtfulAdventures.Web.ViewModels.Blog.BlogVisualizeModel
+
+@{
+    ViewBag.Title = "Blogs";
+}
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.1/css/all.min.css">
+
+<h1 class="text-center">Blogs</h1>
+
+<hr style="margin-top: 50px; margin-bottom:50px;"/>
+
+<div class="container mb-4 mt-4">
+    <div class="row">
+        @foreach (var blog in Model.Blogs)
+        {
+            <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
+                <div class="card shadow">
+                    <div class="card-body text-center">
+                        <a href="@Url.Action("BlogDetails", "Blog", new { id = blog.Id} )">
+                            <style>
+                                .card-img-top {
+                                    height: 200px;
+                                    width: 100%;
+                                    object-fit: cover;
+                                }
+
+                            </style>
+                            @if (!String.IsNullOrEmpty(blog.ImageUrl))
+                            {
+                                <img class="card-img-top" src="~/images/@blog.ImageUrl" alt="no-photo">
+                            }
+                            else
+                            {
+                                <img class="card-img-top" src="~/local/blog-default.jpg" alt="no-photo">
+                            }
+                        </a>
+                        <ul class="list-inline mt-3">
+                            <li class="list-inline-item">
+                                <a href="@Url.Action("Profile", "UserProfile", new { username = blog.Author })" style="color:deepskyblue">
+                                    <i class="fas fa-user"></i> By @blog.Author
+                                </a>
+                            </li>
+
+                            <li class="list-inline-item"><i class="far fa-clock"></i> @blog.CreatedOn</li>
+                        </ul>
+                        <hr>
+                        <h5 style="text-decoration:underline;">@blog.Title</h5>
+                        <p class="lead">@blog.Content.Substring(0, 123)</p>
+                        <a class="btn btn-outline-dark my-2" href="@Url.Action("BlogDetails", "Blog", new { id = blog.Id} )" role="button" style="color:wheat">Read more...</a>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+

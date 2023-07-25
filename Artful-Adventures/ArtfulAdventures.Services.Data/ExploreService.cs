@@ -33,17 +33,21 @@ public class ExploreService : IExploreService
         var pictures = await _data.Pictures.Select(p => new PictureVisualizeViewModel()
         {
             Id = p.Id.ToString(),
-            PictureUrl = Path.GetFileName(p.Url)
+            PictureUrl = Path.GetFileName(p.Url),
+            CreatedOn = p.CreatedOn,
+            Likes = p.Likes,
         }).ToListAsync();
 
         pictures = FilterBrokenUrls.FilterAsync(pictures);
+        pictures = pictures.OrderByDescending(p => p.CreatedOn).ToList();
 
         ExploreViewModel model = new ExploreViewModel()
         {
             HashTags = hashtags,
             PicturesIds = pictures.Skip(skip).Take(pageSize).ToList()
         };
-
+        
+        
         return model;
     }
 

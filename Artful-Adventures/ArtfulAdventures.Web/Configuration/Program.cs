@@ -1,3 +1,6 @@
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
+using ArtfulAdventures.Data;
 namespace ArtfulAdventures.Web.Configuration;
 
 using ArtfulAdventures.Data;
@@ -31,6 +34,7 @@ public class Program
         builder.Services.AddScoped<IExploreService, ExploreService>();
         builder.Services.AddScoped<IProfileService, ProfileService>();
         builder.Services.AddScoped<IFollowingService, FollowingService>();
+        builder.Services.AddScoped<IBlogService, BlogService>();
 
         var app = builder.Build();
 

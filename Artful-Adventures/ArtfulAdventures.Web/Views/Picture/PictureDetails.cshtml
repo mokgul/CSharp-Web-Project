@@ -1,5 +1,9 @@
 ﻿@model ArtfulAdventures.Web.ViewModels.Picture.PictureDetailsViewModel
 
+@{
+    ViewBag.Title = "Picture Details";
+}
+
 @if (TempData["Success"] != null)
 {
     <div class="alert alert-success text-black" role="alert">
@@ -140,13 +144,10 @@
                                     </div>
                                 </div>
                             }
-
                         </div>
                     </div>
                 </section>
             }
-
-
         </div>
     </div>
 </div>
@@ -160,7 +161,7 @@
                 <div class="col-md-12 col-lg-10">
                     <div class="card text-dark">
                         <div class="card-body p-4">
-                            <h4 class="mb-0">Recent comments</h4>
+                            <h4 class="mb-0">Recent comments(@Model.CommentsCount)</h4>
                             <p class="fw-light mb-4 pb-2">Latest Comments section by users</p>
 
                             <div class="card-footer py-3 border-0" style="background-color: transparent;">
@@ -226,7 +227,6 @@
         backdrop-filter: blur(10px);
     }</style>
 
-}
 <script>
     let button = document.getElementById("button");
     button.addEventListener("click", function () {

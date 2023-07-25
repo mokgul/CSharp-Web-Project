@@ -31,6 +31,8 @@ public class PictureDetailsViewModel
 
     public DateTime? CreatedOn { get; set; }
 
+    public int CommentsCount { get; set; }
+
     public ICollection<CommentViewModel>? Comments { get; set; }
 }
 
