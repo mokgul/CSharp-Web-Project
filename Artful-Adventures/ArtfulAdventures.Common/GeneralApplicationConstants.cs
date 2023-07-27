@@ -7,4 +7,6 @@ public static class GeneralApplicationConstants
     public const string ftpUserName = $"SHIN-MEDIA\\ArtfulFTP";
     public const string ftpPassword = $"JIKtak2023!";
     public const int ftpPort = 50022;
+
+    public const string defaultPictureDescriptionChallenge = "Challenge participation";
 }

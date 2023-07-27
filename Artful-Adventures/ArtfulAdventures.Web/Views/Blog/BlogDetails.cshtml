@@ -4,6 +4,8 @@
     ViewData["Title"] = "Blog Details";
 }
 
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.1/css/all.min.css">
+
 <div class="card px-3 pt-3" style="max-width: 100%;">
     <!-- News block -->
     <div>
@@ -25,70 +27,126 @@
         </div>
 
         <!-- Article data -->
-        <div class="row mb-3">
-            <div class="col-6">
-                <a href="" class="text-info">
-                    <i class="fas fa-plane"></i>
-                    By @Model.Author
+        <ul class="list-inline mt-3">
+            <li class="list-inline-item">
+                <a href="@Url.Action("Profile", "UserProfile", new { username = Model.Author })" style="color:deepskyblue">
+                    <i class="fas fa-user"></i> By @Model.Author
                 </a>
-            </div>
+            </li>
 
-            <div class="col-6 text-end">
-                <u> @Model.CreatedOn</u>
-            </div>
-        </div>
+            <li class="list-inline-item"><i class="far fa-clock"></i> @Model.CreatedOn</li>
+        </ul>
 
         <!-- Article title and description -->
         <a href="" class="text-dark">
-            <h5 style="color:lightsteelblue;font-size: 23px;text-align:center;">@Model.Title</h5>
+            <h1 style="color:lightsteelblue;text-align:center; margin-bottom:20px; margin-top: 20px;">@Model.Title</h1>
 
             <p style="color:whitesmoke; font-family: monospace, sans-serif; font-size: 18px;">
                 @Model.Content
             </p>
 
         </a>
-
         <hr />
+        
+        <form method="post" asp-area="" asp-controller="Blog" asp-action="Like" asp-route-blogId="@Model.Id">
+            <button type="submit" class="btn btn-outline-dark my-2 mx-auto" style="color:wheat;  background-color:#284564; margin-bottom: 2rem!important;">
+                Like<span class="badge ms-2">@Model.Likes</span></a>
+            </button>
+        </form>
     </div>
 </div>
-@*<section>
-    <div class="row">
-        <div class="col-sm-5" style="padding-right:30px;">
+<div class="row">
+    <!-- Section 4: Comments -->
+    <section class="col-md-11">
+        <div class="container my-5">
+            <div class="row d-flex justify-content-left">
+                <div class="col-md-12 col-lg-10">
+                    <div class="card text-dark">
+                        <div class="card-body p-4" style="background:#272e48; color:#88c4f7;">
+                            <h4 class="mb-0">Recent comments(@Model.CommentsCount)</h4>
+                            <p class="fw-light mb-4 pb-2">Latest Comments section by users</p>
 
-            <img class="img-responsive" src="~/images/@Model.ImageUrl" style="width:100%; height:auto; float:left!important; margin-right: 20px;">
-        </div>
-        <div class="col-sm-7" style="height: 100px;">
-            <div class="row">
-                <div class="col-sm-12">
-                    <h2>@Model.Title</h2>
-                </div>
-                <div class="col-sm-12">
-                    <h3>
-                        By @Model.Author on @Model.CreatedOn
-                    </h3>
+                            <div class="card-footer py-3 border-0" style="background-color: transparent;">
+                                <div class="d-flex flex-start w-100">
+                                    @if (Model.AuthorPictureUrl != null)
+                                    {
+                                        <img class="rounded-circle shadow-1-strong me-3"
+                                             src="~/images/@Model.AuthorPictureUrl" alt="avatar" width="40"
+                                             height="40" />
+
+                                    }
+                                    else
+                                    {
+                                        <img class="rounded-circle shadow-1-strong me-3"
+                                             src="~/local/no-profile-picture.jpg" alt="avatar" width="40"
+                                             height="40" />
+                                    }
+
+                                    <div class="form-outline w-100">
+                                        <textarea class="form-control" id="textArea" rows="4"
+                                                  style="background-color: transparent; color:#88c4f7;"></textarea>
+                                    </div>
+                                </div>
+                                <div class="float-end mt-3 pt-1">
+                                    <form asp-area="" asp-controller="Comment" asp-action="AddCommentBlog" asp-route-blogId="@Model.Id" method="post">
+                                        <input type="hidden" name="content" id="contentInput" />
+                                        <button type="submit" id="button" class="btn btn-primary btn-sm">Post comment</button>
+                                    </form>
+                                </div>
+                            </div>
+
+                            @if (Model.Comments != null)
+                            {
+                                @foreach (var comment in Model.Comments.OrderByDescending(p => p.CreatedOn))
+                                {
+                                    <div class="card-body p-4">
+                                        <div class="d-flex flex-start">
+                                            @if (Model.AuthorPictureUrl != null)
+                                            {
+                                                <img class="rounded-circle shadow-1-strong me-3"
+                                                     src="~/images/@Model.AuthorPictureUrl" alt="avatar" width="40"
+                                                     height="40" />
+
+                                            }
+                                            else
+                                            {
+                                                <img class="rounded-circle shadow-1-strong me-3"
+                                                     src="~/local/no-profile-picture.jpg" alt="avatar" width="40"
+                                                     height="40" />
+                                            }
+                                            <div>
+                                                <a href="@Url.Action("Profile", "UserProfile", new { username = @comment.Author })" style="color:deepskyblue">
+                                                    <i class="fas fa-user"></i> @comment.Author
+                                                </a>
+                                                <div class="d-flex align-items-center mb-3">
+                                                    <p class="mb-0">
+                                                        @comment.CreatedOn
+                                                    </p>
+                                                </div>
+                                                <p class="mb-0">
+                                                    @comment.Content
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <hr class="my-0" style="height: 1px;" />
+
+                                    <hr class="my-0" />
+                                }
+                            }
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
-        <div class=" d-flex">
-
-            @Model.Content
-        </div>
-        <div class="col-sm-12">
-            <hr />
-        </div>
-
-
-        <p>@Model.Likes Likes | @Model.CommentsCount Comments</p>
-
-        <h3>Comments</h3>
-        @foreach (var comment in Model.Comments)
-        {
-            <div class="card mb-3">
-                <div class="card-body">
-                    <h5 class="card-title">@comment.Author</h5>
-                    <p class="card-text">@comment.Content</p>
-                </div>
-            </div>
-        }
-    </div>
-</section>*@
+    </section>
+</div>
+<script>
+    let button = document.getElementById("button");
+    button.addEventListener("click", function () {
+        let textArea = document.getElementById("textArea");
+        let contentInput = document.getElementById("contentInput");
+        contentInput.value = textArea.value;
+    });
+</script>

@@ -8,8 +8,10 @@ using System.Drawing;
 public class ExploreViewModel
 {
 
-    public ICollection<PictureVisualizeViewModel> PicturesIds { get; set; }
+    public ICollection<PictureVisualizeViewModel> Pictures { get; set; }
 
     public List<HashTagViewModel> HashTags { get; set; } = new List<HashTagViewModel>();
+
+    public List<HashTagViewModel> TagsForDropDown { get; set; } = new List<HashTagViewModel>();
 }
 

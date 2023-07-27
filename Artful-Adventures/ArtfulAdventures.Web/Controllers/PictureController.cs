@@ -44,6 +44,7 @@
                 }
                 if (!ModelState.IsValid)
                 {
+                    System.IO.File.Delete(Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "images", Path.GetFileName(path)));
                     return View(model);
                 }
                 await _pictureService.UploadPictureAsync(model, userId, path);
@@ -81,8 +82,15 @@
         [HttpPost]
         public async Task<IActionResult> LikePicture(string pictureId)
         {
-            await _pictureService.LikePictureAsync(pictureId);
-
+            try
+            {
+                await _pictureService.LikePictureAsync(pictureId);
+            }
+            catch (ArgumentException ex)
+            {
+                TempData["Message"] = ex.Message;
+                return RedirectToAction("PictureDetails", new { id = pictureId });
+            }
             return RedirectToAction("PictureDetails", new { id = pictureId });
         }
 
@@ -102,7 +110,8 @@
             }
             //Gets the first file and saves it to the specified path.
             var file = form.Files.First();
-            var fileName = file.FileName;
+            var fileName = Guid.NewGuid().ToString() + Path.GetExtension(file.FileName);
+
             var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "images", fileName);
 
             //Resize the image

@@ -6,6 +6,8 @@ public class HashTagViewModel
 
     public string? Name { get; set; }
 
+    public int PicturesCount { get; set; }
+
     public bool IsSelected { get; set; }
 }
 

@@ -34,7 +34,7 @@
             try
             {
                 var path = await UploadFile();
-                
+
                 if (!ModelState.IsValid)
                 {
                     return View(model);
@@ -84,11 +84,31 @@
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetBlogs()
+        public async Task<IActionResult> GetBlogs(string sort, int page)
         {
-            var model = await _blogService.GetAllBlogsAsync();
+            
+                var model = await _blogService.GetAllBlogsAsync(sort, page);
 
-            return View(model);
+                ViewBag.Sort = sort;
+                ViewBag.CurrentPage = page;
+
+                return View(model);
+        }
+
+
+        [HttpPost]
+        public async Task<IActionResult> Like(string blogId)
+        {
+            try
+            {
+                await _blogService.LikeBlogAsync(blogId);
+            }
+            catch (ArgumentException ex)
+            {
+                TempData["Message"] = ex.Message;
+                return RedirectToAction("BlogDetails", new { id = blogId });
+            }
+            return RedirectToAction("BlogDetails", new { id = blogId });
         }
 
         private string GetUserId()

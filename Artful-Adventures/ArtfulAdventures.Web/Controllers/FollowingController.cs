@@ -25,18 +25,22 @@
             return View();
         }
         [HttpGet]
-        public async Task<IActionResult> All(int[] tagsIds, int page)
+        public async Task<IActionResult> All(string sort, int page)
         {
-            string username = User.Identity.Name;
-            ExploreViewModel model = await _followingService.GetExploreViewModelAsync(page, username);
-            if (tagsIds.Length > 0)
+            try
             {
-                model = await _followingService.SortByTagAsync(tagsIds, page, username);
+                string username = User!.Identity!.Name!;
+                ExploreViewModel model = await _followingService.GetExploreViewModelAsync(sort, page, username);
+
+                ViewBag.Sort = sort;
+                ViewBag.CurrentPage = page;
+                return View(model);
             }
-
-            ViewBag.CurrentPage = page;
-            return View(model);
-
+            catch (Exception ex)
+            {
+                TempData["Error"] = ex.Message;
+                return RedirectToAction("All", "Following");
+            }
         }
 
     }

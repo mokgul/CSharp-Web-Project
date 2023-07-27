@@ -10,6 +10,8 @@ public class BlogDetailsViewModel
 
     public string Author { get; set; } = null!;
 
+    public string? AuthorPictureUrl { get; set; }
+
     public DateTime CreatedOn { get; set; }
 
     public string? ImageUrl { get; set; } = null!;

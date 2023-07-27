@@ -20,60 +20,98 @@ public class ExploreService : IExploreService
     }
 
 
-    public async Task<ExploreViewModel> GetExploreViewModelAsync(int page = 1)
+    public async Task<ExploreViewModel> GetExploreViewModelAsync(string sort, int page = 1)
     {
         int pageSize = 20;
         int skip = (page - 1) * pageSize;
-        var hashtags = await _data.HashTags.Select(h => new HashTagViewModel()
+        var hashtags = await _data.HashTags.Include(h => h.PicturesHashTags).OrderByDescending(h => h.PicturesHashTags.Count).Select(h => new HashTagViewModel()
         {
             Id = h.Id,
-            Name = h.Type
+            Name = h.Type.Replace("_", " "),
+            PicturesCount = h.PicturesHashTags.Count
+        }).Take(14).ToListAsync();
+        var dropDownMenuTags = await _data.HashTags.Select(h => new HashTagViewModel()
+        {
+            Id = h.Id,
+            Name = h.Type.Replace("_", " ")
         }).ToListAsync();
 
-        var pictures = await _data.Pictures.Select(p => new PictureVisualizeViewModel()
+        var pictures = await _data.Pictures.Include(t => t.PicturesHashTags).Select(p => new PictureVisualizeViewModel()
         {
             Id = p.Id.ToString(),
+            Owner = p.Owner.UserName,
             PictureUrl = Path.GetFileName(p.Url),
             CreatedOn = p.CreatedOn,
             Likes = p.Likes,
+            HashTags = p.PicturesHashTags.Select(h => h.Tag.Type).ToList()
         }).ToListAsync();
 
         pictures = FilterBrokenUrls.FilterAsync(pictures);
         pictures = pictures.OrderByDescending(p => p.CreatedOn).ToList();
 
+        pictures = await SortPicturesAsync(sort, pictures);
+
         ExploreViewModel model = new ExploreViewModel()
         {
             HashTags = hashtags,
-            PicturesIds = pictures.Skip(skip).Take(pageSize).ToList()
+            TagsForDropDown = dropDownMenuTags,
+            Pictures = pictures.Skip(skip).Take(pageSize).ToList()
         };
-        
-        
+
+
         return model;
     }
 
-    public async Task<ExploreViewModel> SortByTagAsync(int[] tagsIds, int page = 1)
+    private async Task<List<PictureVisualizeViewModel>> SortPicturesAsync(string sort, List<PictureVisualizeViewModel> pictures)
     {
-
-        var selectedHashTagsIds = tagsIds;
-
-        int pageSize = 20;
-        int skip = (page - 1) * pageSize;
-        var pictureIds = await _data.PicturesHashTags.Where(p => selectedHashTagsIds.Contains(p.TagId)).Select(p => p.PictureId).ToListAsync();
-        var pictures = await _data.Pictures.Where(p => pictureIds.Contains(p.Id)).Select(pv => new PictureVisualizeViewModel()
+        if (string.IsNullOrWhiteSpace(sort))
         {
-            Id = pv.Id.ToString(),
-            PictureUrl = Path.GetFileName(pv.Url)
-        }).ToListAsync();
-        ExploreViewModel model = new ExploreViewModel();
-        pictures = FilterBrokenUrls.FilterAsync(pictures);
-        model.HashTags = await _data.HashTags.Select(h => new HashTagViewModel()
+            return pictures;
+        }
+        var owner = string.Empty;
+        var tag = string.Empty;
+        if (sort != "likes" && sort != "newest" && sort != "oldest")
         {
-            Id = h.Id,
-            Name = h.Type
-        }).ToListAsync();
-        model.PicturesIds = pictures.Skip(skip).Take(pageSize).ToList();
+            if (!_data.HashTags.Any(h => h.Type == sort.Replace(" ", "_")))
+            {
+                owner = sort;
+                sort = "author";
+            }
+            else
+            {
+                tag = sort.Replace(" ", "_");
+                sort = "tag";
+            }
+        }
+        if (sort != "likes" && sort != "newest" && sort != "oldest" && sort != "tag")
+        {
+            if (!_data.Users.Any(u => u.UserName == owner))
+                throw new ArgumentException($"User {owner} does not exist.");
+        }
 
-        return model;
+        switch (sort)
+        {
+            case "likes":
+                pictures = pictures.OrderByDescending(p => p.Likes).ToList();
+                break;
+            case "newest":
+                pictures = pictures.OrderByDescending(p => p.CreatedOn).ToList();
+                break;
+            case "oldest":
+                pictures = pictures.OrderBy(p => p.CreatedOn).ToList();
+                break;
+            case "author":
+                pictures = pictures.Where(p => p.Owner == owner).ToList();
+                break;
+            case "tag":
+                tag = tag.Replace(" ", "_");
+                pictures = pictures.Where(p => p.HashTags.Contains(tag)).ToList();
+                break;
+            default:
+                break;
+        }
+        return pictures;
     }
+
 }
 

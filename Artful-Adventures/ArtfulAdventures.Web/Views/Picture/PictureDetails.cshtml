@@ -160,26 +160,36 @@
             <div class="row d-flex justify-content-left">
                 <div class="col-md-12 col-lg-10">
                     <div class="card text-dark">
-                        <div class="card-body p-4">
+                        <div class="card-body p-4" style="background:#272e48; color:#88c4f7;">
                             <h4 class="mb-0">Recent comments(@Model.CommentsCount)</h4>
                             <p class="fw-light mb-4 pb-2">Latest Comments section by users</p>
 
                             <div class="card-footer py-3 border-0" style="background-color: transparent;">
                                 <div class="d-flex flex-start w-100">
-                                    <img class="rounded-circle shadow-1-strong me-3"
-                                         src="" alt="avatar" width="40"
-                                         height="40" />
+                                    @if (Model.OwnerPictureUrl != null)
+                                    {
+                                        <img class="rounded-circle shadow-1-strong me-3"
+                                             src="~/images/@Model.OwnerPictureUrl" alt="avatar" width="40"
+                                             height="40" />
+
+                                    }
+                                    else
+                                    {
+                                        <img class="rounded-circle shadow-1-strong me-3"
+                                             src="~/local/no-profile-picture.jpg" alt="avatar" width="40"
+                                             height="40" />
+                                    }
+                                    
                                     <div class="form-outline w-100">
                                         <textarea class="form-control" id="textArea" rows="4"
-                                                  style="background-color: transparent;"></textarea>
+                                                  style="background-color: transparent; color:#88c4f7;"></textarea>
                                     </div>
                                 </div>
                                 <div class="float-end mt-3 pt-1">
-                                    <form asp-area="" asp-controller="Comment" asp-action="AddComment" asp-route-pictureId="@Model.Id" method="post">
+                                    <form asp-area="" asp-controller="Comment" asp-action="AddCommentPicture" asp-route-pictureId="@Model.Id" method="post">
                                         <input type="hidden" name="content" id="contentInput" />
                                         <button type="submit" id="button" class="btn btn-primary btn-sm">Post comment</button>
                                     </form>
-                                    <button type="button" class="btn btn-outline-primary btn-sm">Cancel</button>
                                 </div>
                             </div>
 
@@ -193,7 +203,9 @@
                                                  src="~/images/@comment.AuthorPictureUrl" alt="avatar" width="60"
                                                  height="60" />
                                             <div>
-                                                <h6 class="fw-bold mb-1">@comment.Author</h6>
+                                                <a href="@Url.Action("Profile", "UserProfile", new { username = @comment.Author })" style="color:deepskyblue">
+                                                    <i class="fas fa-user"></i> @comment.Author
+                                                </a>
                                                 <div class="d-flex align-items-center mb-3">
                                                     <p class="mb-0">
                                                         @comment.CreatedOn

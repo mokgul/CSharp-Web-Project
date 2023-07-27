@@ -60,13 +60,15 @@ public class PictureService : IPictureService
             Picture = picture
         });
 
+        var tagIds = seletedHashTags.Select(t => t.Id).ToList();
+        var tags = await _data.HashTags.Where(h => tagIds.Contains(h.Id)).ToListAsync();
         foreach (var tag in seletedHashTags)
         {
             picture.PicturesHashTags.Add(new PictureHashTag()
             {
                 Picture = picture,
                 PictureId = picture.Id,
-                Tag = await _data.HashTags.FirstOrDefaultAsync(h => h.Id == tag.Id),
+                Tag = tags.FirstOrDefault(t => t.Id == tag.Id),
                 TagId = tag.Id
             });
         }
@@ -102,10 +104,12 @@ public class PictureService : IPictureService
             .Include(p => p.Portfolio)
             .FirstOrDefaultAsync(u => u.Id == picture.UserId);
 
+        var tagIds = picture.PicturesHashTags.Select(t => t.TagId).ToList();
+        var tags = await _data.HashTags.Where(h => tagIds.Contains(h.Id)).ToListAsync();
         var hashtags = picture.PicturesHashTags.Select(h => new HashTagViewModel()
         {
             Id = h.TagId,
-            Name = _data.HashTags.FirstOrDefault(t => t.Id == h.TagId ).Type,
+            Name = tags.FirstOrDefault(t => t.Id == h.TagId).Type,
         }).ToList();
 
         var comments = _data.Comments.Where(c => c.PictureId.ToString() == id).Select(c => new CommentViewModel()
@@ -162,7 +166,11 @@ public class PictureService : IPictureService
     public async Task LikePictureAsync(string pictureId)
     {
         var picture = _data.Pictures.FirstOrDefault(p => p.Id.ToString() == pictureId);
-        picture!.Likes++;
+        if(picture == null)
+        {
+            throw new ArgumentException("Picture not found.");
+        }
+        picture.Likes++;
         await _data.SaveChangesAsync();
     }
 }

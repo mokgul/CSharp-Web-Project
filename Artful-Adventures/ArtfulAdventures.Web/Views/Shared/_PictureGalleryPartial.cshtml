@@ -1,7 +1,7 @@
 ﻿@model PictureVisualizeViewModel
 
 
-    <div style="flex-basis: 20%; padding: 5px; max-height: 100%;">
+<div style="flex-basis: 20%; padding: 5px; max-height: 100%;  margin-top: 1rem;">
         <a href="@Url.Action("PictureDetails", "Picture", new { id = Model.Id })">
             <div style="width: 200px; height: 200px; overflow: hidden;">
                 <img src="~/images/@Model.PictureUrl" alt=" "

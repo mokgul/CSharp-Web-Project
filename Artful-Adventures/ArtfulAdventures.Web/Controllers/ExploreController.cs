@@ -15,17 +15,22 @@
         }
 
         [HttpGet]
-        public async Task<IActionResult> All(int[] tagsIds, int page)
+        public async Task<IActionResult> All(string sort, int page)
         {
-            ExploreViewModel model = await _exploreService.GetExploreViewModelAsync(page);
-            if (tagsIds.Length > 0)
+            try
             {
-                model = await _exploreService.SortByTagAsync(tagsIds, page);
+                ExploreViewModel model = await _exploreService.GetExploreViewModelAsync(sort, page);
+
+                ViewBag.Sort = sort;
+                ViewBag.CurrentPage = page;
+
+                return View(model);
             }
-
-            ViewBag.CurrentPage = page;
-
-            return View(model);
+            catch (ArgumentException ex)
+            {
+                TempData["Error"] = ex.Message;
+                return RedirectToAction("All", "Explore");
+            }
 
         }
     }

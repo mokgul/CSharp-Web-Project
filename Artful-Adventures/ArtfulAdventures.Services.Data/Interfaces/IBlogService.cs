@@ -11,8 +11,8 @@ public interface IBlogService
 
     Task<BlogDetailsViewModel> GetBlogDetailsAsync(string id);
 
-    Task<BlogVisualizeModel> GetAllBlogsAsync();
-    
+    Task<BlogVisualizeModel> GetAllBlogsAsync(string sort, int page);
 
+    Task LikeBlogAsync(string blogId);
 }
 

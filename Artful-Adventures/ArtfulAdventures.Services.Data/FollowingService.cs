@@ -1,5 +1,6 @@
 ﻿namespace ArtfulAdventures.Services.Data;
 
+using System.Linq;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 
@@ -21,63 +22,113 @@ public class FollowingService : IFollowingService
     {
         _data = data;
     }
-    public async Task<ExploreViewModel> GetExploreViewModelAsync(int page, string username)
+    public async Task<ExploreViewModel> GetExploreViewModelAsync(string sort, int page, string username)
     {
         int pageSize = 20;
         int skip = (page - 1) * pageSize;
         var user = await _data.Users.Include(f => f.Following).FirstOrDefaultAsync(u => u.UserName == username);
 
-        var hashtags = await _data.HashTags.Select(h => new HashTagViewModel()
+        var dropDownMenuTags = await _data.HashTags.Select(h => new HashTagViewModel()
         {
             Id = h.Id,
-            Name = h.Type
+            Name = h.Type.Replace("_", " ")
         }).ToListAsync();
 
         var usersFollowed = user.Following.Select(p => p.FollowedId).ToList();
-        var pictures = await _data.Pictures.Where(p => usersFollowed.Contains(p.Owner.Id)).Select(p => new PictureVisualizeViewModel()
+        var pictures = await _data.Pictures.Include(h => h.PicturesHashTags).Where(p => usersFollowed.Contains(p.Owner.Id)).Select(p => new PictureVisualizeViewModel()
         {
             Id = p.Id.ToString(),
             PictureUrl = Path.GetFileName(p.Url),
+            Owner = p.Owner.UserName,
+            CreatedOn = p.CreatedOn,
+            Likes = p.Likes,
+            HashTags = p.PicturesHashTags.Select(h => h.Tag.Type).ToList()
         }).ToListAsync();
+
+        var pictureIds = pictures.Select(p => p.Id).ToList();
+
+        var hashtags = await _data.HashTags.Include(h => h.PicturesHashTags)
+    .Where(p => p.PicturesHashTags.Any(p => pictureIds.Contains(p.PictureId.ToString())))
+    .OrderByDescending(h => h.PicturesHashTags.Count)
+    .Select(h => new HashTagViewModel()
+    {
+        Id = h.Id,
+        Name = h.Type.Replace("_", " "),
+        PicturesCount = h.PicturesHashTags.Count(p => pictureIds.Contains(p.PictureId.ToString()))
+    }).Take(14).ToListAsync();
+
 
         pictures = FilterBrokenUrls.FilterAsync(pictures);
         pictures = pictures.OrderByDescending(p => p.CreatedOn).ToList();
 
+        pictures = await SortPicturesAsync(sort, pictures);
+
         ExploreViewModel model = new ExploreViewModel()
         {
             HashTags = hashtags,
-            PicturesIds = pictures.Skip(skip).Take(pageSize).ToList()
+            TagsForDropDown = dropDownMenuTags,
+            Pictures = pictures.Skip(skip).Take(pageSize).ToList()
         };
         return model;
       
     }
 
-    public async Task<ExploreViewModel> SortByTagAsync(int[] tagsIds, int page, string username)
+    private async Task<List<PictureVisualizeViewModel>> SortPicturesAsync(string sort, List<PictureVisualizeViewModel> pictures)
     {
-        var selectedHashTagsIds = tagsIds;
-
-        int pageSize = 20;
-        int skip = (page - 1) * pageSize;
-
-        var user = await _data.Users.Include(f => f.Following).FirstOrDefaultAsync(u => u.UserName == username);
-
-        var usersFollowed = user.Following.Select(p => p.FollowedId).ToList();
-        var pictureIds = await _data.PicturesHashTags.Where(p => selectedHashTagsIds.Contains(p.TagId)).Select(p => p.PictureId).ToListAsync();
-        var pictures = await _data.Pictures.Where(p => usersFollowed.Contains(p.Owner.Id)).Where(p => pictureIds.Contains(p.Id)).Select(p => new PictureVisualizeViewModel()
+        if (string.IsNullOrWhiteSpace(sort))
         {
-            Id = p.Id.ToString(),
-            PictureUrl = Path.GetFileName(p.Url),
-        }).ToListAsync();
-        ExploreViewModel model = new ExploreViewModel();
-        pictures = FilterBrokenUrls.FilterAsync(pictures);
-        model.HashTags = await _data.HashTags.Select(h => new HashTagViewModel()
+            return pictures;
+        }
+        var owner = string.Empty;
+        var tag = string.Empty;
+        if (sort != "likes" && sort != "newest" && sort != "oldest")
         {
-            Id = h.Id,
-            Name = h.Type
-        }).ToListAsync();
-        model.PicturesIds = pictures.Skip(skip).Take(pageSize).ToList();
+            if (!_data.HashTags.Any(h => h.Type == sort.Replace(" ", "_")))
+            {
+                owner = sort;
+                sort = "author";
+            }
+            else
+            {
+                tag = sort.Replace(" ", "_");
+                sort = "tag";
+            }
+        }
+        if (sort != "likes" && sort != "newest" && sort != "oldest" && sort != "tag")
+        {
+            if (!_data.Users.Any(u => u.UserName == owner))
+                throw new ArgumentException($"User {owner} does not exist.");
 
-        return model;
+            if (!pictures.Any(p => p.Owner == owner) && pictures.Count(p => p.Owner == owner) > 0)
+                throw new ArgumentException($"You are not following user {owner}.");
+
+            if (pictures.Count(p => p.Owner == owner) == 0 )
+                throw new ArgumentException($"{owner} has not uploaded any pictures yet.");
+
+        }
+
+        switch (sort)
+        {
+            case "likes":
+                pictures = pictures.OrderByDescending(p => p.Likes).ToList();
+                break;
+            case "newest":
+                pictures = pictures.OrderByDescending(p => p.CreatedOn).ToList();
+                break;
+            case "oldest":
+                pictures = pictures.OrderBy(p => p.CreatedOn).ToList();
+                break;
+            case "author":
+                pictures = pictures.Where(p => p.Owner == owner).ToList();
+                break;
+            case "tag":
+                tag = tag.Replace(" ", "_");
+                pictures = pictures.Where(p => p.HashTags.Contains(tag)).ToList();
+                break;
+            default:
+                break;
+        }
+        return pictures;
     }
 }
 

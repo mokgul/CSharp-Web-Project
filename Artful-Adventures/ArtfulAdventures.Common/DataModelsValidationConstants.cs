@@ -20,11 +20,11 @@ public static class DataModelsValidationConstants
     {
         public const int TitleMinLength = 20;
         public const int TitleMaxLength = 100;
-        public const string DateFormat = "yyyy-MM-dd H:mm";
         public const int UrlMinLength = 3;
         public const int UrlMaxLength = 2048;
         public const int ContentMinLength = 100;
         public const int ContentMaxLength = 10000;
+        public const string DateFormat = "yyyy-MM-dd H:mm";
     }
 
     public static class CommentConstants
@@ -42,11 +42,11 @@ public static class DataModelsValidationConstants
         public const int TitleMaxLength = 100;
         public const int CreatorMinLength = 5;
         public const int CreatorMaxLength = 50;
-        public const string DateFormat = "yyyy-MM-dd H:mm";
         public const int UrlMinLength = 3;
         public const int UrlMaxLength = 2048;
         public const int RequirementsMinLength = 20;
         public const int RequirementsMaxLength = 1000;
+        public const string DateFormat = "yyyy-MM-dd H:mm";
     }
 
     public static class PictureConstants

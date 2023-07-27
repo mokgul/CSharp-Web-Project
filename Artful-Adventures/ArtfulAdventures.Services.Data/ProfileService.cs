@@ -52,9 +52,15 @@ public class ProfileService : IProfileService
 
     public async Task<PortfolioViewModel?> GetCollectionAsync(string username)
     {
+        // Query the Users DbSet
         var user = await _data.Users
+            // Include the Collection navigation property
             .Include(p => p.Collection)
+            // Then include the Picture navigation property of the Collection
+            .ThenInclude(p => p.Picture)
+            // Find the first user with the specified username
             .FirstOrDefaultAsync(u => u.UserName == username);
+
 
         if (user!.Collection.Count == 0)
         {
@@ -62,12 +68,15 @@ public class ProfileService : IProfileService
         }
         var pictures = user!.Collection.Select(p => new PictureVisualizeViewModel()
         {
+            
             Id = p.PictureId.ToString(),
-            PictureUrl = Path.GetFileName(_data.Pictures.FirstOrDefault(i => i.Id == p.PictureId)!.Url),
+            CreatedOn = p.Picture.CreatedOn,
+            Likes = p.Picture.Likes,
+            PictureUrl = Path.GetFileName(p.Picture!.Url),
         }).ToList();
 
         pictures = FilterBrokenUrls.FilterAsync(pictures);
-
+        pictures = pictures.OrderByDescending(p => p.CreatedOn).ToList();
         var model = new PortfolioViewModel()
         {
             Pictures = pictures,
@@ -86,7 +95,7 @@ public class ProfileService : IProfileService
         var followers = user!.Followers.Select(f => new ProfilePartialView()
         {
             Username = _data.Users.FirstOrDefault(u => u.Id == f.FollowerId)!.UserName!,
-            ProfilePictureUrl = f.Follower.Url,
+            ProfilePictureUrl = Path.GetFileName(f.Follower.Url),
             Name = f.Follower.Name,
             Bio = f.Follower.Bio,
             CityName = f.Follower.CityName,
@@ -113,7 +122,7 @@ public class ProfileService : IProfileService
         var following = user!.Following.Select(f => new ProfilePartialView()
         {
             Username = _data.Users.FirstOrDefault(u => u.Id == f.FollowedId)?.UserName!,
-            ProfilePictureUrl = f.Followed.Url,
+            ProfilePictureUrl = Path.GetFileName(f.Followed.Url),
             Name = f.Followed.Name,
             Bio = f.Followed.Bio,
             CityName = f.Followed.CityName,
@@ -133,6 +142,7 @@ public class ProfileService : IProfileService
     {
         var user = await _data.Users
                 .Include(p => p.Portfolio)
+                .ThenInclude(p => p.Picture)
                 .FirstOrDefaultAsync(u => u.UserName == username);
 
         if (user!.Portfolio.Count == 0)
@@ -143,10 +153,13 @@ public class ProfileService : IProfileService
         var pictures = user!.Portfolio.Select(p => new PictureVisualizeViewModel()
         {
             Id = p.PictureId.ToString(),
-            PictureUrl = Path.GetFileName(_data.Pictures.FirstOrDefault(i => i.Id == p.PictureId)!.Url),
+            CreatedOn = p.Picture.CreatedOn,
+            Likes = p.Picture.Likes,
+            PictureUrl = Path.GetFileName(p.Picture!.Url),
         }).ToList();
 
         pictures = FilterBrokenUrls.FilterAsync(pictures);
+        pictures = pictures.OrderByDescending(p => p.CreatedOn).ToList();
 
         var model = new PortfolioViewModel()
         {
@@ -161,7 +174,9 @@ public class ProfileService : IProfileService
                 .Include(m => m.Followers)
                 .Include(s => s.Following)
                 .Include(p => p.Portfolio)
+                .ThenInclude(p => p.Picture)
                 .Include(s => s.ApplicationUsersSkills)
+                .ThenInclude(s => s.Skill)
                 .FirstOrDefaultAsync(u => u.UserName == username);
         if (user == null)
         {
@@ -177,16 +192,19 @@ public class ProfileService : IProfileService
         ICollection<SkillViewModel> skills = user!.ApplicationUsersSkills.Select(sa => new SkillViewModel()
         {
             Id = sa.SkillId,
-            Name = _data.Skills.FirstOrDefault(s => s.Id == sa.SkillId)!.Type,
+            Name = sa.Skill.Type,
         }).ToList();
 
         var pictures = user!.Portfolio.Select(p => new PictureVisualizeViewModel()
         {
             Id = p.PictureId.ToString(),
-            PictureUrl = Path.GetFileName(_data.Pictures.FirstOrDefault(i => i.Id == p.PictureId)!.Url),
+            CreatedOn = p.Picture.CreatedOn,
+            Likes = p.Picture.Likes,
+            PictureUrl = Path.GetFileName(p.Picture!.Url),
         }).ToList();
 
         pictures = FilterBrokenUrls.FilterAsync(pictures);
+        pictures = pictures.OrderByDescending(p => p.CreatedOn).ToList();
 
         var model = new ProfileViewModel()
         {

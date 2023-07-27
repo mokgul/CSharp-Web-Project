@@ -117,3 +117,15 @@ body {
 	color: #bcd0f7;
 }
 
+.my-2 {
+	margin: 0 0.5rem !important;
+	border: none;
+	border-bottom: 1px solid #ccc;
+	background-color: #272e48;
+	color: wheat;
+	font-size: 1.0rem;
+	padding: 0.5rem;
+	margin-left: 1rem;
+	margin-bottom: 1rem;
+}
+

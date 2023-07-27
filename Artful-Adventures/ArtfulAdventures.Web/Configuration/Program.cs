@@ -30,11 +30,12 @@ public class Program
 
         builder.Services.AddControllersWithViews();
 
+        builder.Services.AddScoped<IBlogService, BlogService>();
         builder.Services.AddScoped<IPictureService, PictureService>();
         builder.Services.AddScoped<IExploreService, ExploreService>();
         builder.Services.AddScoped<IProfileService, ProfileService>();
         builder.Services.AddScoped<IFollowingService, FollowingService>();
-        builder.Services.AddScoped<IBlogService, BlogService>();
+        builder.Services.AddScoped<IChallengeService, ChallengeService>();
 
         var app = builder.Build();
 
