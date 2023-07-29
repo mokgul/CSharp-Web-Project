@@ -22,6 +22,8 @@
         [HttpGet]
         public async Task<IActionResult> CreateBlog()
         {
+            ViewBag.Action = "CreateBlog";
+
             var model = await _blogService.GetBlogViewModelAsync();
 
             return View(model);
@@ -86,13 +88,14 @@
         [HttpGet]
         public async Task<IActionResult> GetBlogs(string sort, int page)
         {
-            
-                var model = await _blogService.GetAllBlogsAsync(sort, page);
 
-                ViewBag.Sort = sort;
-                ViewBag.CurrentPage = page;
+            var model = await _blogService.GetAllBlogsAsync(sort, page);
 
-                return View(model);
+            ViewBag.Sort = sort;
+            ViewBag.CurrentPage = page;
+            ViewBag.Action = "GetBlogs";
+
+            return View(model);
         }
 
 
@@ -109,6 +112,70 @@
                 return RedirectToAction("BlogDetails", new { id = blogId });
             }
             return RedirectToAction("BlogDetails", new { id = blogId });
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> ManageBlogs(string sort, int page)
+        {
+            var userId = GetUserId();
+            var model = await _blogService.GetAllBlogsForManageAsync(sort, userId, page);
+
+            ViewBag.Sort = sort;
+            ViewBag.CurrentPage = page;
+            ViewBag.Action = "ManageBlogs";
+
+            return View("GetBlogs", model);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> EditBlog(string id)
+        {
+            ViewBag.Action = "EditBlog";
+            var model = await _blogService.GetBlogToEditAsync(id);
+
+            return View("CreateBlog", model);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> EditBlog(BlogAddFormModel model)
+        {
+            string id = model.Id;
+            try
+            {
+                var path = await UploadFile();
+
+                if (!ModelState.IsValid)
+                {
+                    return RedirectToAction("ManageBlogs", "Blog");
+                }
+                await _blogService.EditBlogAsync(model, id, path);
+            }
+            catch (Exception)
+            {
+                TempData["Error"] = "Something went wrong. Please try again later.";
+                return RedirectToAction("ManageBlogs", "Blog");
+            }
+            TempData["Success"] = "Your blog was edited successfully!";
+
+            return RedirectToAction("ManageBlogs", "Blog");
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> DeleteBlog(string id)
+        {
+            var userId = GetUserId();
+            try
+            {
+                await _blogService.DeleteBlogAsync(id, userId);
+            }
+            catch (ArgumentException ex)
+            {
+                TempData["Error"] = ex.Message;
+                return RedirectToAction("ManageBlogs", "Blog");
+            }
+            TempData["Success"] = "Your blog was deleted successfully!";
+
+            return RedirectToAction("ManageBlogs", "Blog");
         }
 
         private string GetUserId()

@@ -6,6 +6,8 @@ using static ArtfulAdventures.Common.DataModelsValidationConstants.BlogConstants
 
 public class BlogAddFormModel
 {
+    public string Id { get; set; } = null!;
+
     [Required]
     [StringLength(TitleMaxLength, MinimumLength = TitleMinLength)]
     public string Title { get; set; } = null!;

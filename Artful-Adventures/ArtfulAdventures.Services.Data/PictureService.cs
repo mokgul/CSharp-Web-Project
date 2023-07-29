@@ -1,5 +1,6 @@
 ﻿namespace ArtfulAdventures.Services.Data;
 
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Security.Claims;
@@ -148,7 +149,7 @@ public class PictureService : IPictureService
     {
         var picture = _data.Pictures.FirstOrDefault(p => p.Id.ToString() == id);
         var user = _data.Users.Include(p => p.Collection).FirstOrDefault(u => u.Id.ToString() == userId);
-        if(user!.Collection.Any(c => c.PictureId == picture!.Id))
+        if (user!.Collection.Any(c => c.PictureId == picture!.Id))
         {
             return string.Empty;
         }
@@ -159,19 +160,101 @@ public class PictureService : IPictureService
             PictureId = picture!.Id,
             Picture = picture
         });
-        await  _data.SaveChangesAsync();
+        await _data.SaveChangesAsync();
         return "You added this picture to your collection.";
     }
 
     public async Task LikePictureAsync(string pictureId)
     {
         var picture = _data.Pictures.FirstOrDefault(p => p.Id.ToString() == pictureId);
-        if(picture == null)
+        if (picture == null)
         {
             throw new ArgumentException("Picture not found.");
         }
         picture.Likes++;
         await _data.SaveChangesAsync();
+    }
+
+    public async Task<ICollection<PictureEditViewModel>> ManageGetAllPicturesAsync(string userId, int page = 1)
+    {
+        var pageSize = 9;
+        var skip = (page - 1) * pageSize;
+        var pictures = await _data.Pictures.Where(p => p.UserId.ToString() == userId).ToListAsync();
+        var model = pictures.Select(p => new PictureEditViewModel()
+        {
+            Id = p.Id.ToString(),
+            PictureUrl = Path.GetFileName(p.Url),
+            Description = p.Description,
+        }).ToList();
+        model = model.Skip(skip).Take(pageSize).ToList();
+        return model;
+    }
+
+    public async Task<PictureEditViewModel> GetPictureToEditAsync(string id)
+    {
+        var picture = await _data.Pictures.FirstOrDefaultAsync(p => p.Id.ToString() == id);
+        var hashtags = await _data.HashTags.Select(h => new HashTagViewModel()
+        {
+            Id = h.Id,
+            Name = h.Type
+        }).ToListAsync();
+        var model = new PictureEditViewModel()
+        {
+            Id = picture.Id.ToString(),
+            Description = picture.Description,
+            HashTags = hashtags
+        };
+        return model;
+    }
+
+    public async Task EditPictureAsync(PictureEditViewModel model)
+    {
+        var id = model.Id;
+        var picture = await _data.Pictures.FirstOrDefaultAsync(p => p.Id.ToString() == id);
+        picture!.Description = model.Description;
+        var selectedHashTags = model.HashTags.Where(h => h.IsSelected).ToList();
+        if (selectedHashTags.Count > 0)
+        {
+            var tagIds = selectedHashTags.Select(t => t.Id).ToList();
+            var tags = await _data.HashTags.Where(h => tagIds.Contains(h.Id)).ToListAsync();
+            picture.PicturesHashTags.Clear();
+            foreach (var tag in selectedHashTags)
+            {
+                picture.PicturesHashTags.Add(new PictureHashTag()
+                {
+                    Picture = picture,
+                    PictureId = picture.Id,
+                    Tag = tags.FirstOrDefault(t => t.Id == tag.Id),
+                    TagId = tag.Id
+                });
+            }
+        }
+        await _data.SaveChangesAsync();
+
+    }
+
+    public async Task<string> DeletePictureAsync(string id, string userId)
+    {
+        var path = string.Empty;
+        var picture = await _data.Pictures
+            .Include(c => c.Comments)
+            .Include(cl => cl.Collection)
+            .Include(ph => ph.PicturesHashTags)
+            .Include(p => p.Portfolio)
+            .Include(o => o.Owner)
+            .Where(u => u.Owner.Id.ToString() == userId)
+            .FirstOrDefaultAsync(p => p.Id.ToString() == id);
+        picture!.Comments.Clear();
+        picture.Collection.Clear();
+        picture.PicturesHashTags.Clear();
+        picture.Portfolio.Clear();
+
+        path = picture.Url;
+
+        _data.Pictures.Remove(picture);
+        await _data.SaveChangesAsync();
+
+        return path;
     }
 }
 

@@ -153,5 +153,65 @@ public class BlogService : IBlogService
         }
         return blogs;
     }
+
+    public async Task<BlogAddFormModel> GetBlogToEditAsync(string id)
+    {
+        var blog = _data.Blogs.Include(u => u.Author).FirstOrDefault(x => x.Id.ToString() == id);
+        
+        var model = new BlogAddFormModel()
+        {
+            Id = id,
+            Title = blog.Title,
+            Content = blog.Content,
+            ImageUrl = Path.GetFileName(blog.ImageUrl),
+        };
+        return model;
+    }
+
+    public async Task<BlogVisualizeModel> GetAllBlogsForManageAsync(string sort, string userId, int page = 1)
+    {
+        int pageSize = 6;
+        int skip = (page - 1) * pageSize;
+        var blogs = await _data.Blogs.Include(a => a.Author).Where(b => b.AuthorId.ToString() == userId).OrderByDescending(x => x.CreatedOn).ToListAsync();
+        blogs = blogs.OrderByDescending(x => x.CreatedOn).ToList();
+        var modelBlogs = blogs.Select(b => new BlogDetailsViewModel()
+        {
+            Id = b.Id.ToString(),
+            Title = b.Title,
+            Content = b.Content,
+            Author = b.Author.UserName,
+            CreatedOn = b.CreatedOn,
+            Likes = b.Likes,
+            ImageUrl = Path.GetFileName(b.ImageUrl),
+        }).ToList();
+        modelBlogs = await SortBlogsAsync(sort, modelBlogs);
+        var model = new BlogVisualizeModel()
+        {
+            Blogs = modelBlogs.Skip(skip).Take(pageSize).ToList(),
+        };
+
+        return model;
+    }
+
+    public async Task EditBlogAsync(BlogAddFormModel model, string id, string? path)
+    {
+        var blog = await _data.Blogs.FirstOrDefaultAsync(x => x.Id.ToString() == id)!;
+        blog!.Title = model.Title;
+        blog.Content = model.Content;
+        if (!string.IsNullOrEmpty(path))
+        {
+            blog.ImageUrl = path;
+        }
+        _data.Blogs.Update(blog);
+        await _data.SaveChangesAsync();
+    }
+
+    public async Task DeleteBlogAsync(string id, string userId)
+    {
+        var blog = await _data.Blogs.Include(c => c.Comments).Where(u => u.AuthorId.ToString() == userId).FirstOrDefaultAsync(x => x.Id.ToString() == id);
+        blog!.Comments.Clear();
+        _data.Blogs.Remove(blog!);
+        _data.SaveChanges();
+    }
 }
 

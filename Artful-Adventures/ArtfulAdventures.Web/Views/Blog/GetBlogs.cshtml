@@ -4,17 +4,31 @@
     int currentPage = ViewBag.CurrentPage ?? 1;
     int previousPage = currentPage > 1 ? currentPage - 1 : 1;
     int nextPage = currentPage + 1;
+    string action = ViewBag.Action;
 }
 
 @{
     ViewBag.Title = "Blogs";
 }
 
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-danger" role="alert">
+        @TempData["Error"]
+    </div>
+}
+@if (TempData["Success"] != null)
+{
+    <div class="alert alert-success" role="alert">
+        @TempData["Success"]
+    </div>
+}
+
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.1/css/all.min.css">
 
 <h1 class="text-center">Blogs</h1>
 
-<hr style="margin-top: 50px; margin-bottom:50px;"/>
+<hr style="margin-top: 50px; margin-bottom:50px;" />
 
 <style>
     .my-2 {
@@ -24,15 +38,17 @@
     .text-purple {
         color: #bcd0f7;
     }
+
+    }
 </style>
 <div class="d-flex justify-content-center text-center">
-    
+
     <a class="btn btn-outline-dark my-2 mx-auto" href="@Url.Action("GetBlogs", "Blog", new { sort = "", page = 1})" role="button" style="color:wheat; background-color:cornflowerblue;">All Blogs</a>
     <a class="btn btn-outline-dark my-2 mx-auto" href="@Url.Action("GetBlogs", "Blog", new { sort = "likes", page = 1})" role="button" style="color:wheat;  background-color:#284564">Popular</a>
     <a class="btn btn-outline-dark my-2 mx-auto" href="@Url.Action("GetBlogs", "Blog", new { sort = "newest", page = 1})" role="button" style="color:wheat;  background-color:#284564">Recent</a>
     <a class="btn btn-outline-dark my-2 mx-auto" href="@Url.Action("GetBlogs", "Blog", new { sort = "oldest", page = 1})" role="button" style="color:wheat;  background-color:#284564">Previous</a>
     <a id="sort-link-user" class="btn btn-outline-dark my-2 mx-auto" href="@Url.Action("GetBlogs", "Blog", new { sort = " ", page = 1})" role="button" style="color:wheat;  background-color:#284564">By Author</a>
-    <input id="user-input" type="text" placeholder="Enter user" style="font-size: 16px; margin-bottom: 0rem!important;"/>
+    <input id="user-input" type="text" placeholder="Enter user" style="font-size: 16px; margin-bottom: 0rem!important;" />
     <datalist id="suggestions"></datalist>
 
     <style>
@@ -107,7 +123,17 @@
                         </style>
                         <h5 class="text-purple" style="text-decoration:underline;">@blog.Title</h5>
                         <p class="lead text-purple">@(blog.Content.Length >= 123 ? blog.Content.Substring(0, 123) : @blog.Content)</p>
-                        <a class="btn btn-outline-dark my-2" href="@Url.Action("BlogDetails", "Blog", new { id = blog.Id} )" role="button" style="color:wheat">Read more...</a>
+                        <div style="display: flex; justify-content:center">
+                            <a class="btn btn-outline-dark my-2 blog-button-white" href="@Url.Action("BlogDetails", "Blog", new { id = blog.Id} )" role="button" style="color:wheat">Read more...</a>
+                            @if (action == "ManageBlogs")
+                            {
+                                <a class="btn btn-outline-dark my-2 edit-blog-button-yellow" href="@Url.Action("EditBlog", "Blog", new { id = blog.Id} )" role="button" style="color:wheat">Edit Blog</a>
+                                <form method="post" asp-controller="Blog" asp-action="DeleteBlog" asp-route-id="@blog.Id">
+                                    <button type="submit" class="btn btn-outline-dark my-2 delete-blog-button-red" style="color:wheat">Delete Blog</button>
+                                </form>
+                            }
+                        </div>
+
                     </div>
                 </div>
             </div>

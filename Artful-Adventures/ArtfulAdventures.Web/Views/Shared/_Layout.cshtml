@@ -71,33 +71,6 @@
                         </ul>
                         @if (SignInManager.IsSignedIn(User))
                         {
-                            @*
-                    <ul class="nav-item mt-3 d-flex" style="font-size: 1.3rem">
-                    <li class="nav-item mt-2" style="margin-right: 1.3rem;">@User!.Identity!.Name</li>
-                    <li class="nav-item mt-2">
-                    <div class="icon-with-badge">
-                    @await Component.InvokeAsync("UnreadMessages")
-                    <a href="@Url.Action("Inbox", "Message")"><i class="fas fa-comments fa-lg"></i></a>
-                    </div>
-                    </li>
-
-                    <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false"><i class="fas fa-user"></i></a>
-
-                    <div class="dropdown-menu dropdown-menu-end">
-                    <a class="dropdown-item" asp-area="" asp-controller="UserProfile" asp-action="Profile" asp-route-username="@User!.Identity!.Name">Profile</a>
-                    <a class="dropdown-item" asp-area="" asp-controller="Blog" asp-action="CreateBlog">New Blog Post</a>
-                    <a class="dropdown-item" asp-area="" asp-controller="Message" asp-action="Inbox">Inbox</a>
-                    <div class="dropdown-divider"></div>
-                    <a class="dropdown-item" href="#">Separated link</a>
-                    <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">Settings</a>
-                    <form class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
-                    <button type="submit" class="nav-link btn btn-link text-dark">Logout</button>
-                    </form>
-                    </div>
-                    </li>
-
-                    </ul>*@
                             <div class="icon-with-badge">
                                 @await Component.InvokeAsync("UnreadMessages")
                                 <a href="@Url.Action("Inbox", "Message")"><i class="fas fa-comments fa-lg"></i></a>
@@ -134,8 +107,10 @@
         </div>
         <div class="offcanvas-body">
             <p><a class="nav-link text-dark" asp-area="" asp-controller="UserProfile" asp-action="Profile" asp-route-username="@User!.Identity!.Name">Profile</a></p>
-            <p><a class="nav-link text-dark" asp-area="" asp-controller="Blog" asp-action="CreateBlog">New Blog Post</a></p>
             <p><a class="nav-link text-dark" asp-area="" asp-controller="Message" asp-action="Inbox">Inbox</a></p>
+            <p><a class="nav-link text-dark" asp-area="" asp-controller="Blog" asp-action="CreateBlog">New Blog Post</a></p>
+            <p><a class="nav-link text-dark" asp-area="" asp-controller="Blog" asp-action="ManageBlogs" asp-route-page="1">Manage Blogs</a></p>
+            <p><a class="nav-link text-dark" asp-area="" asp-controller="Picture" asp-action="ManageGetAllPictures" asp-route-page="1">Manage Portfolio</a></p>
             <p><a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">Settings</a></p>
             <p>
                 <form class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">

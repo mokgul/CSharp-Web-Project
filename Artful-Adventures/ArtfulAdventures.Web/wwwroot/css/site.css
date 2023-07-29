@@ -40,10 +40,10 @@ ul.nav-item.mt-3 {
 	list-style-type: none;
 }
 
-	.navbar-nav li a:hover,
-	a.nav-link.dropdown-toggle:hover {
-		color: rgb(95, 209, 249);
-	}
+.navbar-nav li a:hover,
+a.nav-link.dropdown-toggle:hover {
+	color: rgb(95, 209, 249);
+}
 
 
 *,
@@ -121,17 +121,6 @@ body {
 	color: #bcd0f7;
 }
 
-.my-2 {
-	margin: 0 0.5rem !important;
-	border: none;
-	border-bottom: 1px solid #ccc;
-	background-color: #272e48;
-	color: wheat;
-	font-size: 1.0rem;
-	padding: 0.5rem;
-	margin-left: 1rem;
-	margin-bottom: 1rem;
-}
 /*Notification counter css*/
 .icon-with-badge {
 	position: relative;
@@ -143,4 +132,25 @@ body {
 		right: -10px;
 	}
 
+.my-2 {
+	margin: 0 0.5rem !important;
+	border: none;
+	border-bottom: 1px solid #ccc;
+	background-color: #272e48;
+	color: wheat;
+	font-size: 1.0rem;
+	padding: 0.5rem;
+	margin-left: 1rem;
+	margin-bottom: 1rem;
+}
 
+.blog-button-white {
+	box-shadow: inset 0px -4px 8px 0px rgba(255, 255, 255, 0.6); /* Smaller inward white shadow on the bottom side */
+}
+
+.edit-blog-button-yellow {
+	box-shadow: inset 0px -4px 8px 0px rgba(255, 215, 0, 0.6); /* Inward yellowish shadow on the bottom side */
+}
+
+.delete-blog-button-red {
+	box-shadow: inset -2px -7px 12px 0px rgba(255, 0, 0, 0.6) /* Smaller inward red shadow on the bottom side */

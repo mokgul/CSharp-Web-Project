@@ -1,5 +1,9 @@
 ﻿@model BlogAddFormModel
 
+
+@{
+    string action = ViewBag.Action;
+}
 @if (TempData["Success"] != null)
 {
     <div class="alert alert-success text-black" role="alert">
@@ -7,11 +11,11 @@
     </div>
 }
 @{
-    ViewBag.Title = "Add Blog Post";
+    ViewBag.Title = action == "CreateBlog" ? "Add Blog Post" : "Edit Blog Post";
 }
 
 <h2>@ViewBag.Title</h2>
-<form method="post" asp-controller="Blog" asp-action="CreateBlog" enctype="multipart/form-data">
+<form method="post" asp-controller="Blog" asp-action="@action" enctype="multipart/form-data">
     <div class="form-horizontal">
         <h4>Blog Post</h4>
         <hr />

@@ -13,6 +13,14 @@ public interface IPictureService
 
     Task<string> AddToCollectionAsync(string id, string userId);
 
+    Task<ICollection<PictureEditViewModel>> ManageGetAllPicturesAsync(string userId, int page);
+
+    Task<PictureEditViewModel> GetPictureToEditAsync(string id);
+
+    Task EditPictureAsync(PictureEditViewModel model);
+
+    Task<string> DeletePictureAsync(string id, string userId);
+
     Task LikePictureAsync(string pictureId);
 
 }

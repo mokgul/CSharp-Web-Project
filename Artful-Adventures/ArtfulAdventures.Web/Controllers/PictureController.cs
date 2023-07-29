@@ -1,6 +1,7 @@
 ﻿namespace ArtfulAdventures.Web.Controllers
 {
     using System;
+    using System.Diagnostics;
     using System.Drawing;
     using System.IO;
     using System.Security.Claims;
@@ -94,6 +95,61 @@
             return RedirectToAction("PictureDetails", new { id = pictureId });
         }
 
+        [HttpGet]
+        public async Task<IActionResult> ManageGetAllPictures(int page)
+        {
+            ViewBag.CurrentPage = page;
+            var userId = GetUserId();
+            var model = await _pictureService.ManageGetAllPicturesAsync(userId, page);
+            if (model == null)
+            {
+                return RedirectToAction("UserProfile", "Profile");
+            }
+            return View(model);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> EditPicture(string id)
+        {
+            var model = await _pictureService.GetPictureToEditAsync(id);
+            return View(model);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> EditPicture(PictureEditViewModel model)
+        {
+            try
+            {
+                await _pictureService.EditPictureAsync(model);
+            }
+            catch (Exception)
+            {
+                return RedirectToAction("ManageGetAllPictures", "Picture", new { page = 1 });
+            }
+            TempData["Success"] = "Your picture was edited successfully!";
+            return RedirectToAction("ManageGetAllPictures", "Picture", new { page = 1 });
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> DeletePicture(string id)
+        {
+            Stopwatch stopwatch = new Stopwatch();
+            stopwatch.Start();
+            var userId = GetUserId();
+            try
+            {
+                var pathToDelete = await _pictureService.DeletePictureAsync(id, userId);
+                await DeleteFromFtpServer.DeleteFile(pathToDelete);
+            }
+            catch (Exception)
+            {
+                return RedirectToAction("ManageGetAllPictures", "Picture", new { page = 1 });
+            }
+            stopwatch.Stop();
+            var time = stopwatch.Elapsed;
+            TempData["Success"] = "Your picture was deleted successfully!";
+            return RedirectToAction("ManageGetAllPictures", "Picture", new { page = 1 });
+        }
 
         private string GetUserId()
         {

@@ -13,6 +13,14 @@ public interface IBlogService
 
     Task<BlogVisualizeModel> GetAllBlogsAsync(string sort, int page);
 
+    Task<BlogVisualizeModel> GetAllBlogsForManageAsync(string sort, string userId, int page);
+
+    Task<BlogAddFormModel> GetBlogToEditAsync(string id);
+
+    Task DeleteBlogAsync(string id, string userId);
+
+    Task EditBlogAsync(BlogAddFormModel model, string id, string? path);
+
     Task LikeBlogAsync(string blogId);
 }
 
