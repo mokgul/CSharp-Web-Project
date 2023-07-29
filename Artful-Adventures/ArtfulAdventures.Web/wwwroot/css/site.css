@@ -24,12 +24,16 @@ body {
 	box-shadow: 0 0 10px #ccc, 0 0 20px #ccc, 0 0 30px #ccc, 0 0 20px #00f;
 	position: relative;
 	z-index: 1;
-	margin-bottom: 70px
+	margin-bottom: 70px;
+}
+
+a.nav-link.active {
+	color: #bcd0f7;
 }
 
 .navbar-nav li a,
 a.nav-link.dropdown-toggle {
-	color: #6b8cce;
+	color: #bcd0eb !important;
 }
 
 ul.nav-item.mt-3 {
@@ -128,4 +132,15 @@ body {
 	margin-left: 1rem;
 	margin-bottom: 1rem;
 }
+/*Notification counter css*/
+.icon-with-badge {
+	position: relative;
+}
+
+	.icon-with-badge .badge {
+		position: absolute;
+		top: -5px;
+		right: -10px;
+	}
+
 

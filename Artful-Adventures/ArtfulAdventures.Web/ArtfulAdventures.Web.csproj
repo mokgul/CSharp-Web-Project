@@ -25,6 +25,7 @@
     <ProjectReference Include="..\ArtfulAdventures.Data.Models\ArtfulAdventures.Data.Models.csproj" />
     <ProjectReference Include="..\ArtfulAdventures.Data\ArtfulAdventures.Data.csproj" />
     <ProjectReference Include="..\ArtfulAdventures.Services.Data\ArtfulAdventures.Services.Data.csproj" />
+    <ProjectReference Include="..\ArtfulAdventures.Services.Search\ArtfulAdventures.Services.Search.csproj" />
     <ProjectReference Include="..\ArtfulAdventures.Web.ViewModels\ArtfulAdventures.Web.ViewModels.csproj" />
   </ItemGroup>
 

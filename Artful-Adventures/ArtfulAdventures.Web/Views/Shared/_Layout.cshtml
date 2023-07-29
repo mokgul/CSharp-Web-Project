@@ -11,6 +11,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - Artful Adventures</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.4/css/all.css">
+
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/ArtfulAdventures.Web.styles.css" asp-append-version="true" />
 </head>
@@ -60,31 +62,50 @@
                                 </a>
                             </li>
                             <li class="nav-item mt-2" style="margin-left: 10rem; font-size:1.3rem;">
-                                <form class="d-flex">
-                                    <input class="form-control" type="search" placeholder="Search">
+                                <form method="get" class="d-flex" asp-area="" asp-controller="Home" asp-action="Search">
+                                    <input class="form-control" type="search" placeholder="Search" name="query">
                                     <button class="btn btn-secondary my-2 my-sm-0" type="submit">Search</button>
                                 </form>
+
                             </li>
                         </ul>
                         @if (SignInManager.IsSignedIn(User))
                         {
-                            <ul class="nav-item mt-3" style="font-size: 1.3rem">
-                                <li class="nav-item dropdown">
-                                    <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">User Profile</a>
-                                    <div class="dropdown-menu">
-                                        <a class="dropdown-item" asp-area="" asp-controller="UserProfile" asp-action="Profile" asp-route-username="@User!.Identity!.Name">Profile</a>
-                                        <a class="dropdown-item" asp-area="" asp-controller="Blog" asp-action="CreateBlog">New Blog Post</a>
-                                        <a class="dropdown-item" href="#">Something else here</a>
-                                        <div class="dropdown-divider"></div>
-                                        <a class="dropdown-item" href="#">Separated link</a>
-                                        <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">Settings</a>
-                                        <form class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
-                                            <button type="submit" class="nav-link btn btn-link text-dark">Logout</button>
-                                        </form>
-                                    </div>
-                                </li>
+                            @*
+                    <ul class="nav-item mt-3 d-flex" style="font-size: 1.3rem">
+                    <li class="nav-item mt-2" style="margin-right: 1.3rem;">@User!.Identity!.Name</li>
+                    <li class="nav-item mt-2">
+                    <div class="icon-with-badge">
+                    @await Component.InvokeAsync("UnreadMessages")
+                    <a href="@Url.Action("Inbox", "Message")"><i class="fas fa-comments fa-lg"></i></a>
+                    </div>
+                    </li>
 
-                            </ul>
+                    <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false"><i class="fas fa-user"></i></a>
+
+                    <div class="dropdown-menu dropdown-menu-end">
+                    <a class="dropdown-item" asp-area="" asp-controller="UserProfile" asp-action="Profile" asp-route-username="@User!.Identity!.Name">Profile</a>
+                    <a class="dropdown-item" asp-area="" asp-controller="Blog" asp-action="CreateBlog">New Blog Post</a>
+                    <a class="dropdown-item" asp-area="" asp-controller="Message" asp-action="Inbox">Inbox</a>
+                    <div class="dropdown-divider"></div>
+                    <a class="dropdown-item" href="#">Separated link</a>
+                    <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">Settings</a>
+                    <form class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
+                    <button type="submit" class="nav-link btn btn-link text-dark">Logout</button>
+                    </form>
+                    </div>
+                    </li>
+
+                    </ul>*@
+                            <div class="icon-with-badge">
+                                @await Component.InvokeAsync("UnreadMessages")
+                                <a href="@Url.Action("Inbox", "Message")"><i class="fas fa-comments fa-lg"></i></a>
+                            </div>
+                            <div id="profileTriggerContainer">
+                                <span><i class="fas fa-user"></i></span>
+                            </div>
+
                         }
                         else
                         {
@@ -101,6 +122,31 @@
         </main>
     </div>
 
+    <div class="offcanvas offcanvas-end" tabindex="-1" id="settingsOffCanvas" aria-labelledby="settingsOffCanvasLabel">
+        <div class="offcanvas-header d-flex flex-column" style="border:1px solid rgba(255, 255, 255, 0.2);">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <p class="offcanvas-title mb-0" id="settingsOffCanvasLabel" style="font-size: 26px;">User Profile</p>
+                <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close" ></button>
+            </div>
+                @await Component.InvokeAsync("OffCanvasProfile")
+            
+
+        </div>
+        <div class="offcanvas-body">
+            <p><a class="nav-link text-dark" asp-area="" asp-controller="UserProfile" asp-action="Profile" asp-route-username="@User!.Identity!.Name">Profile</a></p>
+            <p><a class="nav-link text-dark" asp-area="" asp-controller="Blog" asp-action="CreateBlog">New Blog Post</a></p>
+            <p><a class="nav-link text-dark" asp-area="" asp-controller="Message" asp-action="Inbox">Inbox</a></p>
+            <p><a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">Settings</a></p>
+            <p>
+                <form class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
+                    <button type="submit" class="nav-link btn btn-link text-dark" style="color: #b8ceeb!important;">Logout</button>
+                </form>
+            </p>
+        </div>
+    </div>
+
+
+
     <footer class="footer sticky-footer border-top footer text-muted">
         <div class="container">
             &copy; Artful Adventures @releaseYear
@@ -113,6 +159,77 @@
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
+    <script>
+        // Get the profile trigger container element
+        const profileTriggerContainer = document.getElementById('profileTriggerContainer');
+
+        // Get the off-canvas element
+        const offCanvasElement = new bootstrap.Offcanvas(document.getElementById('settingsOffCanvas'));
+
+        // Add an event listener to the profile trigger container
+        profileTriggerContainer.addEventListener('click', () => {
+            offCanvasElement.show();
+        });
+    </script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>
+
+<style>
+    #profileTriggerContainer i {
+        font-size: 34px; /* adjust the size as needed */
+        margin-right: 20px; /* adjust the space as needed */
+    }
+
+    #profileTriggerContainer:hover {
+        cursor: pointer;
+    }
+
+    .icon-with-badge {
+        font-size: 30px; /* adjust the size as needed */
+        margin-right: 20px; /* adjust the space as needed */
+    }
+
+    .offcanvas {
+        max-width: 300px; /* adjust the value as needed */
+    }
+
+
+    #settingsOffCanvas {
+        background-color: #1a2225;
+        backdrop-filter: blur(10px); /* adjust the blur amount as needed */
+    }
+
+
+        #settingsOffCanvas .offcanvas-body a:hover {
+            background-color: rgba(255, 255, 255, 0.2); /* adjust the color and opacity as needed */
+        }
+
+        #settingsOffCanvas .offcanvas-body a {
+            font-size: 18px; /* adjust the size as needed */
+            color: #b8ceeb !important; /* adjust the color as needed */
+        }
+
+        #settingsOffCanvas .offcanvas-header{
+            color: #b8ceeb !important; /* adjust the color as needed */
+        }
+
+        #settingsOffCanvas .offcanvas-body {
+            border: 1px solid rgba(255, 255, 255, 0.2)!important; /* adjust the color as needed */
+        }
+
+    .offcanvas-body p:not(:last-child) > a {
+        display: block;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+
+
+    .offcanvas-header .btn-close {
+        background-color: #b8ceeb!important; /* adjust the color as needed */
+        margin: 0px; /* adjust the padding as needed */
+        margin-left: 6rem; /* adjust the margin as needed */
+    }
+
+
+</style>

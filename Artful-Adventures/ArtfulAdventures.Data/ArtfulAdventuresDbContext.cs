@@ -38,11 +38,15 @@ public class ArtfulAdventuresDbContext : IdentityDbContext<ApplicationUser, Iden
 
     public DbSet<FollowerFollowing> Follows { get; set; } = null!;
 
+    public DbSet<Message> Messages { get; set; } = null!;
+
     protected override void OnModelCreating(ModelBuilder builder)
     {
         var mappingConfigurer = new MappingTablesConfiguration();
        
         var enumSeedConfigurer = new EnumsSeedingConfiguration();
+
+        var messageConfiguration = new MessageTableConfiguration();
 
         builder.ApplyConfiguration<PictureHashTag>(mappingConfigurer);
         builder.ApplyConfiguration<ApplicationUserSkill>(mappingConfigurer);
@@ -53,6 +57,8 @@ public class ArtfulAdventuresDbContext : IdentityDbContext<ApplicationUser, Iden
         builder.ApplyConfiguration<Skill>(enumSeedConfigurer);
 
         builder.ApplyConfiguration<FollowerFollowing>(new FollowTableConfiguration());
+
+        builder.ApplyConfiguration<Message>(messageConfiguration);
 
         base.OnModelCreating(builder);
     }

@@ -14,7 +14,7 @@ public static class DataModelsValidationConstants
         public const int CityNameMaxLength = 60;
         public const int AboutMinLength = 10;
         public const int AboutMaxLength = 200;
-        
+
     }
     public static class BlogConstants
     {
@@ -55,6 +55,15 @@ public static class DataModelsValidationConstants
         public const int UrlMaxLength = 2048;
         public const int DescriptionMinLength = 10;
         public const int DescriptionMaxLength = 1000;
+        public const string DateFormat = "yyyy-MM-dd H:mm";
+    }
+
+    public static class MessageConstants
+    {
+        public const int SubjectMinLength = 2;
+        public const int SubjectMaxLength = 100;
+        public const int ContentMinLength = 10;
+        public const int ContentMaxLength = 1000;
         public const string DateFormat = "yyyy-MM-dd H:mm";
     }
 }

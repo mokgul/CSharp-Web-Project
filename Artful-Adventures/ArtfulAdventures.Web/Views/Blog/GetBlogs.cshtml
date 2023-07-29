@@ -20,6 +20,10 @@
     .my-2 {
         margin: 0 0.5rem !important;
     }
+
+    .text-purple {
+        color: #bcd0f7;
+    }
 </style>
 <div class="d-flex justify-content-center text-center">
     
@@ -92,7 +96,7 @@
                                 </a>
                             </li>
 
-                            <li class="list-inline-item"><i class="far fa-clock"></i> @blog.CreatedOn</li>
+                            <li class="list-inline-item text-purple"><i class="far fa-clock text-purple"></i> @blog.CreatedOn</li>
                         </ul>
                         <hr>
                         <style>
@@ -101,8 +105,8 @@
                                 height: 6em;
                             }
                         </style>
-                        <h5 style="text-decoration:underline;">@blog.Title</h5>
-                        <p class="lead">@(blog.Content.Length >= 123 ? blog.Content.Substring(0, 123) : @blog.Content)</p>
+                        <h5 class="text-purple" style="text-decoration:underline;">@blog.Title</h5>
+                        <p class="lead text-purple">@(blog.Content.Length >= 123 ? blog.Content.Substring(0, 123) : @blog.Content)</p>
                         <a class="btn btn-outline-dark my-2" href="@Url.Action("BlogDetails", "Blog", new { id = blog.Id} )" role="button" style="color:wheat">Read more...</a>
                     </div>
                 </div>

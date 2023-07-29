@@ -77,27 +77,20 @@
                                     </div>
                                 </a>
                             </div>
+                            <style>
+                                img:hover {
+                                    filter: brightness(150%);
+                                }
+                            </style>
                         }
                     </div>
                 }
                 else
                 {
-                    <h3 class="text-center">Entries:</h3>
-                    <p>No pictures available.</p>
+                    <h3 class="text-center" style="color: #bcd0f7;">Entries:</h3>
+                    <p style="color: #bcd0f7;">No pictures available.</p>
                 }
             </div>
         </div>
     </div>
 </div>
-@*@if (Model.Pictures.Any())
-        {
-        <h3>Pictures:</h3>
-        foreach (var picture in Model.Pictures)
-        {
-        <img src="~/images/@picture" alt="Challenge Picture" />
-        }
-        }
-        else
-        {
-        <p>No pictures available.</p>
-        }*@

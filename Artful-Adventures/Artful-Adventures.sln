@@ -21,6 +21,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Services", "Services", "{50
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ArtfulAdventures.Services.Data", "ArtfulAdventures.Services.Data\ArtfulAdventures.Services.Data.csproj", "{9F405EC7-14D3-4C4A-A205-E102E711078E}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ArtfulAdventures.Services.Search", "ArtfulAdventures.Services.Search\ArtfulAdventures.Services.Search.csproj", "{27AA923B-78FD-4161-8BEA-0749FAC19249}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -51,6 +53,10 @@ Global
 		{9F405EC7-14D3-4C4A-A205-E102E711078E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9F405EC7-14D3-4C4A-A205-E102E711078E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9F405EC7-14D3-4C4A-A205-E102E711078E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{27AA923B-78FD-4161-8BEA-0749FAC19249}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{27AA923B-78FD-4161-8BEA-0749FAC19249}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{27AA923B-78FD-4161-8BEA-0749FAC19249}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{27AA923B-78FD-4161-8BEA-0749FAC19249}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -61,6 +67,7 @@ Global
 		{1EB62DCD-EA0D-4506-BEF7-993D327ECE3A} = {F1D90ADF-5ECC-43F7-9E9C-CB215A9D8046}
 		{2634BAC7-E998-4125-AD60-554C626B63C9} = {9777F8D2-4CB1-49A2-9040-2183969F30F6}
 		{9F405EC7-14D3-4C4A-A205-E102E711078E} = {50AC8374-7927-4CA7-B4C8-9938E54F37FB}
+		{27AA923B-78FD-4161-8BEA-0749FAC19249} = {50AC8374-7927-4CA7-B4C8-9938E54F37FB}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {846090A0-8538-45D4-9545-AFCEC610B61C}

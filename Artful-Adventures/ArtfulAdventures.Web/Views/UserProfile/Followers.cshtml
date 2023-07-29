@@ -3,7 +3,11 @@
 @{
     ViewBag.Title = "Followers";
 }
-
+<style>
+    .text-purple {
+        color: #bcd0f7 !important;
+    }
+</style>
 <div class="d-flex justify-content-center align-items-center">
     <div class="card mb-4" style="background: radial-gradient(circle at 10% 20%, rgba(218, 203, 246,0.3) 10%, rgba(192, 192, 245,0.1) 33.1%, rgba(218, 203, 246,0.5) 90%);border-color:rgb(218, 203, 246); width:50%;">
         <div class="card-body text-center">
@@ -33,19 +37,19 @@
                             }
                             @if (profile.Username != null)
                             {
-                                <h5 class="my-3">@profile.Username</h5>
+                                <h5 class="my-3 text-purple">@profile.Username</h5>
                             }
                             @if (profile.Name != null)
                             {
-                                <p class="mb-1 text-black">@profile.Name</p>
+                                <p class="mb-1 text-purple">@profile.Name</p>
                             }
                             @if (profile.CityName != null)
                             {
-                                <p class="mb-1 text-black">@profile.CityName</p>
+                                <p class="mb-1 text-purple">@profile.CityName</p>
                             }
                             @if (profile.Bio != null)
                             {
-                                <p class="mb-4 text-black">@profile.Bio</p>
+                                <p class="mb-4 text-purple">@profile.Bio</p>
                             }
                             <div class="d-flex justify-content-center mb-2">
                                 <form method="get" asp-area="" asp-controller="UserProfile" asp-action="Profile" asp-route-username="@profile.Username">
@@ -54,7 +58,12 @@
                                         Profile
                                     </button>
                                 </form>
-                                <button type="button" class="btn btn-outline-primary ms-1" style="color:white; border-color:rgb(218, 203, 246)">Message</button>
+                                <form method="get" asp-area="" asp-controller="Message" asp-action="SendMessage">
+                                    <input type="hidden" name="username" value="@profile.Username" />
+                                    <button type="submit" class="btn btn-primary" style=" border-color:rgb(218, 203, 246)">
+                                        Message
+                                    </button>
+                                </form>
                             </div>
                             <style>
                                 .btn-outline-primary:hover,
@@ -66,16 +75,16 @@
                                 <div class="d-flex justify-content-center rounded-3 p-2 mb-2"
                                      style="background:radial-gradient(circle at -4% -12.9%, rgb(74, 98, 110) 0.3%, rgb(30, 33, 48) 90.2%); border: 1px solid white; color:white;">
                                     <div>
-                                        <p class="small text-muted mb-1">Followers</p>
-                                        <p class="mb-0">@profile.FollowersCount</p>
+                                        <p class="small text-purple mb-1">Followers</p>
+                                        <p class="mb-0text-purple">@profile.FollowersCount</p>
                                     </div>
                                     <div class="px-3">
-                                        <p class="small text-muted mb-1">Following</p>
-                                        <p class="mb-0">@profile.FollowingCount</p>
+                                        <p class="small text-purple mb-1">Following</p>
+                                        <p class="mb-0 text-purple">@profile.FollowingCount</p>
                                     </div>
                                     <div>
-                                        <p class="small text-muted mb-1">Uploads</p>
-                                        <p class="mb-0">@profile.PicturesCount</p>
+                                        <p class="small text-purple mb-1">Uploads</p>
+                                        <p class="mb-0 text-purple">@profile.PicturesCount</p>
                                     </div>
                                 </div>
                             </div>

@@ -44,7 +44,9 @@ public class ApplicationUser : IdentityUser<Guid>
 
     public ICollection<ApplicationUserCollection> Collection { get; set; } = new HashSet<ApplicationUserCollection>();
 
+    public ICollection<Message> SentMessages { get; set; } = new HashSet<Message>();
 
-    //Collection And Skills are stored in Mapping Tables
+    public ICollection<Message> ReceivedMessages { get; set; } = new HashSet<Message>();
+
 }
 

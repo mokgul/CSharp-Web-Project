@@ -17,7 +17,7 @@ namespace ArtfulAdventures.Data.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "6.0.18")
+                .HasAnnotation("ProductVersion", "6.0.20")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
@@ -488,6 +488,45 @@ namespace ArtfulAdventures.Data.Migrations
                         });
                 });
 
+            modelBuilder.Entity("ArtfulAdventures.Data.Models.Message", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<string>("Content")
+                        .IsRequired()
+                        .HasMaxLength(1000)
+                        .HasColumnType("nvarchar(1000)");
+
+                    b.Property<bool>("IsRead")
+                        .HasColumnType("bit");
+
+                    b.Property<Guid>("ReceiverId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("SenderId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Subject")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<DateTime>("Timestamp")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ReceiverId");
+
+                    b.HasIndex("SenderId");
+
+                    b.ToTable("Messages", (string)null);
+                });
+
             modelBuilder.Entity("ArtfulAdventures.Data.Models.Picture", b =>
                 {
                     b.Property<Guid>("Id")
@@ -917,7 +956,7 @@ namespace ArtfulAdventures.Data.Migrations
             modelBuilder.Entity("ArtfulAdventures.Data.Models.ApplicationUserCollection", b =>
                 {
                     b.HasOne("ArtfulAdventures.Data.Models.Picture", "Picture")
-                        .WithMany()
+                        .WithMany("Collection")
                         .HasForeignKey("PictureId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -936,7 +975,7 @@ namespace ArtfulAdventures.Data.Migrations
             modelBuilder.Entity("ArtfulAdventures.Data.Models.ApplicationUserPicture", b =>
                 {
                     b.HasOne("ArtfulAdventures.Data.Models.Picture", "Picture")
-                        .WithMany("ApplicationUsersPictures")
+                        .WithMany("Portfolio")
                         .HasForeignKey("PictureId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -1014,6 +1053,25 @@ namespace ArtfulAdventures.Data.Migrations
                     b.Navigation("Followed");
 
                     b.Navigation("Follower");
+                });
+
+            modelBuilder.Entity("ArtfulAdventures.Data.Models.Message", b =>
+                {
+                    b.HasOne("ArtfulAdventures.Data.Models.ApplicationUser", "Receiver")
+                        .WithMany("ReceivedMessages")
+                        .HasForeignKey("ReceiverId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("ArtfulAdventures.Data.Models.ApplicationUser", "Sender")
+                        .WithMany("SentMessages")
+                        .HasForeignKey("SenderId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Receiver");
+
+                    b.Navigation("Sender");
                 });
 
             modelBuilder.Entity("ArtfulAdventures.Data.Models.Picture", b =>
@@ -1116,6 +1174,10 @@ namespace ArtfulAdventures.Data.Migrations
                     b.Navigation("Following");
 
                     b.Navigation("Portfolio");
+
+                    b.Navigation("ReceivedMessages");
+
+                    b.Navigation("SentMessages");
                 });
 
             modelBuilder.Entity("ArtfulAdventures.Data.Models.Blog", b =>
@@ -1135,11 +1197,13 @@ namespace ArtfulAdventures.Data.Migrations
 
             modelBuilder.Entity("ArtfulAdventures.Data.Models.Picture", b =>
                 {
-                    b.Navigation("ApplicationUsersPictures");
+                    b.Navigation("Collection");
 
                     b.Navigation("Comments");
 
                     b.Navigation("PicturesHashTags");
+
+                    b.Navigation("Portfolio");
                 });
 
             modelBuilder.Entity("ArtfulAdventures.Data.Models.Skill", b =>

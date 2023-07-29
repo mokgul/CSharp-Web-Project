@@ -1,0 +1,42 @@
+﻿@model MessageInbox
+
+<h2>Inbox</h2>
+
+@{
+    ViewBag.Title = "Inbox";
+}
+
+<style>
+    .inbox-table td, th {
+        color: #bcd0f7;
+    }
+</style>
+<a href="@Url.Action("SendMessage", "Message")" class="btn btn-primary">New message</a>
+<table class="table inbox-table">
+    <thead>
+        <tr>
+            <th>Sender</th>
+            <th>Subject</th>
+            <th>Timestamp</th>
+            <th>Read</th>
+            <th>Unread Count</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var message in Model.Messages)
+        {
+            <tr>
+                <td>@message.Sender</td>
+                <td>@message.Subject</td>
+                <td>@message.Timestamp</td>
+                <td>@(message.UnreadMessages  == 0 ? "Yes" : "No")</td>
+                <td>@message.UnreadMessages</td>
+                <td><a href="@Url.Action("ViewMessageHistory", "Message", new{id = message.Id})">View History</a></td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+
+

@@ -1,0 +1,28 @@
+﻿@model MessageInboxViewModel
+
+<h2>Message</h2>
+
+@{
+    ViewBag.Title = "Message";
+}
+
+<div>
+    <label>Sender:</label>
+    @Model.Sender
+</div>
+
+<div>
+    <label>Subject:</label>
+    @Model.Subject
+</div>
+
+<div>
+    <label>Content:</label>
+    @Model.Content
+</div>
+
+<div>
+    <label>Timestamp:</label>
+    @Model.Timestamp
+</div>
+<a href="@Url.Action("Inbox", "Message")" class="btn btn-secondary">Back to Inbox</a>

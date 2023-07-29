@@ -1,0 +1,26 @@
+﻿@model string[]
+
+
+
+<div class="mini-card d-flex align-items-center">
+    @if (Model[1] != null)
+    {
+        <img class="rounded-circle shadow-1-strong me-3"
+             src="~/images/@Model[1]" alt="avatar" width="80"
+             height="auto" style="margin-left:10px;" />
+    }
+    else
+    {
+        <img class="rounded-circle shadow-1-strong me-3"
+             src="~/local/no-profile-picture.jpg" alt="avatar" width="80"
+             height="auto" />
+    }
+
+    <p class="my-3 text-purple" style="font-size: 28px; margin-left: 10px; margin-right:60px;">@Model[0]</p>
+</div>
+
+<style>
+    .mini-card {
+        background-color:  rgba(255, 255, 255, 0.1);
+    }
+</style>

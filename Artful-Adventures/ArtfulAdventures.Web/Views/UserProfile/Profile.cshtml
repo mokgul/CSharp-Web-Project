@@ -15,7 +15,11 @@ else if (TempData["Success"] != null)
         @TempData["Success"]
     </div>
 }
-
+<style>
+    .text-purple {
+        color: #bcd0f7!important;
+    }
+</style>
 <section>
     <div class="container py-3">
         <div class="card mb-4 mb-lg-0" style="max-width: 20rem; background: none; border: none;">
@@ -23,19 +27,19 @@ else if (TempData["Success"] != null)
                 <div class="d-flex  mb-3">
                     <form asp-area="" asp-controller="UserProfile" asp-action="Portfolio" method="get">
                         <input type="hidden" name="username" value="@Model.Username" />
-                        <button type="submit" class="btn btn-outline-secondary" style="margin-right: 13px; color: white; border-color:rgb(218, 203, 246)">Portfolio</button>
+                        <button type="submit" class="btn btn-outline-secondary text-purple" style="margin-right: 13px; color: white; border-color:rgb(218, 203, 246)">Portfolio</button>
                     </form>
                     <form asp-area="" asp-controller="UserProfile" asp-action="Favorites" method="get">
                         <input type="hidden" name="username" value="@Model.Username" />
-                        <button type="submit" class="btn btn-outline-secondary" style="margin-right: 13px; color: white; border-color:rgb(218, 203, 246)">Favorites</button>
+                        <button type="submit" class="btn btn-outline-secondary text-purple" style="margin-right: 13px; color: white; border-color:rgb(218, 203, 246)">Favorites</button>
                     </form>
                     <form asp-area="" asp-controller="UserProfile" asp-action="Followers" method="get">
                         <input type="hidden" name="username" value="@Model.Username" />
-                        <button type="submit" class="btn btn-outline-secondary" style="margin-right: 13px; color: white; border-color:rgb(218, 203, 246)">Followers</button>
+                        <button type="submit" class="btn btn-outline-secondary text-purple" style="margin-right: 13px; color: white; border-color:rgb(218, 203, 246)">Followers</button>
                     </form>
                     <form asp-area="" asp-controller="UserProfile" asp-action="Following" method="get">
                         <input type="hidden" name="username" value="@Model.Username" />
-                        <button type="submit" class="btn btn-outline-secondary" style="margin-right: 13px; color: white; border-color:rgb(218, 203, 246)">Following</button>
+                        <button type="submit" class="btn btn-outline-secondary text-purple" style="margin-right: 13px; color: white; border-color:rgb(218, 203, 246)">Following</button>
                     </form>
                 </div>
                 <style>
@@ -62,19 +66,19 @@ else if (TempData["Success"] != null)
                         }
                         @if (Model.Username != null)
                         {
-                            <h5 class="my-3">@Model.Username</h5>
+                            <h5 class="my-3 text-purple">@Model.Username</h5>
                         }
                         @if (Model.Name != null)
                         {
-                            <p class="mb-1 text-black">@Model.Name</p>
+                            <p class="mb-1  text-purple">@Model.Name</p>
                         }
                         @if (Model.CityName != null)
                         {
-                            <p class="mb-1 text-black">@Model.CityName</p>
+                            <p class="mb-1  text-purple">@Model.CityName</p>
                         }
                         @if (Model.Bio != null)
                         {
-                            <p class="mb-4 text-black">@Model.Bio</p>
+                            <p class="mb-4 text-purple">@Model.Bio</p>
                         }
                         <div class="d-flex justify-content-center mb-2">
                             @if (Model.isFollowed == true)
@@ -93,7 +97,12 @@ else if (TempData["Success"] != null)
                                     </button>
                                 </form>
                             }
-                            <button type="button" class="btn btn-outline-primary ms-1" style="color:white; border-color:rgb(218, 203, 246)">Message</button>
+                            <form method="get" asp-area="" asp-controller="Message" asp-action="SendMessage">
+                                <input type="hidden" name="username" value="@Model.Username" />
+                                <button type="submit" class="btn btn-primary" style=" border-color:rgb(218, 203, 246)">
+                                    Message
+                                </button>
+                            </form>
                         </div>
                         <style>
                             .btn-outline-primary:hover,
@@ -105,16 +114,16 @@ else if (TempData["Success"] != null)
                             <div class="d-flex justify-content-center rounded-3 p-2 mb-2"
                                  style="background:radial-gradient(circle at -4% -12.9%, rgb(74, 98, 110) 0.3%, rgb(30, 33, 48) 90.2%); border: 1px solid white; color:white;">
                                 <div>
-                                    <p class="small text-muted mb-1">Followers</p>
-                                    <p class="mb-0">@Model.FollowersCount</p>
+                                    <p class="small text-purple mb-1">Followers</p>
+                                    <p class="mb-0 text-purple">@Model.FollowersCount</p>
                                 </div>
                                 <div class="px-3">
-                                    <p class="small text-muted mb-1">Following</p>
-                                    <p class="mb-0">@Model.FollowingCount</p>
+                                    <p class="small text-purple mb-1">Following</p>
+                                    <p class="mb-0 text-purple">@Model.FollowingCount</p>
                                 </div>
                                 <div>
-                                    <p class="small text-muted mb-1">Uploads</p>
-                                    <p class="mb-0">@Model.PicturesCount</p>
+                                    <p class="small text-purple mb-1">Uploads</p>
+                                    <p class="mb-0 text-purple">@Model.PicturesCount</p>
                                 </div>
                             </div>
                         </div>
@@ -125,8 +134,8 @@ else if (TempData["Success"] != null)
                     <div class="col-lg-4">
                         <div class="card mb-4" style="width: 20rem; height:15rem;background: radial-gradient(circle at 10% 20%, rgba(218, 203, 246,0.3) 10%, rgba(192, 192, 245,0.1) 33.1%, rgba(218, 203, 246,0.5) 90%);border-color:rgb(218, 203, 246)">
                             <div class="card-body text-center">
-                                <h5 class="my-3">About</h5>
-                                <p class="mb-4 text-black">@Model.About</p>
+                                <h5 class="my-3 text-purple">About</h5>
+                                <p class="mb-4 text-purple">@Model.About</p>
                             </div>
                         </div>
                     </div>
@@ -137,7 +146,7 @@ else if (TempData["Success"] != null)
                     <div class="card-body">
                         @if (Model.Pictures != null && Model.Pictures.Count > 0)
                         {
-                            <div style="display: flex; flex-wrap: wrap;">
+                            <div style="display: flex; flex-wrap: wrap; justify-content: flex-start; margin-left: 30px;">
                                 @foreach (var picture in Model.Pictures.Take(9))
                                 {
                                     @await Html.PartialAsync("_PictureDisplayPartial", picture)

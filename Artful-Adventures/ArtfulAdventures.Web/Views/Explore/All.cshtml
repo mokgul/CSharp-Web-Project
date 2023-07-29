@@ -1,5 +1,6 @@
 ﻿@model ExploreViewModel
 @using Microsoft.AspNetCore.Http
+
 <link rel="stylesheet" href="https://cdn.rawgit.com/bantikyan/icheck-bootstrap/master/icheck-bootstrap.min.css">
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 @{
@@ -27,11 +28,11 @@
         <a class="btn btn-outline-dark my-2 mx-auto" href="@Url.Action("All", "Explore", new { sort = "newest", page = 1})" role="button" style="color:wheat;  background-color:#284564">Recent</a>
         <a class="btn btn-outline-dark my-2 mx-auto" href="@Url.Action("All", "Explore", new { sort = "oldest", page = 1})" role="button" style="color:wheat;  background-color:#284564">Previous</a>
         <a id="sort-link-tag" class="btn btn-outline-dark my-2 mx-auto" href="@Url.Action("All", "Explore", new { sort = " ", page = 1})" role="button" style="color:wheat;  background-color:#284564">Sort by tag</a>
-        <input id="tag-input" type="text" placeholder="Enter tag" list="suggestions"/>
+        <input id="tag-input" type="text" placeholder="Enter tag" list="suggestions" />
         <datalist id="suggestions"></datalist>
 
         <a id="sort-link-user" class="btn btn-outline-dark my-2 mx-auto" href="@Url.Action("All", "Explore", new { sort = " ", page = 1})" role="button" style="color:wheat;  background-color:#284564">By Author</a>
-        <input id="user-input" type="text" placeholder="Enter user"/>
+        <input id="user-input" type="text" placeholder="Enter user" />
         <datalist id="suggestions"></datalist>
     </div>
     <div class="mb-2 py-3">
@@ -99,10 +100,13 @@
                 <div class="card-body">
                     @if (Model.Pictures != null && Model.Pictures.Count > 0)
                     {
-                        <div style="display: flex; flex-wrap: wrap;">
+                        <div style="display: flex; flex-wrap: wrap; justify-content: flex-start;">
                             @foreach (var picture in Model.Pictures)
                             {
-                                @await Html.PartialAsync("_PictureGalleryPartial", picture)
+                                <div>
+                                    @await Html.PartialAsync("_PictureGalleryPartial", picture)
+                                </div>
+                                
                             }
                         </div>
                     }

@@ -98,10 +98,13 @@
                 <div class="card-body">
                     @if (Model.Pictures != null && Model.Pictures.Count > 0)
                     {
-                        <div style="display: flex; flex-wrap: wrap;">
+                        <div style="display: flex; flex-wrap: wrap; justify-content: flex-start;">
                             @foreach (var picture in Model.Pictures)
                             {
-                                @await Html.PartialAsync("_PictureGalleryPartial", picture)
+                                <div>
+                                    @await Html.PartialAsync("_PictureGalleryPartial", picture)
+                                </div>
+
                             }
                         </div>
                     }
