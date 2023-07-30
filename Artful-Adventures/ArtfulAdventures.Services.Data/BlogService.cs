@@ -1,6 +1,7 @@
 ﻿namespace ArtfulAdventures.Services.Data;
 
 using System.Threading.Tasks;
+using System.Xml.Linq;
 
 using ArtfulAdventures.Data;
 using ArtfulAdventures.Data.Models;
@@ -66,7 +67,6 @@ public class BlogService : IBlogService
             Title = blog.Title,
             Content = blog.Content,
             Author = user!.UserName,
-            AuthorPictureUrl = Path.GetFileName(user!.Url),
             CreatedOn = blog.CreatedOn,
             Likes = blog.Likes,
             ImageUrl = Path.GetFileName(blog.ImageUrl),
@@ -75,8 +75,12 @@ public class BlogService : IBlogService
                 Author = c.Author,
                 Content = c.Content,
                 CreatedOn = c.CreatedOn,
-            }).ToList(),
+            }).ToList()
         };
+            foreach (var comment in model.Comments)
+        {
+            comment.AuthorPictureUrl = Path.GetFileName(_data.Users.FirstOrDefault(u => u.UserName == comment.Author).Url);
+        }
         return model;
     }
 

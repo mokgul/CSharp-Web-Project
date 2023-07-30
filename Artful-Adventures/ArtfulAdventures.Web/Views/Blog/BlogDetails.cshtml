@@ -36,7 +36,7 @@
                 </a>
             </li>
 
-            <li class="list-inline-item"><i class="far fa-clock"></i> @Model.CreatedOn</li>
+            <li class="list-inline-item" style="color:#abd5ff"><i class="far fa-clock" style="color:#abd5ff"></i> @Model.CreatedOn</li>
         </ul>
 
         <!-- Article title and description -->
@@ -49,7 +49,7 @@
 
         </a>
         <hr />
-        
+
         <form method="post" asp-area="" asp-controller="Blog" asp-action="Like" asp-route-blogId="@Model.Id">
             <button type="submit" class="btn btn-outline-dark my-2 mx-auto" style="color:wheat;  background-color:#284564; margin-bottom: 2rem!important;">
                 Like<span class="badge ms-2">@Model.Likes</span></a>
@@ -70,19 +70,10 @@
 
                             <div class="card-footer py-3 border-0" style="background-color: transparent;">
                                 <div class="d-flex flex-start w-100">
-                                    @if (Model.AuthorPictureUrl != null)
-                                    {
-                                        <img class="rounded-circle shadow-1-strong me-3"
-                                             src="~/images/@Model.AuthorPictureUrl" alt="avatar" width="40"
-                                             height="40" />
 
-                                    }
-                                    else
-                                    {
-                                        <img class="rounded-circle shadow-1-strong me-3"
-                                             src="~/local/no-profile-picture.jpg" alt="avatar" width="40"
-                                             height="40" />
-                                    }
+                                    <img class="rounded-circle shadow-1-strong me-3"
+                                         src="~/local/no-profile-picture.jpg" alt="avatar" width="40"
+                                         height="40" />
 
                                     <div class="form-outline w-100">
                                         <textarea class="form-control" id="textArea" rows="4"
@@ -103,10 +94,10 @@
                                 {
                                     <div class="card-body p-4">
                                         <div class="d-flex flex-start">
-                                            @if (Model.AuthorPictureUrl != null)
+                                            @if (comment.AuthorPictureUrl != null)
                                             {
                                                 <img class="rounded-circle shadow-1-strong me-3"
-                                                     src="~/images/@Model.AuthorPictureUrl" alt="avatar" width="40"
+                                                     src="~/images/@comment.AuthorPictureUrl" alt="avatar" width="40"
                                                      height="40" />
 
                                             }

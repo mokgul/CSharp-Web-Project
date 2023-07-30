@@ -1,8 +1,5 @@
 ﻿@model ArtfulAdventures.Web.ViewModels.Picture.PictureDetailsViewModel
 
-@{
-    ViewBag.Title = "Picture Details";
-}
 
 @if (TempData["Success"] != null)
 {
@@ -17,7 +14,9 @@
         @TempData["Message"]
     </div>
 }
-
+@{
+    ViewBag.Title = "Picture Details";
+}
 <div class="container">
     <div class="row">
         <!-- Section 1: Picture -->
@@ -30,6 +29,9 @@
                 border-radius: 15px;
             }
         </style>
+        <div style="display: flex; justify-content:start">
+            <a class="btn btn-outline-dark my-2 blog-button-white" href="@Context.Request.Headers["Referer"]" role="button" style="color:wheat; width: 80px; margin-bottom: 1rem!important;">Return</a>
+        </div>
 
         <div class="col-md-9 d-flex justify-content-center align-items-center frosted-glass">
             <section class="picture-view">
@@ -68,13 +70,13 @@
                                 <div class="d-flex justify-content-center pt-2">
                                     <form method="get" asp-area="" asp-controller="UserProfile" asp-action="Profile" asp-route-username="@Model.Owner">
                                         <input type="hidden" name="username" value="@Model.Owner" />
-                                        <button type="submit" class="btn btn-outline-primary me-1 flex-grow-1">
+                                        <button type="submit" class="btn btn-outline-dark my-2 blog-button-white" style="color:wheat; height:42px;padding-left:12px; padding-right:12px;">
                                             Profile
                                         </button>
                                     </form>
                                     <form method="get" asp-area="" asp-controller="Message" asp-action="SendMessage">
                                         <input type="hidden" name="username" value="@Model.Owner" />
-                                        <button type="submit" class="btn btn-outline-primary me-1 flex-grow-1">
+                                        <button type="submit" class="btn btn-outline-dark my-2 blog-button-white" style="color:wheat; height:42px;padding-left:12px; padding-right:12px;">
                                             Message
                                         </button>
                                     </form>
@@ -112,12 +114,12 @@
                          style="background:radial-gradient(circle at -4% -12.9%, rgb(74, 98, 110) 0.3%, rgb(30, 33, 48) 90.2%); ">
                         <div class="d-flex justify-content-center">
                             <form method="post" asp-area="" asp-controller="Picture" asp-action="LikePicture" asp-route-pictureId="@Model.Id">
-                                <button type="submit" class="btn btn-outline-primary me-1 flex-grow-1">
+                                <button type="submit" class="btn btn-outline-dark my-2 blog-button-white" style="color:wheat; height:42px;padding-left:12px; padding-right:12px;">
                                     Like
                                 </button>
                             </form>
                             <form method="post" asp-area="" asp-controller="Picture" asp-action="AddToCollection" asp-route-pictureId="@Model.Id">
-                                <button type="submit" class="btn btn-outline-primary me-1 flex-grow-1">Add To Favorites</button>
+                                <button type="submit" class="btn btn-outline-dark my-2 blog-button-white" style="color:wheat; height:42px;padding-left:12px; padding-right:12px;">Add To Favorites</button>
                             </form>
                         </div>
                     </div>
@@ -171,20 +173,11 @@
 
                             <div class="card-footer py-3 border-0" style="background-color: transparent;">
                                 <div class="d-flex flex-start w-100">
-                                    @if (Model.OwnerPictureUrl != null)
-                                    {
-                                        <img class="rounded-circle shadow-1-strong me-3"
-                                             src="~/images/@Model.OwnerPictureUrl" alt="avatar" width="40"
-                                             height="40" />
 
-                                    }
-                                    else
-                                    {
-                                        <img class="rounded-circle shadow-1-strong me-3"
-                                             src="~/local/no-profile-picture.jpg" alt="avatar" width="40"
-                                             height="40" />
-                                    }
-                                    
+                                    <img class="rounded-circle shadow-1-strong me-3"
+                                         src="~/local/no-profile-picture.jpg" alt="avatar" width="40"
+                                         height="40" />
+
                                     <div class="form-outline w-100">
                                         <textarea class="form-control" id="textArea" rows="4"
                                                   style="background-color: transparent; color:#88c4f7;"></textarea>
@@ -244,10 +237,11 @@
         backdrop-filter: blur(10px);
         color: #bcd0f7;
     }
-    .text-purple{
-        color: #bcd0f7!important;
+
+    .text-purple {
+        color: #bcd0f7 !important;
     }
-    </style>
+</style>
 
 <script>
     let button = document.getElementById("button");

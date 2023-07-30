@@ -7,7 +7,7 @@
 }
 
 @{
-    ViewBag.Title = "Manage Portfolio";
+    ViewBag.Title = action == "ManageGetAllPictures" ? "Manage Portfolio" : "Manage Favorites";
 }
 
 @if (TempData["Error"] != null)
@@ -68,10 +68,22 @@
                         </a>
                         <p class="lead text-purple">@(item.Description.Length >= 123 ? item.Description.Substring(0, 123) : @item.Description)</p>
                         <div style="display: flex; justify-content:center">
-                            <a class="btn btn-outline-dark my-2 edit-blog-button-yellow" href="@Url.Action("EditPicture", "Picture", new { id = item.Id} )" role="button" style="color:wheat">Edit Picture</a>
-                            <form method="post" asp-controller="Picture" asp-action="DeletePicture" asp-route-id="@item.Id">
-                                <button type="submit" class="btn btn-outline-dark my-2 delete-blog-button-red" style="color:wheat">Delete Picture</button>
-                            </form>
+                            @if (action == "ManageGetAllPictures")
+                            {
+                                <a class="btn btn-outline-dark my-2 edit-blog-button-yellow" href="@Url.Action("EditPicture", "Picture", new { id = item.Id} )" role="button" style="color:wheat">Edit Picture</a>
+                            }
+                            @if (action == "ManageGetAllPictures")
+                            {
+                                <form method="post" asp-controller="Picture" asp-action="DeletePicture" asp-route-id="@item.Id">
+                                    <button type="submit" class="btn btn-outline-dark my-2 delete-blog-button-red" style="color:wheat">Delete Picture</button>
+                                </form>
+                            }
+                            else
+                            {
+                                <form method="post" asp-controller="Picture" asp-action="RemoveFromCollection" asp-route-id="@item.Id">
+                                    <button type="submit" class="btn btn-outline-dark my-2 delete-blog-button-red" style="color:wheat">Remove from Favorites</button>
+                                </form>
+                            }
                         </div>
 
                     </div>

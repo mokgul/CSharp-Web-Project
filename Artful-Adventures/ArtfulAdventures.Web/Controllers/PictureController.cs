@@ -99,6 +99,7 @@
         public async Task<IActionResult> ManageGetAllPictures(int page)
         {
             ViewBag.CurrentPage = page;
+            ViewBag.Action = "ManageGetAllPictures";
             var userId = GetUserId();
             var model = await _pictureService.ManageGetAllPicturesAsync(userId, page);
             if (model == null)
@@ -106,6 +107,20 @@
                 return RedirectToAction("UserProfile", "Profile");
             }
             return View(model);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> ManageGetAllCollection(int page)
+        {
+            ViewBag.CurrentPage = page;
+            ViewBag.Action = "ManageGetAllCollection";
+            var userId = GetUserId();
+            var model = await _pictureService.ManageGetAllCollectionAsync(userId, page);
+            if (model == null)
+            {
+                return RedirectToAction("UserProfile", "Profile");
+            }
+            return View("ManageGetAllPictures", model);
         }
 
         [HttpGet]
@@ -133,22 +148,37 @@
         [HttpPost]
         public async Task<IActionResult> DeletePicture(string id)
         {
-            Stopwatch stopwatch = new Stopwatch();
-            stopwatch.Start();
             var userId = GetUserId();
             try
             {
                 var pathToDelete = await _pictureService.DeletePictureAsync(id, userId);
                 await DeleteFromFtpServer.DeleteFile(pathToDelete);
             }
-            catch (Exception)
+            catch (ArgumentException ex)
             {
+                TempData["Error"] = ex.Message;
                 return RedirectToAction("ManageGetAllPictures", "Picture", new { page = 1 });
             }
-            stopwatch.Stop();
-            var time = stopwatch.Elapsed;
             TempData["Success"] = "Your picture was deleted successfully!";
             return RedirectToAction("ManageGetAllPictures", "Picture", new { page = 1 });
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> RemoveFromCollection(string id)
+        {
+            var userId = GetUserId();
+            var result = string.Empty;
+            try
+            {
+                result = await _pictureService.RemoveFromCollectionAsync(id, userId);
+            }
+            catch (ArgumentException ex)
+            {
+                TempData["Error"] = ex.Message;
+                return RedirectToAction("ManageGetAllCollection", "Picture", new { page = 1 });
+            }
+            TempData["Success"] = result;
+            return RedirectToAction("ManageGetAllCollection", "Picture", new { page = 1 });
         }
 
         private string GetUserId()

@@ -175,6 +175,7 @@ public class PictureService : IPictureService
         await _data.SaveChangesAsync();
     }
 
+    //for portfolio
     public async Task<ICollection<PictureEditViewModel>> ManageGetAllPicturesAsync(string userId, int page = 1)
     {
         var pageSize = 9;
@@ -187,6 +188,21 @@ public class PictureService : IPictureService
             Description = p.Description,
         }).ToList();
         model = model.Skip(skip).Take(pageSize).ToList();
+        return model;
+    }
+
+    public async Task<ICollection<PictureEditViewModel>> ManageGetAllCollectionAsync(string userId, int page = 1)
+    {
+        int pageSize = 9;
+        var skip = (page - 1) * pageSize;
+        var user = await _data.Users.Include(p => p.Collection).FirstOrDefaultAsync(u => u.Id.ToString() == userId);
+        var collection = user!.Collection.Select(p => _data.Pictures.Find(p.PictureId)).Select(c => new PictureEditViewModel()
+        {
+            Id = c.Id.ToString(),
+            PictureUrl = Path.GetFileName(c.Url),
+            Description = c.Description,
+        }).ToList();
+        var model = collection.Skip(skip).Take(pageSize).ToList();
         return model;
     }
 
@@ -244,6 +260,10 @@ public class PictureService : IPictureService
             .Include(o => o.Owner)
             .Where(u => u.Owner.Id.ToString() == userId)
             .FirstOrDefaultAsync(p => p.Id.ToString() == id);
+        if (picture == null)
+        {
+            throw new ArgumentException("Picture not found.");
+        }
         picture!.Comments.Clear();
         picture.Collection.Clear();
         picture.PicturesHashTags.Clear();
@@ -255,6 +275,23 @@ public class PictureService : IPictureService
         await _data.SaveChangesAsync();
 
         return path;
+    }
+
+    public async Task<string> RemoveFromCollectionAsync(string id, string userId)
+    {
+        var user = _data.Users.Include(c => c.Collection).FirstOrDefault(u => u.Id.ToString() == userId);
+        if (user == null)
+        {
+            throw new ArgumentException("User not found.");
+        }
+        var picture = user.Collection.FirstOrDefault(p => p.PictureId.ToString() == id);
+        if (picture == null)
+        {
+            throw new ArgumentException("Picture not found.");
+        }
+        user.Collection.Remove(picture);
+        _data.SaveChanges();
+        return "You removed this picture from your collection.";
     }
 }
 

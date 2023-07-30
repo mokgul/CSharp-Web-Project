@@ -34,7 +34,7 @@ public class MessageController : Controller
         var receiver = await _data.Users.FirstOrDefaultAsync(x => x.UserName == model.Receiver);
         if (receiver == null)
         {
-            ModelState.AddModelError("Receiver", "User does not exist.");
+            TempData["Error"] = "User does not exist.";
             return View(model);
         }
         var user = await _data.Users.FirstOrDefaultAsync(x => x.UserName == this.User!.Identity!.Name);
@@ -51,7 +51,9 @@ public class MessageController : Controller
         receiver.ReceivedMessages.Add(message);
         await _data.Messages.AddAsync(message);
         await _data.SaveChangesAsync();
-        return RedirectToAction("Index", "Home");
+        TempData["Success"] = "Message sent successfully.";
+        return View(model);
+        //return RedirectToAction("Inbox", "Message");
     }
 
     [HttpGet]

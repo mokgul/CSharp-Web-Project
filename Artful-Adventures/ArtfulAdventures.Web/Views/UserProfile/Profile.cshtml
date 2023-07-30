@@ -17,7 +17,7 @@ else if (TempData["Success"] != null)
 }
 <style>
     .text-purple {
-        color: #bcd0f7!important;
+        color: #bcd0f7 !important;
     }
 </style>
 <section>
@@ -84,24 +84,19 @@ else if (TempData["Success"] != null)
                             @if (Model.isFollowed == true)
                             {
                                 <form method="post" asp-area="" asp-controller="UserProfile" asp-action="Unfollow" asp-route-username="@Model.Username">
-                                    <button type="submit" class="btn btn-primary" style=" border-color:rgb(218, 203, 246)">
-                                        Unfollow
-                                    </button>
+                                    <button type="submit" class="btn btn-outline-dark my-2 blog-button-white" style="color:wheat; height:42px;padding-left:12px; padding-right:12px;">Unfollow</button>
                                 </form>
                             }
                             else
                             {
                                 <form method="post" asp-area="" asp-controller="UserProfile" asp-action="Follow" asp-route-username="@Model.Username">
-                                    <button type="submit" class="btn btn-primary" style=" border-color:rgb(218, 203, 246)">
-                                        Follow
-                                    </button>
+                                    <button type="submit" class="btn btn-outline-dark my-2 blog-button-white" style="color:wheat; height:42px;padding-left:12px; padding-right:12px;">Follow</button>
                                 </form>
+
                             }
                             <form method="get" asp-area="" asp-controller="Message" asp-action="SendMessage">
                                 <input type="hidden" name="username" value="@Model.Username" />
-                                <button type="submit" class="btn btn-primary" style=" border-color:rgb(218, 203, 246)">
-                                    Message
-                                </button>
+                                <button type="submit" class="btn btn-outline-dark my-2 blog-button-white" style="color:wheat; height:42px;padding-left:12px; padding-right:12px;">Message</button>
                             </form>
                         </div>
                         <style>

@@ -15,6 +15,9 @@
         </div>
     </div>
 </div>
+<div style="display: flex; justify-content:start;">
+    <a class="btn btn-outline-dark my-2 blog-button-white" href="@Context.Request.Headers["Referer"]" role="button" style="color:wheat; width: 80px; margin-bottom: 1rem!important;">Return</a>
+</div>
 <section>
     <div class="container py-3">
 
@@ -53,14 +56,14 @@
                             <div class="d-flex justify-content-center mb-2">
                                 <form method="get" asp-area="" asp-controller="UserProfile" asp-action="Profile" asp-route-username="@profile.Username">
                                     <input type="hidden" name="username" value="@profile.Username" />
-                                    <button type="submit" class="btn btn-primary" style=" border-color:rgb(218, 203, 246)">
+                                    <button type="submit" class="btn btn-outline-dark my-2 blog-button-white" style="color:wheat; height:42px;padding-left:12px; padding-right:12px;">
                                         Profile
                                     </button>
                                 </form>
 
                                 <form method="get" asp-area="" asp-controller="Message" asp-action="SendMessage">
                                     <input type="hidden" name="username" value="@profile.Username" />
-                                    <button type="submit" class="btn btn-primary" style=" border-color:rgb(218, 203, 246)">
+                                    <button type="submit" class="btn btn-outline-dark my-2 blog-button-white" style="color:wheat; height:42px;padding-left:12px; padding-right:12px;">
                                         Message
                                     </button>
                                 </form>
