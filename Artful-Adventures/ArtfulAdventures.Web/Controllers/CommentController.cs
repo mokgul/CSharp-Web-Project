@@ -6,7 +6,11 @@
     using ArtfulAdventures.Data.Models;
     using ArtfulAdventures.Web.ViewModels.Comment;
 
+    using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
+    using Microsoft.EntityFrameworkCore;
+
+    using static ArtfulAdventures.Common.GeneralApplicationConstants.Roles;
 
     public class CommentController : Controller
     {
@@ -58,5 +62,6 @@
             await _data.SaveChangesAsync();
             return RedirectToAction("BlogDetails", "Blog", new { id = blogId });
         }
+
     }
 }

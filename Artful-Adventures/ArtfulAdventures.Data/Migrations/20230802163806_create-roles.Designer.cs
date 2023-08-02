@@ -4,6 +4,7 @@ using ArtfulAdventures.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ArtfulAdventures.Data.Migrations
 {
     [DbContext(typeof(ArtfulAdventuresDbContext))]
-    partial class ArtfulAdventuresDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230802163806_create-roles")]
+    partial class createroles
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -106,64 +108,6 @@ namespace ArtfulAdventures.Data.Migrations
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
                     b.ToTable("AspNetUsers", (string)null);
-
-                    b.HasData(
-                        new
-                        {
-                            Id = new Guid("b04c7301-c0c6-4a05-a8ba-8bec078cb212"),
-                            AccessFailedCount = 0,
-                            ConcurrencyStamp = "e09351ef-6000-473c-b4d8-1e088cf888b0",
-                            Email = "test-user-01@test.art",
-                            EmailConfirmed = false,
-                            LockoutEnabled = false,
-                            NormalizedUserName = "TEST-USER-01",
-                            PasswordHash = "AQAAAAEAACcQAAAAEDKDoGP36zLtDNuRMVj1w8VRbvkPe0XlFj0Nt0vy46YJACjkUibd6zH0D3MpFGgIcg==",
-                            PhoneNumberConfirmed = false,
-                            TwoFactorEnabled = false,
-                            UserName = "test-user-01"
-                        },
-                        new
-                        {
-                            Id = new Guid("c1a9dd0b-8434-421d-8d52-80c8ec3c0e2a"),
-                            AccessFailedCount = 0,
-                            ConcurrencyStamp = "6502a18e-13a1-4d62-8137-b182b6ff4ac5",
-                            Email = "test-user-02@test.art",
-                            EmailConfirmed = false,
-                            LockoutEnabled = false,
-                            NormalizedUserName = "TEST-USER-02",
-                            PasswordHash = "AQAAAAEAACcQAAAAEGsm9/nKOLG1FfpoX/dXuGpXbdy6/hXR77MQLDcHw/C4WqpaBKoLLienLZtiylUWRw==",
-                            PhoneNumberConfirmed = false,
-                            TwoFactorEnabled = false,
-                            UserName = "test-user-02"
-                        },
-                        new
-                        {
-                            Id = new Guid("cbef4ddc-5788-48ab-9380-aa457c89a554"),
-                            AccessFailedCount = 0,
-                            ConcurrencyStamp = "ad6240b4-5fb7-4c42-a48f-d65bfb7d2968",
-                            Email = "test-user-03@test.art",
-                            EmailConfirmed = false,
-                            LockoutEnabled = false,
-                            NormalizedUserName = "TEST-USER-03",
-                            PasswordHash = "AQAAAAEAACcQAAAAEJ9vlrAkwOUvinPlTA0TjFU2wW/v4JgSGSBjKuV9sXjEx91ssdZeiifSxYpT30W9Xg==",
-                            PhoneNumberConfirmed = false,
-                            TwoFactorEnabled = false,
-                            UserName = "test-user-03"
-                        },
-                        new
-                        {
-                            Id = new Guid("bd2fe03e-7ab2-4c83-bcb6-10c48aa601cb"),
-                            AccessFailedCount = 0,
-                            ConcurrencyStamp = "608affe4-75ba-487e-8a3a-fc138de073da",
-                            Email = "admin@art-adv.com",
-                            EmailConfirmed = false,
-                            LockoutEnabled = false,
-                            NormalizedUserName = "admin",
-                            PasswordHash = "AQAAAAEAACcQAAAAELXP2T8nYf3/Kz6Z1547VjSvY/78TaJgJEi1yu7gOn7N7srqFi8Gfuga2fdVFYpfrA==",
-                            PhoneNumberConfirmed = false,
-                            TwoFactorEnabled = false,
-                            UserName = "admin"
-                        });
                 });
 
             modelBuilder.Entity("ArtfulAdventures.Data.Models.ApplicationUserCollection", b =>
@@ -907,14 +851,14 @@ namespace ArtfulAdventures.Data.Migrations
                         new
                         {
                             Id = new Guid("2c5e174e-3b0e-446f-86af-483d56fd7210"),
-                            ConcurrencyStamp = "c0e19566-060a-41b5-a055-57f026041f1a",
+                            ConcurrencyStamp = "7a8aac2f-6188-41a4-8ca5-51f9b5ff15be",
                             Name = "Administrator",
                             NormalizedName = "ADMINISTRATOR"
                         },
                         new
                         {
                             Id = new Guid("8e445865-a24d-4543-a6c6-9443d048cdb9"),
-                            ConcurrencyStamp = "fdc25e60-4e41-49f4-bd84-31f5ed7f6336",
+                            ConcurrencyStamp = "58caf414-ce94-4b9f-8f51-b7678a99ed71",
                             Name = "User",
                             NormalizedName = "USER"
                         });
@@ -1004,28 +948,6 @@ namespace ArtfulAdventures.Data.Migrations
                     b.HasIndex("RoleId");
 
                     b.ToTable("AspNetUserRoles", (string)null);
-
-                    b.HasData(
-                        new
-                        {
-                            UserId = new Guid("b04c7301-c0c6-4a05-a8ba-8bec078cb212"),
-                            RoleId = new Guid("8e445865-a24d-4543-a6c6-9443d048cdb9")
-                        },
-                        new
-                        {
-                            UserId = new Guid("c1a9dd0b-8434-421d-8d52-80c8ec3c0e2a"),
-                            RoleId = new Guid("8e445865-a24d-4543-a6c6-9443d048cdb9")
-                        },
-                        new
-                        {
-                            UserId = new Guid("cbef4ddc-5788-48ab-9380-aa457c89a554"),
-                            RoleId = new Guid("8e445865-a24d-4543-a6c6-9443d048cdb9")
-                        },
-                        new
-                        {
-                            UserId = new Guid("bd2fe03e-7ab2-4c83-bcb6-10c48aa601cb"),
-                            RoleId = new Guid("2c5e174e-3b0e-446f-86af-483d56fd7210")
-                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<System.Guid>", b =>

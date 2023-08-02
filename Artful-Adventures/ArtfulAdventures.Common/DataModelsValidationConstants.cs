@@ -66,5 +66,13 @@ public static class DataModelsValidationConstants
         public const int ContentMaxLength = 1000;
         public const string DateFormat = "yyyy-MM-dd H:mm";
     }
-}
 
+    public static class RolesConstants
+    {
+        public const string AdminUserName = "admin";
+        public const string AdminEmail = "admin@art-adv.com";
+        public const string AdminPassword = "80d6f669-19f7-43d6-9a76-b6edd0be1a59";
+        public const string AdminId = "2c5e174e-3b0e-446f-86af-483d56fd7210";
+        public const string UserId = "8e445865-a24d-4543-a6c6-9443d048cdb9";
+    }
+}

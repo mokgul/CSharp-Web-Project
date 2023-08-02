@@ -1,4 +1,5 @@
 ﻿@model BlogDetailsViewModel
+@using static ArtfulAdventures.Common.GeneralApplicationConstants.Roles;
 
 @{
     ViewData["Title"] = "Blog Details";
@@ -7,7 +8,15 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.1/css/all.min.css">
 
 
-
+<div style="display: flex; justify-content:space-between">
+    <a class="btn btn-outline-dark my-2 blog-button-white" href="@Context.Request.Headers["Referer"]" role="button" style="color:wheat; width: 80px; margin-bottom: 1rem!important; ">Return</a>
+    @if (User!.IsInRole(Administrator))
+    {
+        <form method="post" asp-area="Admin" asp-controller="ManageContent" asp-action="DeleteBlog" asp-route-blogId="@Model.Id" asp-route-user="@Model.Author">
+            <button type="submit" class="btn btn-outline-dark my-2 delete-blog-button-red" style="color:wheat;">Delete Blog</button>
+        </form>
+    }
+</div>
 <div class="card px-3 pt-3" style="max-width: 100%;">
     <!-- News block -->
     <div>
@@ -80,10 +89,10 @@
                                                   style="background-color: transparent; color:#88c4f7;"></textarea>
                                     </div>
                                 </div>
-                                <div class="float-end mt-3 pt-1">
+                                <div style="display: flex; justify-content:space-between">
                                     <form asp-area="" asp-controller="Comment" asp-action="AddCommentBlog" asp-route-blogId="@Model.Id" method="post">
                                         <input type="hidden" name="content" id="contentInput" />
-                                        <button type="submit" id="button" class="btn btn-primary btn-sm">Post comment</button>
+                                        <button type="submit" id="button" class="btn btn-outline-dark my-2 blog-button-white" style="color:wheat; width: 120px; margin-bottom: 1rem!important; margin-left: 3.4rem!important; margin-top: 1rem!important;">Post comment</button>
                                     </form>
                                 </div>
                             </div>
@@ -121,6 +130,14 @@
                                                 </p>
                                             </div>
                                         </div>
+                                        @if (User!.IsInRole(Administrator))
+                                        {
+                                            <div style="display: flex; justify-content: flex-end;">
+                                                <form method="post" asp-area="Admin" asp-controller="ManageContent" asp-action="DeleteCommentBlog" asp-route-blogId="@Model.Id" asp-route-commentId="@comment.Id">
+                                                    <button type="submit" class="btn btn-outline-dark my-2 delete-blog-button-red" style="color:wheat;">Delete Comment</button>
+                                                </form>
+                                            </div>
+                                        }
                                     </div>
 
                                     <hr class="my-0" style="height: 1px;" />

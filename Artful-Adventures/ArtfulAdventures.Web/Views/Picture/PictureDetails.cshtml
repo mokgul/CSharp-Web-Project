@@ -1,4 +1,5 @@
 ﻿@model ArtfulAdventures.Web.ViewModels.Picture.PictureDetailsViewModel
+@using static ArtfulAdventures.Common.GeneralApplicationConstants.Roles;
 
 
 @if (TempData["Success"] != null)
@@ -29,9 +30,16 @@
                 border-radius: 15px;
             }
         </style>
-        <div style="display: flex; justify-content:start">
-            <a class="btn btn-outline-dark my-2 blog-button-white" href="@Context.Request.Headers["Referer"]" role="button" style="color:wheat; width: 80px; margin-bottom: 1rem!important;">Return</a>
+        <div style="display: flex; justify-content:space-between">
+            <a class="btn btn-outline-dark my-2 blog-button-white" href="@Context.Request.Headers["Referer"]" role="button" style="color:wheat; width: 80px; margin-bottom: 1rem!important; margin-left: -0.5rem!important;">Return</a>
+            @if (User!.IsInRole(Administrator))
+            {
+                <form method="post" asp-area="Admin" asp-controller="ManageContent" asp-action="DeletePicture" asp-route-pictureId="@Model.Id" asp-route-user="@Model.Owner">
+                    <button type="submit" class="btn btn-outline-dark my-2 delete-blog-button-red" style="color:wheat;">Delete Picture</button>
+                </form>
+            }
         </div>
+
 
         <div class="col-md-9 d-flex justify-content-center align-items-center frosted-glass">
             <section class="picture-view">
@@ -183,10 +191,10 @@
                                                   style="background-color: transparent; color:#88c4f7;"></textarea>
                                     </div>
                                 </div>
-                                <div class="float-end mt-3 pt-1">
+                                <div style="display: flex; justify-content:space-between">
                                     <form asp-area="" asp-controller="Comment" asp-action="AddCommentPicture" asp-route-pictureId="@Model.Id" method="post">
                                         <input type="hidden" name="content" id="contentInput" />
-                                        <button type="submit" id="button" class="btn btn-primary btn-sm">Post comment</button>
+                                        <button type="submit" id="button" class="btn btn-outline-dark my-2 blog-button-white" style="color:wheat; width: 120px; margin-bottom: 1rem!important; margin-left: 3.4rem!important; margin-top: 1rem!important;">Post comment</button>
                                     </form>
                                 </div>
                             </div>
@@ -196,25 +204,36 @@
                                 @foreach (var comment in Model.Comments.OrderByDescending(p => p.CreatedOn))
                                 {
                                     <div class="card-body p-4">
-                                        <div class="d-flex flex-start">
-                                            <img class="rounded-circle shadow-1-strong me-3"
-                                                 src="~/images/@comment.AuthorPictureUrl" alt="avatar" width="60"
-                                                 height="60" />
-                                            <div>
-                                                <a href="@Url.Action("Profile", "UserProfile", new { username = @comment.Author })" style="color:deepskyblue">
-                                                    <i class="fas fa-user"></i> @comment.Author
-                                                </a>
-                                                <div class="d-flex align-items-center mb-3">
+                                        <div style="display: flex; justify-content: space-between;">
+                                            <div class="d-flex flex-start">
+                                                <img class="rounded-circle shadow-1-strong me-3"
+                                                     src="~/images/@comment.AuthorPictureUrl" alt="avatar" width="60"
+                                                     height="60" />
+                                                <div>
+                                                    <a href="@Url.Action("Profile", "UserProfile", new { username = @comment.Author })" style="color:deepskyblue">
+                                                        <i class="fas fa-user"></i> @comment.Author
+                                                    </a>
+                                                    <div class="d-flex align-items-center mb-3">
+                                                        <p class="mb-0">
+                                                            @comment.CreatedOn
+                                                        </p>
+                                                    </div>
                                                     <p class="mb-0">
-                                                        @comment.CreatedOn
+                                                        @comment.Content
                                                     </p>
                                                 </div>
-                                                <p class="mb-0">
-                                                    @comment.Content
-                                                </p>
                                             </div>
+                                            @if (User!.IsInRole(Administrator))
+                                            {
+                                                <div style="display: flex; justify-content: flex-end;">
+                                                    <form method="post" asp-area="Admin" asp-controller="ManageContent" asp-action="DeleteCommentPicture" asp-route-pictureId="@Model.Id" asp-route-commentId="@comment.Id">
+                                                        <button type="submit" class="btn btn-outline-dark my-2 delete-blog-button-red" style="color:wheat;">Delete Comment</button>
+                                                    </form>
+                                                </div>
+                                            }
                                         </div>
                                     </div>
+
 
                                     <hr class="my-0" style="height: 1px;" />
 

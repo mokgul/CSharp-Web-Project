@@ -48,17 +48,32 @@ public class ArtfulAdventuresDbContext : IdentityDbContext<ApplicationUser, Iden
 
         var messageConfiguration = new MessageTableConfiguration();
 
+        var roleConfiguration = new CreateRolesConfiguration();
+
+        var userConfiguration = new SeedUsersConfiguration();
+
+        //Configure the mapping tables
         builder.ApplyConfiguration<PictureHashTag>(mappingConfigurer);
         builder.ApplyConfiguration<ApplicationUserSkill>(mappingConfigurer);
         builder.ApplyConfiguration<ApplicationUserPicture>(mappingConfigurer);
         builder.ApplyConfiguration<ApplicationUserCollection>(mappingConfigurer);
         
+        //Configure the enums
         builder.ApplyConfiguration<HashTag>(enumSeedConfigurer);
         builder.ApplyConfiguration<Skill>(enumSeedConfigurer);
 
+        //Configure following table
         builder.ApplyConfiguration<FollowerFollowing>(new FollowTableConfiguration());
 
+        //Configure the message table
         builder.ApplyConfiguration<Message>(messageConfiguration);
+
+        //Configure the roles
+        builder.ApplyConfiguration<IdentityRole<Guid>>(roleConfiguration);
+
+        //Configure the users and add roles to them
+        builder.ApplyConfiguration<ApplicationUser>(userConfiguration);
+        builder.ApplyConfiguration<IdentityUserRole<Guid>>(userConfiguration);
 
         base.OnModelCreating(builder);
     }

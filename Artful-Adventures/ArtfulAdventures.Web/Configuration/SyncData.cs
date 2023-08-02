@@ -6,8 +6,8 @@
         {
             while(true)
             {
-                await Task.Delay(TimeSpan.FromMinutes(1));
                 await DownloadFromFtpServer.DownloadData();
+                await Task.Delay(TimeSpan.FromMinutes(1));
             }
         }
     }

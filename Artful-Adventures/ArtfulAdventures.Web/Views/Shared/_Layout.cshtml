@@ -99,11 +99,12 @@
         <div class="offcanvas-header d-flex flex-column" style="border:1px solid rgba(255, 255, 255, 0.2);">
             <div class="d-flex justify-content-between align-items-center mb-3">
                 <p class="offcanvas-title mb-0" id="settingsOffCanvasLabel" style="font-size: 26px;">User Profile</p>
-                <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close" ></button>
+                <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
             </div>
+            @if (SignInManager.IsSignedIn(User))
+            {
                 @await Component.InvokeAsync("OffCanvasProfile")
-            
-
+            }
         </div>
         <div class="offcanvas-body">
             <p><a class="nav-link text-dark" asp-area="" asp-controller="UserProfile" asp-action="Profile" asp-route-username="@User!.Identity!.Name">Profile</a></p>
@@ -113,6 +114,7 @@
             <p><a class="nav-link text-dark" asp-area="" asp-controller="Picture" asp-action="ManageGetAllPictures" asp-route-page="1">Manage Portfolio</a></p>
             <p><a class="nav-link text-dark" asp-area="" asp-controller="Picture" asp-action="ManageGetAllCollection" asp-route-page="1">Manage Favorites</a></p>
             <p><a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">Settings</a></p>
+
             <p>
                 <form class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
                     <button type="submit" class="nav-link btn btn-link text-dark" style="color: #b8ceeb!important;">Logout</button>
@@ -186,12 +188,12 @@
             color: #b8ceeb !important; /* adjust the color as needed */
         }
 
-        #settingsOffCanvas .offcanvas-header{
+        #settingsOffCanvas .offcanvas-header {
             color: #b8ceeb !important; /* adjust the color as needed */
         }
 
         #settingsOffCanvas .offcanvas-body {
-            border: 1px solid rgba(255, 255, 255, 0.2)!important; /* adjust the color as needed */
+            border: 1px solid rgba(255, 255, 255, 0.2) !important; /* adjust the color as needed */
         }
 
     .offcanvas-body p:not(:last-child) > a {
@@ -202,10 +204,9 @@
 
 
     .offcanvas-header .btn-close {
-        background-color: #b8ceeb!important; /* adjust the color as needed */
+        background-color: #b8ceeb !important; /* adjust the color as needed */
         margin: 0px; /* adjust the padding as needed */
         margin-left: 6rem; /* adjust the margin as needed */
     }
-
 
 </style>

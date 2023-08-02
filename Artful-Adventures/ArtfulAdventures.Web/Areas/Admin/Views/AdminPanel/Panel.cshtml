@@ -1,0 +1,31 @@
+﻿@{
+    ViewData["Title"] = "Admin Home";
+    
+}
+@if (TempData["AdminDelete"] != null)
+{
+    <div class="alert alert-success" role="alert">
+        @TempData["AdminDelete"]
+    </div>
+}
+@if (TempData["AdminDeleteError"] != null)
+{
+    <div class="alert alert-danger" role="alert">
+        @TempData["AdminDeleteError"]
+    </div>
+}
+@if (TempData["AdminDeleteComment"] != null)
+{
+    <div class="alert alert-success" role="alert">
+        @TempData["AdminDeleteComment"]
+    </div>
+}
+@if (TempData["AdminDeleteCommentError"] != null)
+{
+    <div class="alert alert-danger" role="alert">
+        @TempData["AdminDeleteCommentError"]
+    </div>
+}
+
+<h1>Admin Home</h1>
+<p>Welcome to the admin area.</p>

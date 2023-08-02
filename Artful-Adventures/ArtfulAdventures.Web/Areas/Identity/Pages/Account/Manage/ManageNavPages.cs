@@ -27,6 +27,10 @@ namespace  ArtfulAdventures.Web.Areas.Identity.Pages.Account.Manage
 
         public static string PictureNavClass(ViewContext viewContext) => PageNavClass(viewContext, Picture);
 
+        public static string ManageSkillsModel => "ManageSkillsModel";
+
+        public static string ManageSkillsModelNavClass(ViewContext viewContext) => PageNavClass(viewContext, ManageSkillsModel);
+
         public static string Email => "Email";
 
         /// <summary>

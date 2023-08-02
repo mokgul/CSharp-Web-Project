@@ -16,7 +16,7 @@
 
     public DateTime CreatedOn { get; set; }
 
-    public ICollection<string> Pictures { get; set; } = new HashSet<string>();
+    public Dictionary<string, string> Pictures { get; set; } = new Dictionary<string, string>();
 
     }
 

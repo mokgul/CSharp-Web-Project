@@ -35,7 +35,11 @@ public class FollowingService : IFollowingService
         }).ToListAsync();
 
         var usersFollowed = user.Following.Select(p => p.FollowedId).ToList();
-        var pictures = await _data.Pictures.Include(h => h.PicturesHashTags).Where(p => usersFollowed.Contains(p.Owner.Id)).Select(p => new PictureVisualizeViewModel()
+        var pictures = await _data.Pictures.Include(h => h.PicturesHashTags).Where(p => usersFollowed.Contains(p.Owner.Id))
+            .OrderByDescending(p => p.CreatedOn)
+            .Skip(skip)
+            .Take(pageSize)
+            .Select(p => new PictureVisualizeViewModel()
         {
             Id = p.Id.ToString(),
             PictureUrl = Path.GetFileName(p.Url),
@@ -59,7 +63,6 @@ public class FollowingService : IFollowingService
 
 
         pictures = FilterBrokenUrls.FilterAsync(pictures);
-        pictures = pictures.OrderByDescending(p => p.CreatedOn).ToList();
 
         pictures = await SortPicturesAsync(sort, pictures);
 
@@ -67,9 +70,9 @@ public class FollowingService : IFollowingService
         {
             HashTags = hashtags,
             TagsForDropDown = dropDownMenuTags,
-            Pictures = pictures.Skip(skip).Take(pageSize).ToList()
+            Pictures = pictures
         };
-        return model;
+        return model;   
       
     }
 

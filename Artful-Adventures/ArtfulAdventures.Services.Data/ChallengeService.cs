@@ -31,13 +31,14 @@ public class ChallengeService : IChallengeService
             CreatedOn = c.CreatedOn,
             Participants = c.Participants,
             PictureUrl = Path.GetFileName(c.Url),
-        }).ToListAsync();
+        })
+        .Skip(skip).Take(pageSize).ToListAsync();
 
         challenges = challenges.OrderByDescending(x => x.CreatedOn).ToList();
 
         var model = new ChallengesViewModel()
         {
-            Challenges = challenges.Skip(skip).Take(pageSize).ToList(),
+            Challenges = challenges
         };
         return model;
     }
@@ -45,7 +46,9 @@ public class ChallengeService : IChallengeService
     public async Task<ChallengeDetailsViewModel> GetChallengeDetailsAsync(int id)
     {
         var challenge = await _data.Challenges.FindAsync(id);
-        var pictures = await _data.Pictures.Where(x => x.ChallengeId == id).ToListAsync();
+        var pictures = await _data.Pictures
+            .Where(x => x.ChallengeId == id)
+            .ToDictionaryAsync(x => x.Id.ToString(), x => Path.GetFileName(x.Url));
         if(challenge == null)
         {
             throw new NullReferenceException();
@@ -60,7 +63,7 @@ public class ChallengeService : IChallengeService
             CreatedOn = challenge.CreatedOn,
             Creator = challenge.Creator,
             Participants = challenge.Participants,
-            Pictures = challenge.Pictures.Select(x => Path.GetFileName(x.Url)).ToList(),
+            Pictures = pictures
         };
         return model;
     }

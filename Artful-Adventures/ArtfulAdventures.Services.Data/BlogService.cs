@@ -70,8 +70,10 @@ public class BlogService : IBlogService
             CreatedOn = blog.CreatedOn,
             Likes = blog.Likes,
             ImageUrl = Path.GetFileName(blog.ImageUrl),
+            CommentsCount = blog.Comments.Count,
             Comments = blog.Comments.Select(c => new CommentViewModel()
             {
+                Id = c.Id,
                 Author = c.Author,
                 Content = c.Content,
                 CreatedOn = c.CreatedOn,

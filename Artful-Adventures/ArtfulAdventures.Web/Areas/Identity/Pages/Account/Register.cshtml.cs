@@ -14,15 +14,18 @@ public class RegisterModel : PageModel
     private readonly SignInManager<ApplicationUser> _signInManager;
     private readonly UserManager<ApplicationUser> _userManager;
     private readonly IUserStore<ApplicationUser> _userStore;
+    private readonly RoleManager<IdentityRole<Guid>> _roleManager;
 
     public RegisterModel(
         UserManager<ApplicationUser> userManager,
         IUserStore<ApplicationUser> userStore,
-        SignInManager<ApplicationUser> signInManager)
+        SignInManager<ApplicationUser> signInManager,
+        RoleManager<IdentityRole<Guid>> roleManager)
     {
         _userManager = userManager;
         _userStore = userStore;
         _signInManager = signInManager;
+        _roleManager = roleManager;
     }
 
     [BindProperty] public InputModel Input { get; set; }
@@ -73,6 +76,11 @@ public class RegisterModel : PageModel
 
             if (result.Succeeded)
             {
+                var defaultRole = _roleManager.Roles.FirstOrDefault(r => r.Name == "User");
+                if(defaultRole != null)
+                {
+                    await _userManager.AddToRoleAsync(user, defaultRole.Name);
+                }
                 await _signInManager.SignInAsync(user, isPersistent: false);
                 return LocalRedirect(returnUrl);
             }

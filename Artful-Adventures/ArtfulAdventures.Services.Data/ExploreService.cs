@@ -36,7 +36,12 @@ public class ExploreService : IExploreService
             Name = h.Type.Replace("_", " ")
         }).ToListAsync();
 
-        var pictures = await _data.Pictures.Include(t => t.PicturesHashTags).Select(p => new PictureVisualizeViewModel()
+        var pictures = await _data.Pictures
+        .Include(t => t.PicturesHashTags)
+        .OrderByDescending(p => p.CreatedOn)
+        .Skip(skip)
+        .Take(pageSize)
+        .Select(p => new PictureVisualizeViewModel()
         {
             Id = p.Id.ToString(),
             Owner = p.Owner.UserName,
@@ -44,10 +49,11 @@ public class ExploreService : IExploreService
             CreatedOn = p.CreatedOn,
             Likes = p.Likes,
             HashTags = p.PicturesHashTags.Select(h => h.Tag.Type).ToList()
-        }).ToListAsync();
+        })
+    .ToListAsync();
+
 
         pictures = FilterBrokenUrls.FilterAsync(pictures);
-        pictures = pictures.OrderByDescending(p => p.CreatedOn).ToList();
 
         pictures = await SortPicturesAsync(sort, pictures);
 
@@ -55,7 +61,7 @@ public class ExploreService : IExploreService
         {
             HashTags = hashtags,
             TagsForDropDown = dropDownMenuTags,
-            Pictures = pictures.Skip(skip).Take(pageSize).ToList()
+            Pictures = pictures
         };
 
 

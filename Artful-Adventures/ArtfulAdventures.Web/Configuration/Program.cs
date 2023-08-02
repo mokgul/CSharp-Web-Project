@@ -7,6 +7,9 @@ using ArtfulAdventures.Data;
 using ArtfulAdventures.Data.Models;
 using ArtfulAdventures.Services.Data;
 using ArtfulAdventures.Services.Data.Interfaces;
+using ArtfulAdventures.Web.Areas.Admin.Services;
+using ArtfulAdventures.Web.Areas.Admin.Services.Interfaces;
+
 using Microsoft.EntityFrameworkCore;
 
 public class Program
@@ -26,6 +29,7 @@ public class Program
         {
             options.SignIn.RequireConfirmedAccount = false;
         })
+            .AddRoles<IdentityRole<Guid>>()
             .AddEntityFrameworkStores<ArtfulAdventuresDbContext>();
 
         builder.Services.AddControllersWithViews();
@@ -36,6 +40,7 @@ public class Program
         builder.Services.AddScoped<IProfileService, ProfileService>();
         builder.Services.AddScoped<IFollowingService, FollowingService>();
         builder.Services.AddScoped<IChallengeService, ChallengeService>();
+        builder.Services.AddScoped<IManageContentService, ManageContentService>();
 
         var app = builder.Build();
 
@@ -61,9 +66,16 @@ public class Program
         app.UseAuthentication();
         app.UseAuthorization();
 
-        app.MapControllerRoute(
-            name: "default",
-            pattern: "{controller=Home}/{action=Index}/{id?}");
+        app.UseEndpoints(endpoints =>
+        {
+            endpoints.MapControllerRoute(
+                name: "areaRoute",
+                pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}");
+            endpoints.MapControllerRoute(
+                name: "default",
+                pattern: "{controller=Home}/{action=Index}/{id?}");
+        });
+
         app.MapRazorPages();
 
         

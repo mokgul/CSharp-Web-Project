@@ -1,0 +1,48 @@
+﻿@page
+@model ManageSkillsModel
+@{
+    ViewData["Title"] = "Manage Skills";
+}
+
+<h2>Manage Skills</h2>
+
+@if(!string.IsNullOrEmpty(Model.StatusMessage))
+{
+    <div class="alert alert-success" role="alert">
+        @Model.StatusMessage
+    </div>
+}
+
+<form method="post">
+    <div asp-validation-summary="All" class="text-danger"></div>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Skill</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var skill in Model.Skills)
+            {
+                <tr>
+                    <td>@skill.Type</td>
+                    <td><button type="submit" asp-page-handler="RemoveSkill" asp-route-skillId="@skill.Id">Remove</button></td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    <div class="form-group">
+        <label asp-for="SelectedSkill">Add Skill</label>
+        <select asp-for="SelectedSkill" asp-items="Model.AvailableSkills" class="form-control"></select>
+    </div>
+
+    <button type="submit" asp-page-handler="AddSkill">Add Skill</button>
+</form>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}
