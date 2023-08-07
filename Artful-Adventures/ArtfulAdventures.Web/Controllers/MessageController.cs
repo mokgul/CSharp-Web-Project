@@ -48,6 +48,7 @@ public class MessageController : Controller
             Content = model.Content,
             Timestamp = DateTime.UtcNow,
         };
+        user.SentMessages.Add(message);
         receiver.ReceivedMessages.Add(message);
         await _data.Messages.AddAsync(message);
         await _data.SaveChangesAsync();

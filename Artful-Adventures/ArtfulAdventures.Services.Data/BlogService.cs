@@ -49,7 +49,7 @@ public class BlogService : IBlogService
         return model;
     }
 
-    public async Task<BlogDetailsViewModel> GetBlogDetailsAsync(string id)
+    public async Task<BlogDetailsViewModel> GetBlogDetailsAsync(string id, string currentUser)
     {
         
         var blog = await _data.Blogs.Include(c => c.Comments).FirstOrDefaultAsync(x => x.Id.ToString() == id.ToLower());
@@ -61,6 +61,8 @@ public class BlogService : IBlogService
 
         var user = await _data.Users.Include(b => b.Blogs).FirstOrDefaultAsync(x => x.Id == blog.AuthorId);
 
+        var userCommenting = await _data.Users.FirstOrDefaultAsync(x => x.Id.ToString() == currentUser);
+        var userMute = userCommenting!.MuteUntil != null && userCommenting.MuteUntil > DateTime.UtcNow;
         var model = new BlogDetailsViewModel()
         {
             Id = blog.Id.ToString(),
@@ -70,6 +72,7 @@ public class BlogService : IBlogService
             CreatedOn = blog.CreatedOn,
             Likes = blog.Likes,
             ImageUrl = Path.GetFileName(blog.ImageUrl),
+            isCurrentUserMuted = userMute,
             CommentsCount = blog.Comments.Count,
             Comments = blog.Comments.Select(c => new CommentViewModel()
             {

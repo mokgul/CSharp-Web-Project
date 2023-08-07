@@ -14,6 +14,12 @@
         @TempData["Success"]
     </div>
 }
+@if (TempData["AdminCreateChallenge"] != null)
+{
+    <div class="alert alert-success bg-dark text-white" role="alert">
+        @TempData["AdminCreateChallenge"]
+    </div>
+}
 
 @{
     ViewBag.Title = "Challenge";

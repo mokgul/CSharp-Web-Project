@@ -1,4 +1,8 @@
-﻿namespace ArtfulAdventures.Web.Controllers;
+﻿using ArtfulAdventures.Services.Data;
+using ArtfulAdventures.Web.ViewModels.Picture;
+using Microsoft.EntityFrameworkCore;
+
+namespace ArtfulAdventures.Web.Controllers;
 
 using System.Diagnostics;
 
@@ -19,10 +23,28 @@ public class HomeController : Controller
         _data = data;
     }
 
+    [HttpGet]
     public async Task<IActionResult> Index()
     {
-        
-        return View();
+        var model = await _data.Pictures.Select(p => new PictureVisualizeViewModel()
+        {
+            Id = p.Id.ToString(),
+            PictureUrl = Path.GetFileName(p.Url),
+        }).Take(20).ToListAsync();
+        model = FilterBrokenUrls.FilterAsync(model);
+        return View(model);
+    }
+
+    [HttpGet]
+    public async Task<IActionResult> AboutUs()
+    {
+        throw new NotImplementedException();
+    }
+    
+    [HttpGet]
+    public async Task<IActionResult> Privacy()
+    {
+        throw new NotImplementedException();
     }
 
     [HttpGet]

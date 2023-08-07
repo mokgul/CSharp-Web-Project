@@ -21,6 +21,8 @@ public class BlogDetailsViewModel
     public int Likes { get; set; }
 
     public int CommentsCount { get; set; }
+    
+    public bool isCurrentUserMuted { get; set; }
 
     public IEnumerable<CommentViewModel> Comments { get; set; } = new List<CommentViewModel>();
 }

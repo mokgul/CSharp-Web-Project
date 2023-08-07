@@ -29,6 +29,8 @@ public class PictureDetailsViewModel
 
     public ICollection<HashTagViewModel>? HashTags { get; set; }
 
+    public bool isCurrentUserMuted { get; set; }
+    
     public DateTime? CreatedOn { get; set; }
 
     public int CommentsCount { get; set; }

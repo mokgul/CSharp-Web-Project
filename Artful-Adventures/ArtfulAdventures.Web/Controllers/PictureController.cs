@@ -61,7 +61,8 @@
         [HttpGet]
         public async Task<IActionResult> PictureDetails(string id)
         {
-            var picture = await _pictureService.GetPictureDetailsAsync(id);
+            var currentUser = GetUserId();
+            var picture = await _pictureService.GetPictureDetailsAsync(id, currentUser);
 
             return View(picture);
         }
@@ -102,10 +103,7 @@
             ViewBag.Action = "ManageGetAllPictures";
             var userId = GetUserId();
             var model = await _pictureService.ManageGetAllPicturesAsync(userId, page);
-            if (model == null)
-            {
-                return RedirectToAction("UserProfile", "Profile");
-            }
+            
             return View(model);
         }
 
@@ -116,10 +114,7 @@
             ViewBag.Action = "ManageGetAllCollection";
             var userId = GetUserId();
             var model = await _pictureService.ManageGetAllCollectionAsync(userId, page);
-            if (model == null)
-            {
-                return RedirectToAction("UserProfile", "Profile");
-            }
+            
             return View("ManageGetAllPictures", model);
         }
 

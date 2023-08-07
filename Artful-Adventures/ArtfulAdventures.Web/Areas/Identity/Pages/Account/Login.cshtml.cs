@@ -14,10 +14,12 @@ using System.ComponentModel.DataAnnotations;
 public class LoginModel : PageModel
 {
     private readonly SignInManager<ApplicationUser> _signInManager;
+    private readonly UserManager<ApplicationUser> _userManager;
 
-    public LoginModel(SignInManager<ApplicationUser> signInManager)
+    public LoginModel(SignInManager<ApplicationUser> signInManager, UserManager<ApplicationUser> userManager)
     {
         _signInManager = signInManager;
+        _userManager = userManager;
     }
 
     [BindProperty]
@@ -66,7 +68,16 @@ public class LoginModel : PageModel
             {
                 return LocalRedirect(returnUrl);
             }
-
+            else if (result.IsLockedOut)
+            {
+                var user = await _userManager.FindByNameAsync(Input.Username);
+                var lockoutEnd = await _userManager.GetLockoutEndDateAsync(user);
+                var remainingTime = lockoutEnd - DateTimeOffset.UtcNow;
+                if (remainingTime != null)
+                    ModelState.AddModelError(string.Empty,
+                        $"Your account is locked out. Please try again in {(int)remainingTime.Value.TotalDays} days.");
+                return Page();
+            }
             else
             {
                 ModelState.AddModelError(string.Empty, "Invalid login attempt.");

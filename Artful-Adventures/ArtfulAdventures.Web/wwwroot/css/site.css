@@ -54,13 +54,20 @@ a.nav-link.dropdown-toggle:hover {
 
 .body-for-sticky {
 	position: relative; /* for the footer to move with the page size */
-	min-height: 100%; /* for the footer to be at the bottom */
 	padding-bottom: 6rem; /* Space available between last element and bottom border of the page */
+	min-height: 100vh;
+	display: flex;
+	flex-direction: column;
 }
 
 .sticky-footer {
 	position: absolute; /* for it to disappear under last body element */
 	bottom: 0; /* so the footer can stick to the bottom*/
+	width: 100%; /* to take the full width of the page */
+	height: 4rem; /* height of the footer */
+	background-color: #272e48;
+	color: #bcd0f7;
+	margin-top: auto;
 }
 
 body {
@@ -154,3 +161,4 @@ body {
 
 .delete-blog-button-red {
 	box-shadow: inset -2px -7px 12px 0px rgba(255, 0, 0, 0.6) /* Smaller inward red shadow on the bottom side */
+}

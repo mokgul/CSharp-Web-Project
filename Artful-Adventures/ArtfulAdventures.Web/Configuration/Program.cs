@@ -41,6 +41,7 @@ public class Program
         builder.Services.AddScoped<IFollowingService, FollowingService>();
         builder.Services.AddScoped<IChallengeService, ChallengeService>();
         builder.Services.AddScoped<IManageContentService, ManageContentService>();
+        builder.Services.AddScoped<IManageUserService, ManageUserService>();
 
         var app = builder.Build();
 

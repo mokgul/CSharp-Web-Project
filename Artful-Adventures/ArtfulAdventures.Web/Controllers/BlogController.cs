@@ -80,7 +80,8 @@
         [HttpGet]
         public async Task<IActionResult> BlogDetails(string id)
         {
-            var model = await _blogService.GetBlogDetailsAsync(id);
+            var currentUser = GetUserId();
+            var model = await _blogService.GetBlogDetailsAsync(id, currentUser);
 
             return View(model);
         }

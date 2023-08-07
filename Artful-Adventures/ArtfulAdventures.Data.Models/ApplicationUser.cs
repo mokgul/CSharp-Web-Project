@@ -1,11 +1,10 @@
 ﻿namespace ArtfulAdventures.Data.Models;
 
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 
 using Microsoft.AspNetCore.Identity;
 
-using static ArtfulAdventures.Common.DataModelsValidationConstants.ApplicationUserConstants;
+using static Common.DataModelsValidationConstants.ApplicationUserConstants;
 
 public class ApplicationUser : IdentityUser<Guid>
 {
@@ -48,5 +47,6 @@ public class ApplicationUser : IdentityUser<Guid>
 
     public ICollection<Message> ReceivedMessages { get; set; } = new HashSet<Message>();
 
+    public DateTime? MuteUntil { get; set; }
 }
 

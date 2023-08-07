@@ -89,7 +89,7 @@ public class PictureService : IPictureService
         return seletedHashTags;
     }
 
-    public async Task<PictureDetailsViewModel> GetPictureDetailsAsync(string id)
+    public async Task<PictureDetailsViewModel> GetPictureDetailsAsync(string id, string currentUser)
     {
         //Get picture with comments and hashtags
         var picture = await _data.Pictures
@@ -125,6 +125,8 @@ public class PictureService : IPictureService
             comment.AuthorPictureUrl = Path.GetFileName(_data.Users.FirstOrDefault(u => u.UserName == comment.Author).Url);
         }
 
+        var user = await _data.Users.FirstOrDefaultAsync(x => x.Id.ToString() == currentUser);
+        var userMute = user!.MuteUntil != null && user!.MuteUntil > DateTime.UtcNow;
         var model = new PictureDetailsViewModel()
         {
             Id = picture.Id.ToString(),
@@ -140,8 +142,10 @@ public class PictureService : IPictureService
             HashTags = hashtags,
             CreatedOn = picture.CreatedOn,
             CommentsCount = comments.Count,
-            Comments = comments
+            Comments = comments,
+            isCurrentUserMuted = userMute
         };
+        
         return model;
     }
 

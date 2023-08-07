@@ -54,7 +54,7 @@
                 if (String.IsNullOrEmpty(path))
                 {
                     TempData["Error"] = "Please select a file to upload.";
-                    return View();
+                    return RedirectToAction("GetAll", "Challenge");
                 }
                 await _challengeService.ParticipateAsync(id,userId, path);
             }

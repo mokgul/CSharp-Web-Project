@@ -3,6 +3,8 @@
 using System.Threading.Tasks;
 
 using ArtfulAdventures.Data;
+using ArtfulAdventures.Data.Models;
+using ArtfulAdventures.Web.Areas.Admin.Models;
 using ArtfulAdventures.Web.Areas.Admin.Services.Interfaces;
 
 using Microsoft.EntityFrameworkCore;
@@ -14,6 +16,37 @@ public class ManageContentService : IManageContentService
     public ManageContentService(ArtfulAdventuresDbContext data)
     {
         _data = data;
+    }
+
+    public async Task<int> CreateChallengeAsync(ChallengeCreateFormModel model, string path)
+    {
+        Challenge challenge = new Challenge()
+        {
+            CreatedOn = model.CreatedOn,
+            Creator = model.Creator,
+            Title = model.Title,
+            Url = path,
+            Requirements = model.Requirements,
+            Participants = 0
+        };
+        await _data.Challenges.AddAsync(challenge);
+        await _data.SaveChangesAsync();
+        return challenge.Id;
+    }
+
+    public async Task<ChallengeCreateFormModel> CreateChallengeGetFormAsync(string userId)
+    {
+        var user = await _data.Users.FirstOrDefaultAsync(x => x.Id.ToString() == userId);
+        if (user == null)
+        {
+            throw new ArgumentException("User not found.");
+        }
+        var model = new ChallengeCreateFormModel
+        {
+            CreatedOn = DateTime.UtcNow,
+            Creator = user.UserName
+        };
+        return model;
     }
 
     public async Task DeleteBlogAsync(string blogId, string user)
@@ -29,6 +62,19 @@ public class ManageContentService : IManageContentService
         }
         _data.Blogs.Remove(blog);
         await _data.SaveChangesAsync();
+    }
+
+    public async Task<string> DeleteChallengeAsync(int challengeId)
+    {
+        var challenge = await _data.Challenges.FirstOrDefaultAsync(x => x.Id == challengeId);
+        if (challenge == null)
+        {
+            throw new ArgumentException("Challenge not found.");
+        }
+        var path = challenge.Url;
+        _data.Challenges.Remove(challenge);
+        await _data.SaveChangesAsync();
+        return path;
     }
 
     public async Task DeleteCommentBlogAsync(string blogId, string commentId)
@@ -90,4 +136,6 @@ public class ManageContentService : IManageContentService
         return path;
     }
 }
+
+
 

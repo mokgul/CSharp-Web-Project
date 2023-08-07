@@ -9,7 +9,7 @@ public interface IPictureService
 
     Task UploadPictureAsync(PictureAddFormModel model, string id, string path);
 
-    Task <PictureDetailsViewModel> GetPictureDetailsAsync(string id);
+    Task <PictureDetailsViewModel> GetPictureDetailsAsync(string id, string currentUser);
 
     Task<string> AddToCollectionAsync(string id, string userId);
 

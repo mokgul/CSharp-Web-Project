@@ -63,7 +63,6 @@
                                     {
                                         <img src="~/images/@Model.OwnerPictureUrl" alt="image"
                                              class="rounded-circle img-fluid" style="width: 100px;">
-
                                     }
                                     else
                                     {
@@ -77,13 +76,13 @@
                                 </p>
                                 <div class="d-flex justify-content-center pt-2">
                                     <form method="get" asp-area="" asp-controller="UserProfile" asp-action="Profile" asp-route-username="@Model.Owner">
-                                        <input type="hidden" name="username" value="@Model.Owner" />
+                                        <input type="hidden" name="username" value="@Model.Owner"/>
                                         <button type="submit" class="btn btn-outline-dark my-2 blog-button-white" style="color:wheat; height:42px;padding-left:12px; padding-right:12px;">
                                             Profile
                                         </button>
                                     </form>
                                     <form method="get" asp-area="" asp-controller="Message" asp-action="SendMessage">
-                                        <input type="hidden" name="username" value="@Model.Owner" />
+                                        <input type="hidden" name="username" value="@Model.Owner"/>
                                         <button type="submit" class="btn btn-outline-dark my-2 blog-button-white" style="color:wheat; height:42px;padding-left:12px; padding-right:12px;">
                                             Message
                                         </button>
@@ -184,17 +183,34 @@
 
                                     <img class="rounded-circle shadow-1-strong me-3"
                                          src="~/local/no-profile-picture.jpg" alt="avatar" width="40"
-                                         height="40" />
-
-                                    <div class="form-outline w-100">
-                                        <textarea class="form-control" id="textArea" rows="4"
+                                         height="40"/>
+                                    @if (Model.isCurrentUserMuted == false)
+                                    {
+                                        <div class="form-outline w-100">
+                                            <textarea class="form-control" id="textArea" rows="4"
                                                   style="background-color: transparent; color:#88c4f7;"></textarea>
-                                    </div>
+                                        </div>
+                                    }
+                                    else
+                                    {
+                                        <div class="form-outline w-100">
+                                            <p>Current user is muted.</p>
+                                            <textarea class="form-control" id="textArea" rows="4" disabled
+                  style="background-color: transparent; color:#88c4f7;"></textarea>
+                                        </div>
+                                    }
                                 </div>
                                 <div style="display: flex; justify-content:space-between">
                                     <form asp-area="" asp-controller="Comment" asp-action="AddCommentPicture" asp-route-pictureId="@Model.Id" method="post">
-                                        <input type="hidden" name="content" id="contentInput" />
-                                        <button type="submit" id="button" class="btn btn-outline-dark my-2 blog-button-white" style="color:wheat; width: 120px; margin-bottom: 1rem!important; margin-left: 3.4rem!important; margin-top: 1rem!important;">Post comment</button>
+                                        <input type="hidden" name="content" id="contentInput"/>
+                                        @if (Model.isCurrentUserMuted == false)
+                                                {
+                                                    <button type="submit" id="button" class="btn btn-outline-dark my-2 blog-button-white" style="color:wheat; width: 120px; margin-bottom: 1rem!important; margin-left: 3.4rem!important; margin-top: 1rem!important;">Post comment</button>
+                                                }
+                                                else
+                                                {
+                                                    <button type="submit" id="button" class="btn btn-outline-dark my-2 blog-button-white" style="color:wheat; width: 120px; margin-bottom: 1rem!important; margin-left: 3.4rem!important; margin-top: 1rem!important;" disabled>Post comment</button>
+                                                }
                                     </form>
                                 </div>
                             </div>
@@ -208,7 +224,7 @@
                                             <div class="d-flex flex-start">
                                                 <img class="rounded-circle shadow-1-strong me-3"
                                                      src="~/images/@comment.AuthorPictureUrl" alt="avatar" width="60"
-                                                     height="60" />
+                                                     height="60"/>
                                                 <div>
                                                     <a href="@Url.Action("Profile", "UserProfile", new { username = @comment.Author })" style="color:deepskyblue">
                                                         <i class="fas fa-user"></i> @comment.Author
@@ -235,9 +251,9 @@
                                     </div>
 
 
-                                    <hr class="my-0" style="height: 1px;" />
+                                    <hr class="my-0" style="height: 1px;"/>
 
-                                    <hr class="my-0" />
+                                    <hr class="my-0"/>
                                 }
                             }
                         </div>
@@ -270,4 +286,3 @@
         contentInput.value = textArea.value;
     });
 </script>
-

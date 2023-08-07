@@ -32,9 +32,8 @@ public class ChallengeService : IChallengeService
             Participants = c.Participants,
             PictureUrl = Path.GetFileName(c.Url),
         })
+        .OrderByDescending(x => x.CreatedOn)
         .Skip(skip).Take(pageSize).ToListAsync();
-
-        challenges = challenges.OrderByDescending(x => x.CreatedOn).ToList();
 
         var model = new ChallengesViewModel()
         {
@@ -49,7 +48,7 @@ public class ChallengeService : IChallengeService
         var pictures = await _data.Pictures
             .Where(x => x.ChallengeId == id)
             .ToDictionaryAsync(x => x.Id.ToString(), x => Path.GetFileName(x.Url));
-        if(challenge == null)
+        if (challenge == null)
         {
             throw new NullReferenceException();
         }
@@ -71,13 +70,13 @@ public class ChallengeService : IChallengeService
     public async Task ParticipateAsync(int id, string userId, string path)
     {
         var challenge = await _data.Challenges.FindAsync(id);
-        if(challenge == null)
+        if (challenge == null)
         {
             throw new NullReferenceException("Challenge not found");
         }
 
-        var user = await _data.Users.FirstOrDefaultAsync(x => x.Id.ToString() == userId);  
-        if(user == null)
+        var user = await _data.Users.FirstOrDefaultAsync(x => x.Id.ToString() == userId);
+        if (user == null)
         {
             throw new NullReferenceException("User not found");
         }

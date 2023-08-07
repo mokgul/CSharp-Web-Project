@@ -9,7 +9,7 @@ public interface IBlogService
 
     Task CreateBlogAsync(BlogAddFormModel model, string id, string? path);
 
-    Task<BlogDetailsViewModel> GetBlogDetailsAsync(string id);
+    Task<BlogDetailsViewModel> GetBlogDetailsAsync(string id, string currentUser);
 
     Task<BlogVisualizeModel> GetAllBlogsAsync(string sort, int page);
 

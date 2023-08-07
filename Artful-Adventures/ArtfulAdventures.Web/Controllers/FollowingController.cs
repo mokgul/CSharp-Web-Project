@@ -20,10 +20,7 @@
         {
             _followingService = service;
         }
-        public IActionResult Index()
-        {
-            return View();
-        }
+       
         [HttpGet]
         public async Task<IActionResult> All(string sort, int page)
         {

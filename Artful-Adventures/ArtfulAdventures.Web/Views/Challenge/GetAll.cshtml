@@ -1,4 +1,5 @@
 ﻿@model ChallengesViewModel
+@using static ArtfulAdventures.Common.GeneralApplicationConstants.Roles
 
 @{
     ViewBag.Title = "Challenges";
@@ -8,6 +9,14 @@
     int currentPage = ViewBag.CurrentPage ?? 1;
     int previousPage = currentPage > 1 ? currentPage - 1 : 1;
     int nextPage = currentPage + 1;
+}
+@{
+    if (TempData["AdminCreateChallenge"] != null)
+    {
+        <div class="alert alert-success" role="alert">
+            @TempData["AdminCreateChallenge"]
+        </div>
+    }
 }
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.1/css/all.min.css">
@@ -55,10 +64,19 @@
                                 height: 6em;
                             }
                         </style>
-                        <h5 class="text-purple"  style="text-decoration:underline;">@item.Title</h5>
+                        <h5 class="text-purple" style="text-decoration:underline;">@item.Title</h5>
                         <h6 class="card-text" style="color:#2f9ce7">Challenge #@item.Id</h6>
                         <p class="card-text text-purple"><i class="fas fa-trophy">  Participants:</i> (@item.Participants)<p />
-                        <a class="btn btn-outline-dark my-2 blog-button-white" href="@Url.Action("ChallengeDetails", "Challenge", new { id = item.Id} )" role="button" style="color:wheat">Participate</a>
+
+                        <div style="display: flex;justify-content:center;">
+                            <a class="btn btn-outline-dark my-2 blog-button-white" href="@Url.Action("ChallengeDetails", "Challenge", new { id = item.Id} )" role="button" style="color:wheat">Participate</a>
+                                @if (User!.IsInRole(Administrator))
+                                {
+                                <form method="post" asp-area="Admin" asp-controller="ManageContent" asp-action="DeleteChallenge" asp-route-challengeId="@item.Id">
+                                    <button type="submit" class="btn btn-outline-dark my-2 delete-blog-button-red" style="color:wheat;">Delete</button>
+                                </form>
+                                }
+                        </div>
                     </div>
                 </div>
             </div>
