@@ -15,6 +15,12 @@ else if (TempData["Success"] != null)
         @TempData["Success"]
     </div>
 }
+@if(TempData["Error"] != null)
+{
+    <div class="alert alert-success bg-dark text-white" role="alert">
+        @TempData["Error"]
+    </div>
+}
 <style>
     .text-purple {
         color: #bcd0f7 !important;

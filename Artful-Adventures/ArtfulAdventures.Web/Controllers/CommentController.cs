@@ -12,6 +12,7 @@
 
     using static ArtfulAdventures.Common.GeneralApplicationConstants.Roles;
 
+    [Authorize]
     public class CommentController : Controller
     {
         private readonly ArtfulAdventuresDbContext _data;

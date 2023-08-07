@@ -1,4 +1,6 @@
-﻿namespace ArtfulAdventures.Web.Controllers
+﻿using Microsoft.AspNetCore.Authorization;
+
+namespace ArtfulAdventures.Web.Controllers
 {
     using System.Xml.Linq;
 
@@ -12,6 +14,7 @@
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.EntityFrameworkCore;
 
+    [Authorize]
     public class FollowingController : Controller
     {
         private readonly IFollowingService _followingService;
@@ -36,7 +39,7 @@
             catch (Exception ex)
             {
                 TempData["Error"] = ex.Message;
-                return RedirectToAction("All", "Following");
+                return RedirectToAction("All", "Following", new { sort = "", page = 1 });
             }
         }
 

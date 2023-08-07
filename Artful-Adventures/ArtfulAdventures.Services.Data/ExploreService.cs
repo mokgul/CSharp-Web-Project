@@ -1,13 +1,13 @@
 ﻿namespace ArtfulAdventures.Services.Data;
 
 using System.Threading.Tasks;
-
 using ArtfulAdventures.Data;
+using ArtfulAdventures.Services.Common;
 using ArtfulAdventures.Services.Data.Interfaces;
+
 using ArtfulAdventures.Web.ViewModels;
 using ArtfulAdventures.Web.ViewModels.HashTag;
 using ArtfulAdventures.Web.ViewModels.Picture;
-
 using Microsoft.EntityFrameworkCore;
 
 public class ExploreService : IExploreService
@@ -22,14 +22,20 @@ public class ExploreService : IExploreService
 
     public async Task<ExploreViewModel> GetExploreViewModelAsync(string sort, int page = 1)
     {
+        if(ValidatePage.Validate(page) == false)
+        {
+            throw new ArgumentException("Invalid page number!");
+        }
+        
         int pageSize = 20;
         int skip = (page - 1) * pageSize;
-        var hashtags = await _data.HashTags.Include(h => h.PicturesHashTags).OrderByDescending(h => h.PicturesHashTags.Count).Select(h => new HashTagViewModel()
-        {
-            Id = h.Id,
-            Name = h.Type.Replace("_", " "),
-            PicturesCount = h.PicturesHashTags.Count
-        }).Take(14).ToListAsync();
+        var hashtags = await _data.HashTags.Include(h => h.PicturesHashTags)
+            .OrderByDescending(h => h.PicturesHashTags.Count).Select(h => new HashTagViewModel()
+            {
+                Id = h.Id,
+                Name = h.Type.Replace("_", " "),
+                PicturesCount = h.PicturesHashTags.Count
+            }).Take(14).ToListAsync();
         var dropDownMenuTags = await _data.HashTags.Select(h => new HashTagViewModel()
         {
             Id = h.Id,
@@ -37,20 +43,20 @@ public class ExploreService : IExploreService
         }).ToListAsync();
 
         var pictures = await _data.Pictures
-        .Include(t => t.PicturesHashTags)
-        .OrderByDescending(p => p.CreatedOn)
-        .Skip(skip)
-        .Take(pageSize)
-        .Select(p => new PictureVisualizeViewModel()
-        {
-            Id = p.Id.ToString(),
-            Owner = p.Owner.UserName,
-            PictureUrl = Path.GetFileName(p.Url),
-            CreatedOn = p.CreatedOn,
-            Likes = p.Likes,
-            HashTags = p.PicturesHashTags.Select(h => h.Tag.Type).ToList()
-        })
-    .ToListAsync();
+            .Include(t => t.PicturesHashTags)
+            .OrderByDescending(p => p.CreatedOn)
+            .Skip(skip)
+            .Take(pageSize)
+            .Select(p => new PictureVisualizeViewModel()
+            {
+                Id = p.Id.ToString(),
+                Owner = p.Owner.UserName,
+                PictureUrl = Path.GetFileName(p.Url),
+                CreatedOn = p.CreatedOn,
+                Likes = p.Likes,
+                HashTags = p.PicturesHashTags.Select(h => h.Tag.Type).ToList()
+            })
+            .ToListAsync();
 
 
         pictures = FilterBrokenUrls.FilterAsync(pictures);
@@ -63,17 +69,23 @@ public class ExploreService : IExploreService
             TagsForDropDown = dropDownMenuTags,
             Pictures = pictures
         };
-
-
         return model;
     }
 
-    private async Task<List<PictureVisualizeViewModel>> SortPicturesAsync(string sort, List<PictureVisualizeViewModel> pictures)
+    private async Task<List<PictureVisualizeViewModel>> SortPicturesAsync(string sort,
+        List<PictureVisualizeViewModel> pictures)
     {
         if (string.IsNullOrWhiteSpace(sort))
         {
             return pictures;
         }
+        var sortValidator = new ValidateSortParameter(_data);
+        bool isValid = await sortValidator.Validate(sort);
+        if (!isValid)
+        {
+            throw new ArgumentException("Invalid sort parameter!");
+        }
+
         var owner = string.Empty;
         var tag = string.Empty;
         if (sort != "likes" && sort != "newest" && sort != "oldest")
@@ -89,6 +101,7 @@ public class ExploreService : IExploreService
                 sort = "tag";
             }
         }
+
         if (sort != "likes" && sort != "newest" && sort != "oldest" && sort != "tag")
         {
             if (!_data.Users.Any(u => u.UserName == owner))
@@ -116,8 +129,7 @@ public class ExploreService : IExploreService
             default:
                 break;
         }
+
         return pictures;
     }
-
 }
-

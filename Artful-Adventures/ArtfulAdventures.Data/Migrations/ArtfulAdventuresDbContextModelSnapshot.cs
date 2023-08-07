@@ -115,13 +115,14 @@ namespace ArtfulAdventures.Data.Migrations
                         {
                             Id = new Guid("b04c7301-c0c6-4a05-a8ba-8bec078cb212"),
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "1374e658-515c-45f9-91e4-2d1ee96c958b",
+                            ConcurrencyStamp = "b30c6ee9-6fcd-49cb-a301-b4c71335654b",
                             Email = "test-user-01@test.art",
                             EmailConfirmed = false,
                             LockoutEnabled = false,
                             NormalizedUserName = "TEST-USER-01",
-                            PasswordHash = "AQAAAAEAACcQAAAAEJz5q9r94FcQhhrzALnriWyegF1k9yuh4LT7jpUsXmPleb+FntCJ5SOkju0QQjmWSQ==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEJHF9+ZOKmTSGNKADhGjTZ5L7wT0ciWIqvzFtFd65zD+QQZ2aT5Yq6lbCkfMKuV7aQ==",
                             PhoneNumberConfirmed = false,
+                            SecurityStamp = "SecurityStampTest01",
                             TwoFactorEnabled = false,
                             UserName = "test-user-01"
                         },
@@ -129,13 +130,14 @@ namespace ArtfulAdventures.Data.Migrations
                         {
                             Id = new Guid("c1a9dd0b-8434-421d-8d52-80c8ec3c0e2a"),
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "e56a2f6c-ae98-4e51-bd6e-3565fb9cb8e8",
+                            ConcurrencyStamp = "a39a416e-1c54-415e-bccc-219d91ce3fc9",
                             Email = "test-user-02@test.art",
                             EmailConfirmed = false,
                             LockoutEnabled = false,
                             NormalizedUserName = "TEST-USER-02",
-                            PasswordHash = "AQAAAAEAACcQAAAAEA/YcLGcx2HIXz43t/NP5QjCwjE8epztMtHETs8M0fkZln+ypyTxBEbR9yJQPOhLuQ==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEETtmtvoShtGtj9NXeDLB6H6X5TG+Ysl1axUfPT/PSgsBs3w755wa/+myjsIQc9yUQ==",
                             PhoneNumberConfirmed = false,
+                            SecurityStamp = "SecurityStampTest02",
                             TwoFactorEnabled = false,
                             UserName = "test-user-02"
                         },
@@ -143,13 +145,14 @@ namespace ArtfulAdventures.Data.Migrations
                         {
                             Id = new Guid("cbef4ddc-5788-48ab-9380-aa457c89a554"),
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "eb0ab896-4294-46fb-ba2e-cd350f249891",
+                            ConcurrencyStamp = "2b9de94c-0581-4c0e-b0b0-f3c76c542df6",
                             Email = "test-user-03@test.art",
                             EmailConfirmed = false,
                             LockoutEnabled = false,
                             NormalizedUserName = "TEST-USER-03",
-                            PasswordHash = "AQAAAAEAACcQAAAAEDtMmrbhOQHvkDwZSxGB22/+kZRLxopAxQRgzQPcC6dN0Nn7oeWteDpCKQNxu8q7cw==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEBZgpJvUptAM+0ybOOZ/VItIxA6wxs1miV3MaQWv6j8r4kCEZCLu0A3b6NJowGHBOA==",
                             PhoneNumberConfirmed = false,
+                            SecurityStamp = "SecurityStampTest03",
                             TwoFactorEnabled = false,
                             UserName = "test-user-03"
                         },
@@ -157,13 +160,14 @@ namespace ArtfulAdventures.Data.Migrations
                         {
                             Id = new Guid("bd2fe03e-7ab2-4c83-bcb6-10c48aa601cb"),
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "7aab2d74-8ae4-4cb4-ba64-0fa904a4834a",
+                            ConcurrencyStamp = "1081e470-ea3d-4c50-a151-861892176093",
                             Email = "admin@art-adv.com",
                             EmailConfirmed = false,
                             LockoutEnabled = false,
                             NormalizedUserName = "admin",
-                            PasswordHash = "AQAAAAEAACcQAAAAEPAOiMaCQpD3S1lripVGEqYxSYQKaB2nZEIYE5t7GQIDlqcm183jAVoMfqku1M7IMw==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEOncT1Pk4nJ4dbiTFhFqhmqf196XRcokype6B8JPFuhM64hDmZ2dsGlOnfjLWMfknA==",
                             PhoneNumberConfirmed = false,
+                            SecurityStamp = "SecurityStampAdmin",
                             TwoFactorEnabled = false,
                             UserName = "admin"
                         });
@@ -910,14 +914,14 @@ namespace ArtfulAdventures.Data.Migrations
                         new
                         {
                             Id = new Guid("2c5e174e-3b0e-446f-86af-483d56fd7210"),
-                            ConcurrencyStamp = "d7260595-5e72-4ab4-b8c9-44eb082432d1",
+                            ConcurrencyStamp = "26cc6fc5-8174-4988-b8ef-652868caa726",
                             Name = "Administrator",
                             NormalizedName = "ADMINISTRATOR"
                         },
                         new
                         {
                             Id = new Guid("8e445865-a24d-4543-a6c6-9443d048cdb9"),
-                            ConcurrencyStamp = "981562f1-de24-4227-a2b9-3df2d49853ee",
+                            ConcurrencyStamp = "2913c449-55f8-4343-b747-b0f2a9909469",
                             Name = "User",
                             NormalizedName = "USER"
                         });

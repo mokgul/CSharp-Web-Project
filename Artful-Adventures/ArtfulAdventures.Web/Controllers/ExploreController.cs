@@ -1,10 +1,13 @@
-﻿namespace ArtfulAdventures.Web.Controllers
+﻿using Microsoft.AspNetCore.Authorization;
+
+namespace ArtfulAdventures.Web.Controllers
 {
     using ArtfulAdventures.Services.Data.Interfaces;
     using ArtfulAdventures.Web.ViewModels;
 
     using Microsoft.AspNetCore.Mvc;
 
+    [Authorize]
     public class ExploreController : Controller
     {
         private readonly IExploreService _exploreService;
@@ -29,7 +32,7 @@
             catch (ArgumentException ex)
             {
                 TempData["Error"] = ex.Message;
-                return RedirectToAction("All", "Explore");
+                return RedirectToAction("All", "Explore", new{ sort="", page = 1});
             }
 
         }

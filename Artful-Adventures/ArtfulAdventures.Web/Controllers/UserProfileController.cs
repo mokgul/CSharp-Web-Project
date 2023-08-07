@@ -1,11 +1,12 @@
-﻿namespace ArtfulAdventures.Web.Controllers
+﻿using Microsoft.AspNetCore.Authorization;
+
+namespace ArtfulAdventures.Web.Controllers
 {
     using System.Security.Claims;
-
     using ArtfulAdventures.Services.Data.Interfaces;
-
     using Microsoft.AspNetCore.Mvc;
 
+    [Authorize]
     public class UserProfileController : Controller
     {
         private readonly IProfileService _profileService;
@@ -23,6 +24,7 @@
             {
                 return RedirectToAction("NonExistingProfile");
             }
+
             return View(model);
         }
 
@@ -34,29 +36,45 @@
         [HttpGet]
         public async Task<IActionResult> Portfolio(string username)
         {
-            var model = await _profileService.GetPortfolioAsync(username);
-
-            if (model == null)
+            try
             {
-                TempData["Message"] = "No portfolio yet.";
-                return RedirectToAction("Profile", new { username = username });
-            }
+                var model = await _profileService.GetPortfolioAsync(username);
 
-            return View(model);
+                if (model == null)
+                {
+                    TempData["Message"] = "No portfolio yet.";
+                    return RedirectToAction("Profile", new { username = username });
+                }
+
+                return View(model);
+            }
+            catch
+            {
+                TempData["Error"] = "Something went wrong.";
+                return RedirectToAction("Profile", new { username = User.Identity.Name });
+            }
         }
 
         [HttpGet]
         public async Task<IActionResult> Favorites(string username)
         {
-            var model = await _profileService.GetCollectionAsync(username);
-
-            if (model == null)
+            try
             {
-                TempData["Message"] = "No favorites yet.";
-                return RedirectToAction("Profile", new { username = username });
-            }
+                var model = await _profileService.GetCollectionAsync(username);
 
-            return View(model);
+                if (model == null)
+                {
+                    TempData["Message"] = "No favorites yet.";
+                    return RedirectToAction("Profile", new { username = username });
+                }
+
+                return View(model);
+            }
+            catch
+            {
+                TempData["Error"] = "Something went wrong.";
+                return RedirectToAction("Profile", new { username = User.Identity.Name });
+            }
         }
 
         [HttpPost]
@@ -70,6 +88,7 @@
                     TempData["Message"] = "You cannot follow yourself.";
                     return RedirectToAction("Profile", new { username = username });
                 }
+
                 TempData["Success"] = "You are now following this user.";
                 return RedirectToAction("Profile", new { username = username });
             }
@@ -93,38 +112,53 @@
                 TempData["Message"] = "Something went wrong.";
                 return RedirectToAction("Profile", new { username = username });
             }
-
-            return RedirectToAction("Profile", new { username = username });
         }
 
         [HttpGet]
         public async Task<IActionResult> Followers(string username)
         {
-
-            var model = await _profileService.GetFollowersAsync(username);
-            if (model == null)
+            try
             {
-                TempData["Message"] = "No followers yet.";
-                return RedirectToAction("Profile", new { username = username });
+                var model = await _profileService.GetFollowersAsync(username);
+                if (model == null)
+                {
+                    TempData["Message"] = "No followers yet.";
+                    return RedirectToAction("Profile", new { username = username });
+                }
+
+                return View(model);
             }
-            return View(model);
+            catch
+            {
+                TempData["Error"] = "Something went wrong.";
+                return RedirectToAction("Profile", new { username = User.Identity.Name });
+            }
         }
 
         [HttpGet]
         public async Task<IActionResult> Following(string username)
         {
-            var model = await _profileService.GetFollowingAsync(username);
-            if (model == null)
+            try
             {
-                TempData["Message"] = "No following yet.";
-                return RedirectToAction("Profile", new { username = username });
+                var model = await _profileService.GetFollowingAsync(username);
+                if (model == null)
+                {
+                    TempData["Message"] = "No following yet.";
+                    return RedirectToAction("Profile", new { username = username });
+                }
+
+                return View(model);
             }
-            return View(model);
+            catch
+            {
+                TempData["Error"] = "Something went wrong.";
+                return RedirectToAction("Profile", new { username = User.Identity.Name });
+            }
         }
 
         private string GetUserId()
-        {
-            return this.User.FindFirst(ClaimTypes.NameIdentifier)!.Value;
+            {
+                return this.User.FindFirst(ClaimTypes.NameIdentifier)!.Value;
+            }
         }
     }
-}

@@ -1,4 +1,6 @@
-﻿namespace ArtfulAdventures.Services.Data;
+﻿using ArtfulAdventures.Services.Common;
+
+namespace ArtfulAdventures.Services.Data;
 
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -96,6 +98,10 @@ public class PictureService : IPictureService
             .Include(p => p.PicturesHashTags)
             .Include(p => p.Comments)
             .FirstOrDefaultAsync(p => p.Id.ToString() == id);
+        if(picture == null)
+        {
+            throw new NullReferenceException("Picture not found!");
+        }
 
         //Get picture owner with followers and following
         //Since the picture object has a foreign key relationship with the User table (through the UserId property), Entity Framework Core will automatically populate the Owner property of the picture
@@ -182,6 +188,10 @@ public class PictureService : IPictureService
     //for portfolio
     public async Task<ICollection<PictureEditViewModel>> ManageGetAllPicturesAsync(string userId, int page = 1)
     {
+        if(ValidatePage.Validate(page) == false)
+        {
+            throw new ArgumentException("Invalid page number.");
+        }
         var pageSize = 9;
         var skip = (page - 1) * pageSize;
         var pictures = await _data.Pictures.Where(p => p.UserId.ToString() == userId).ToListAsync();
@@ -197,6 +207,10 @@ public class PictureService : IPictureService
 
     public async Task<ICollection<PictureEditViewModel>> ManageGetAllCollectionAsync(string userId, int page = 1)
     {
+        if (ValidatePage.Validate(page) == false)
+        {
+            throw new ArgumentException("Invalid page number.");
+        }
         int pageSize = 9;
         var skip = (page - 1) * pageSize;
         var user = await _data.Users.Include(p => p.Collection).FirstOrDefaultAsync(u => u.Id.ToString() == userId);
@@ -213,6 +227,10 @@ public class PictureService : IPictureService
     public async Task<PictureEditViewModel> GetPictureToEditAsync(string id)
     {
         var picture = await _data.Pictures.FirstOrDefaultAsync(p => p.Id.ToString() == id);
+        if (picture == null)
+        {
+            throw new ArgumentException("Picture not found.");
+        }
         var hashtags = await _data.HashTags.Select(h => new HashTagViewModel()
         {
             Id = h.Id,
@@ -231,6 +249,10 @@ public class PictureService : IPictureService
     {
         var id = model.Id;
         var picture = await _data.Pictures.FirstOrDefaultAsync(p => p.Id.ToString() == id);
+        if (picture == null)
+        {
+            throw new ArgumentException("Picture not found.");
+        }
         picture!.Description = model.Description;
         var selectedHashTags = model.HashTags.Where(h => h.IsSelected).ToList();
         if (selectedHashTags.Count > 0)

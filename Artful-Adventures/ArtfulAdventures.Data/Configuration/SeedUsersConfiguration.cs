@@ -23,6 +23,7 @@ public class SeedUsersConfiguration : IEntityTypeConfiguration<ApplicationUser>,
                 NormalizedUserName = "TEST-USER-01",
                 Email = "test-user-01@test.art",
                 PasswordHash = _passwordHasher.HashPassword(null, "test01"),
+                SecurityStamp = "SecurityStampTest01"
             },
             new ApplicationUser
             {
@@ -31,6 +32,7 @@ public class SeedUsersConfiguration : IEntityTypeConfiguration<ApplicationUser>,
                 NormalizedUserName = "TEST-USER-02",
                 Email = "test-user-02@test.art",
                 PasswordHash = _passwordHasher.HashPassword(null, "test02"),
+                SecurityStamp = "SecurityStampTest02"
             },
             new ApplicationUser
             {
@@ -39,6 +41,7 @@ public class SeedUsersConfiguration : IEntityTypeConfiguration<ApplicationUser>,
                 NormalizedUserName = "TEST-USER-03",
                 Email = "test-user-03@test.art",
                 PasswordHash = _passwordHasher.HashPassword(null, "test03"),
+                SecurityStamp = "SecurityStampTest03"
             },
             new ApplicationUser
             {
@@ -47,6 +50,7 @@ public class SeedUsersConfiguration : IEntityTypeConfiguration<ApplicationUser>,
                 NormalizedUserName = AdminUserName,
                 Email = AdminEmail,
                 PasswordHash = _passwordHasher.HashPassword(null, AdminPassword),
+                SecurityStamp = "SecurityStampAdmin"
             }
             );
     }

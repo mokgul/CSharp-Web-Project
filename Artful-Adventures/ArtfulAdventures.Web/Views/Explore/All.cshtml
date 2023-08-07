@@ -15,6 +15,12 @@
         @TempData["Error"]
     </div>
 }
+@if(TempData["NotFound"] != null)
+{
+    <div class="alert alert-danger bg-dark text-white" role="alert">
+        @TempData["NotFound"]
+    </div>
+}
 
 @{
     ViewBag.Title = "Explore";

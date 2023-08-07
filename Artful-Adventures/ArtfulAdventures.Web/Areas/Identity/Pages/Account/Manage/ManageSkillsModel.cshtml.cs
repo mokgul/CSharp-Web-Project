@@ -1,10 +1,12 @@
-﻿using ArtfulAdventures.Data.Models;
+﻿using ArtfulAdventures.Data;
+using ArtfulAdventures.Data.Models;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.AspNetCore.Mvc;
-using ArtfulAdventures.Data;
 using Microsoft.EntityFrameworkCore;
+
+namespace ArtfulAdventures.Web.Areas.Identity.Pages.Account.Manage;
 
 public class ManageSkillsModel : PageModel
 {

@@ -61,6 +61,10 @@ public class ProfileService : IProfileService
             // Find the first user with the specified username
             .FirstOrDefaultAsync(u => u.UserName == username);
 
+        if(user == null)
+        {
+            throw new NullReferenceException("User not found.");
+        }
 
         if (user!.Collection.Count == 0)
         {
@@ -88,6 +92,11 @@ public class ProfileService : IProfileService
     {
         var user = await _data.Users.Include(m => m.Followers).Include(m => m.Following).FirstOrDefaultAsync(u => u.UserName == username);
 
+        if(user == null)
+        {
+            throw new NullReferenceException("User not found.");
+        }
+        
         if (user!.Followers.Count == 0)
         {
             return null;
@@ -115,6 +124,11 @@ public class ProfileService : IProfileService
     {
         var user = await _data.Users.Include(m => m.Followers).Include(m => m.Following).FirstOrDefaultAsync(u => u.UserName == username);
 
+        if(user == null)
+        {
+            throw new NullReferenceException("User not found.");
+        }
+        
         if (user!.Following.Count == 0)
         {
             return null;
@@ -145,6 +159,11 @@ public class ProfileService : IProfileService
                 .ThenInclude(p => p.Picture)
                 .FirstOrDefaultAsync(u => u.UserName == username);
 
+        if(user == null)
+        {
+            throw new NullReferenceException("User not found.");
+        }
+        
         if (user!.Portfolio.Count == 0)
         {
             return null;

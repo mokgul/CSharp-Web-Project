@@ -23,6 +23,12 @@
         @TempData["Success"]
     </div>
 }
+@if(TempData["NotFound"] != null)
+{
+    <div class="alert alert-danger text-black" role="alert">
+        @TempData["NotFound"]
+    </div>
+}
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.1/css/all.min.css">
 

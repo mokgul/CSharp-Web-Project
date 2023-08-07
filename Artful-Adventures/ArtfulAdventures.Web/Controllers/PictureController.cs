@@ -1,4 +1,7 @@
-﻿namespace ArtfulAdventures.Web.Controllers
+﻿using ArtfulAdventures.Services.Common;
+using Microsoft.AspNetCore.Authorization;
+
+namespace ArtfulAdventures.Web.Controllers
 {
     using System;
     using System.Diagnostics;
@@ -14,6 +17,7 @@
 
     using static ArtfulAdventures.Common.GeneralApplicationConstants;
 
+    [Authorize]
     public class PictureController : Controller
     {
         private readonly IPictureService _pictureService;
@@ -41,7 +45,7 @@
                 var path = await UploadFile();
                 if (String.IsNullOrEmpty(path))
                 {
-                    ModelState.AddModelError("path", "Please select a file to upload.");
+                    ModelState.AddModelError("path", "Please select a file (only images are supported) to upload.");
                 }
                 if (!ModelState.IsValid)
                 {
@@ -52,7 +56,7 @@
             }
             catch (Exception)
             {
-                return RedirectToAction("Error", "Home");
+                return View(model);
             }
             TempData["Success"] = "Your picture was uploaded successfully!";
             return RedirectToAction("Upload", "Picture");
@@ -61,10 +65,18 @@
         [HttpGet]
         public async Task<IActionResult> PictureDetails(string id)
         {
+            try
+            {
             var currentUser = GetUserId();
             var picture = await _pictureService.GetPictureDetailsAsync(id, currentUser);
 
             return View(picture);
+            }
+            catch (NullReferenceException ex)
+            {
+                TempData["NotFound"] = ex.Message;
+                return RedirectToAction("All", "Explore", new { sort = "", page = 1 });
+            }
         }
 
         [HttpPost]
@@ -99,30 +111,54 @@
         [HttpGet]
         public async Task<IActionResult> ManageGetAllPictures(int page)
         {
+            try
+            {
             ViewBag.CurrentPage = page;
             ViewBag.Action = "ManageGetAllPictures";
             var userId = GetUserId();
             var model = await _pictureService.ManageGetAllPicturesAsync(userId, page);
             
             return View(model);
+            }
+catch (ArgumentException ex)
+            {
+                TempData["Error"] = ex.Message;
+                return RedirectToAction("ManageGetAllPictures", "Picture", new { page = 1 });
+            }
         }
 
         [HttpGet]
         public async Task<IActionResult> ManageGetAllCollection(int page)
         {
-            ViewBag.CurrentPage = page;
-            ViewBag.Action = "ManageGetAllCollection";
-            var userId = GetUserId();
-            var model = await _pictureService.ManageGetAllCollectionAsync(userId, page);
+            try
+            {
+                ViewBag.CurrentPage = page;
+                ViewBag.Action = "ManageGetAllCollection";
+                var userId = GetUserId();
+                var model = await _pictureService.ManageGetAllCollectionAsync(userId, page);
             
-            return View("ManageGetAllPictures", model);
+                return View("ManageGetAllPictures", model);
+            }
+            catch (ArgumentException ex)
+            {
+                TempData["Error"] = ex.Message;
+                return RedirectToAction("ManageGetAllCollection", "Picture", new { page = 1 });
+            }
         }
 
         [HttpGet]
         public async Task<IActionResult> EditPicture(string id)
         {
-            var model = await _pictureService.GetPictureToEditAsync(id);
-            return View(model);
+            try
+            {
+                var model = await _pictureService.GetPictureToEditAsync(id);
+                return View(model);
+            }
+            catch (ArgumentException ex)
+            {
+                TempData["Error"] = "Picture not found.";
+                return RedirectToAction("ManageGetAllPictures", "Picture", new { page = 1 });
+            }
         }
 
         [HttpPost]
@@ -132,8 +168,9 @@
             {
                 await _pictureService.EditPictureAsync(model);
             }
-            catch (Exception)
+            catch (ArgumentException ex)
             {
+                TempData["Error"] = "Picture not found.";
                 return RedirectToAction("ManageGetAllPictures", "Picture", new { page = 1 });
             }
             TempData["Success"] = "Your picture was edited successfully!";
@@ -191,6 +228,10 @@
             }
             //Gets the first file and saves it to the specified path.
             var file = form.Files.First();
+            var imageValidator = new ValidateFileIsImage();
+            if(imageValidator.Validate(file) == false)
+                return string.Empty;
+            
             var fileName = Guid.NewGuid().ToString() + Path.GetExtension(file.FileName);
 
             var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "images", fileName);

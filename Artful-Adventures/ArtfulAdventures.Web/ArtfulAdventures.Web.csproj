@@ -23,8 +23,8 @@
   <ItemGroup>
     <ProjectReference Include="..\ArtfulAdventures.Common\ArtfulAdventures.Common.csproj" />
     <ProjectReference Include="..\ArtfulAdventures.Data.Models\ArtfulAdventures.Data.Models.csproj" />
+    <ProjectReference Include="..\ArtfulAdventures.Services.Common\ArtfulAdventures.Services.Common.csproj" />
     <ProjectReference Include="..\ArtfulAdventures.Services.Data\ArtfulAdventures.Services.Data.csproj" />
-    <ProjectReference Include="..\ArtfulAdventures.Services.Search\ArtfulAdventures.Services.Search.csproj" />
     <ProjectReference Include="..\ArtfulAdventures.Web.ViewModels\ArtfulAdventures.Web.ViewModels.csproj" />
   </ItemGroup>
 

@@ -18,6 +18,12 @@
         </div>
     }
 }
+@if(TempData["ErrorNotFound"] != null)
+{
+    <div class="alert alert-danger" role="alert">
+        @TempData["ErrorNotFound"]
+    </div>
+}
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.1/css/all.min.css">
 <h1 class="text-center">Challenge</h1>

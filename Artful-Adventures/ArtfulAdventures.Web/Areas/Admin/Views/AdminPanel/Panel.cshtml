@@ -81,11 +81,11 @@
     </div>
 }
 
-<h1>Admin Home</h1>
+<h1>Admin Panel</h1>
 
 <p>Welcome to the admin area.</p>
 
-<p>Content Moderation</p>
+<h4>Content Moderation</h4>
 <hr />
 <a class="btn btn-outline-dark my-2 mx-auto" href="@Url.Action("CreateChallenge", "ManageContent", new { area = "Admin"})" role="button" style="color:wheat; background-color:cornflowerblue;">Create Challenge</a>
 
@@ -96,7 +96,7 @@
 <a class="btn btn-outline-dark my-2 mx-auto" href="@Url.Action("GetBlogs", "Blog", new { page = 1, area = ""})" role="button" style="color:wheat; background-color:cornflowerblue;">Delete Blog</a>
 <hr />
 
-<p>User Management</p>
+<h4>User Management</h4>
 <hr />
 
 <a class="btn btn-outline-dark my-2 mx-auto" href="@Url.Action("AllUsers", "ManageUser", new { page = 1,area = "Admin"})" role="button" style="color:wheat; background-color:cornflowerblue;">Display All Users</a>

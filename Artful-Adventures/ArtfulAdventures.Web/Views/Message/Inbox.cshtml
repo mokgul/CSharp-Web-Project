@@ -1,7 +1,12 @@
 ﻿@model MessageInbox
 
 <h2>Inbox</h2>
-
+@if(TempData["ErrorNotFound"] != null)
+{
+    <div class="alert alert-danger" role="alert">
+        @TempData["ErrorNotFound"]
+    </div>
+}
 @{
     ViewBag.Title = "Inbox";
 }

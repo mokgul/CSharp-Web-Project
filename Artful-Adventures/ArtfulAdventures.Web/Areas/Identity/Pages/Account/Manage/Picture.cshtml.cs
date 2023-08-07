@@ -10,6 +10,7 @@ using System.Text.Encodings.Web;
 using System.Threading.Tasks;
 
 using ArtfulAdventures.Data.Models;
+using ArtfulAdventures.Services.Common;
 using ArtfulAdventures.Web.Configuration;
 
 using Microsoft.AspNetCore.Identity;
@@ -136,6 +137,9 @@ namespace ArtfulAdventures.Web.Areas.Identity.Pages.Account.Manage
             }
             //Gets the first file and saves it to the specified path.
             var file = form.Files.First();
+            var imageValidator = new ValidateFileIsImage();
+            if(imageValidator.Validate(file) == false)
+                return string.Empty;
             var fileName = file.FileName;
             var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "images", fileName);
 

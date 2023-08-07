@@ -1,4 +1,6 @@
-﻿namespace ArtfulAdventures.Services.Data;
+﻿using ArtfulAdventures.Services.Common;
+
+namespace ArtfulAdventures.Services.Data;
 
 using System.Threading.Tasks;
 using System.Xml.Linq;
@@ -91,6 +93,10 @@ public class BlogService : IBlogService
 
     public async Task<BlogVisualizeModel> GetAllBlogsAsync(string sort, int page = 1)
     {
+        if (!ValidatePage.Validate(page))
+        {
+            throw new ArgumentException("Invalid page number.");
+        }
         int pageSize = 6;
         int skip = (page - 1) * pageSize;
         var blogs = await _data.Blogs.Include(a => a.Author).OrderByDescending(x => x.CreatedOn).ToListAsync();
@@ -131,6 +137,12 @@ public class BlogService : IBlogService
         {
             return blogs;
         }
+        var sortValidator = new ValidateSortParameter(_data);
+        bool isValid = await sortValidator.Validate(sort);
+        if (!isValid)
+        {
+            throw new ArgumentException("Invalid sort parameter!");
+        }
         var owner = string.Empty;
         if (sort != "likes" && sort != "newest" && sort != "oldest")
         {
@@ -166,6 +178,10 @@ public class BlogService : IBlogService
     public async Task<BlogAddFormModel> GetBlogToEditAsync(string id)
     {
         var blog = _data.Blogs.Include(u => u.Author).FirstOrDefault(x => x.Id.ToString() == id);
+        if (blog == null)
+        {
+            throw new NullReferenceException("Blog not found.");
+        }
         
         var model = new BlogAddFormModel()
         {
@@ -179,6 +195,10 @@ public class BlogService : IBlogService
 
     public async Task<BlogVisualizeModel> GetAllBlogsForManageAsync(string sort, string userId, int page = 1)
     {
+        if (!ValidatePage.Validate(page))
+        {
+            throw new ArgumentException();
+        }
         int pageSize = 6;
         int skip = (page - 1) * pageSize;
         var blogs = await _data.Blogs.Include(a => a.Author).Where(b => b.AuthorId.ToString() == userId).OrderByDescending(x => x.CreatedOn).ToListAsync();

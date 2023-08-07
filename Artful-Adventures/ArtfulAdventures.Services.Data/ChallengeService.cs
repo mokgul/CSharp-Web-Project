@@ -1,4 +1,6 @@
-﻿namespace ArtfulAdventures.Services.Data;
+﻿using ArtfulAdventures.Services.Common;
+
+namespace ArtfulAdventures.Services.Data;
 
 using System.Threading.Tasks;
 
@@ -21,6 +23,10 @@ public class ChallengeService : IChallengeService
 
     public async Task<ChallengesViewModel> GetAllAsync(int page = 1)
     {
+        if (!ValidatePage.Validate(page))
+        {
+            throw new ArgumentException("Invalid page number");
+        }
         int pageSize = 6;
         int skip = (page - 1) * pageSize;
         var challenges = await _data.Challenges.Select(c => new ChallengeVisualizeViewModel()
@@ -45,13 +51,13 @@ public class ChallengeService : IChallengeService
     public async Task<ChallengeDetailsViewModel> GetChallengeDetailsAsync(int id)
     {
         var challenge = await _data.Challenges.FindAsync(id);
+        if (challenge == null)
+        {
+            throw new NullReferenceException("Challenge not found");
+        }
         var pictures = await _data.Pictures
             .Where(x => x.ChallengeId == id)
             .ToDictionaryAsync(x => x.Id.ToString(), x => Path.GetFileName(x.Url));
-        if (challenge == null)
-        {
-            throw new NullReferenceException();
-        }
 
         var model = new ChallengeDetailsViewModel
         {

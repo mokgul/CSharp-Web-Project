@@ -1,5 +1,7 @@
-﻿using ArtfulAdventures.Services.Data;
+﻿using ArtfulAdventures.Services.Common;
+using ArtfulAdventures.Services.Data;
 using ArtfulAdventures.Web.ViewModels.Picture;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
 
 namespace ArtfulAdventures.Web.Controllers;
@@ -7,13 +9,13 @@ namespace ArtfulAdventures.Web.Controllers;
 using System.Diagnostics;
 
 using ArtfulAdventures.Data;
-using ArtfulAdventures.Services.Search;
 using ArtfulAdventures.Web.ViewModels.Blog;
 using ArtfulAdventures.Web.ViewModels.Home;
 using ArtfulAdventures.Web.ViewModels.Search;
 
 using Microsoft.AspNetCore.Mvc;
 
+[AllowAnonymous]
 public class HomeController : Controller
 {
     private readonly ArtfulAdventuresDbContext _data;
@@ -38,15 +40,16 @@ public class HomeController : Controller
     [HttpGet]
     public async Task<IActionResult> AboutUs()
     {
-        throw new NotImplementedException();
+        return View();
     }
     
     [HttpGet]
     public async Task<IActionResult> Privacy()
     {
-        throw new NotImplementedException();
+        return View();
     }
 
+    [Authorize]
     [HttpGet]
     public async Task<IActionResult> Search(string query, int page = 1)
     {

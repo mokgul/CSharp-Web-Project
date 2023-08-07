@@ -1,4 +1,7 @@
-﻿namespace ArtfulAdventures.Web.Controllers
+﻿using ArtfulAdventures.Services.Common;
+using Microsoft.AspNetCore.Authorization;
+
+namespace ArtfulAdventures.Web.Controllers
 {
     using ArtfulAdventures.Web.ViewModels.Challenges;
     using System.Xml.Linq;
@@ -11,6 +14,7 @@
     using System.Drawing;
     using System.Security.Claims;
 
+    [Authorize]
     public class ChallengeController : Controller
     {
         private readonly IChallengeService _challengeService;
@@ -23,10 +27,18 @@
         [HttpGet]
         public async Task<IActionResult> GetAll(int page)
         {
+            try
+            {
             var model = await _challengeService.GetAllAsync(page);
             ViewBag.CurrentPage = page;
 
             return View(model);
+            }
+            catch (ArgumentException ex)
+            {
+                TempData["Error"] = ex.Message;
+                return RedirectToAction("GetAll", "Challenge", new { page = 1 });
+            }
         }
 
         [HttpGet]
@@ -39,7 +51,7 @@
             }
             catch (NullReferenceException ex)
             {
-                TempData["Error"] = ex.Message;
+                TempData["ErrorNotFound"] = ex.Message;
                 return RedirectToAction("GetAll", "Challenge");
             }
         }
@@ -77,6 +89,9 @@
             }
             //Gets the first file and saves it to the specified path.
             var file = form.Files.First();
+            var imageValidator = new ValidateFileIsImage();
+            if(imageValidator.Validate(file) == false)
+                return string.Empty;
             var fileName = Guid.NewGuid().ToString() + Path.GetExtension(file.FileName);
 
             var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "images", fileName);

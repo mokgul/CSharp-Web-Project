@@ -15,7 +15,6 @@
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.4/css/all.css">
 
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true"/>
-    <link rel="stylesheet" href="~/ArtfulAdventures.Web.styles.css" asp-append-version="true"/>
 </head>
 <body class="body-for-sticky">
 <header>
@@ -44,7 +43,7 @@
                             </a>
                         </li>
                         <li class="nav-item" style="font-size: 1.3rem">
-                            <a class="nav-link active" asp-area="" asp-controller="Picture" asp-action="Upload" asp-route-page="1">
+                            <a class="nav-link active" asp-area="" asp-controller="Picture" asp-action="Upload">
                                 Upload
                                 <span class="visually-hidden">(current)</span>
                             </a>
@@ -62,12 +61,23 @@
                                 <span class="visually-hidden">(current)</span>
                             </a>
                         </li>
+                        <li class="nav-item" style="font-size: 1.3rem;">
+                            <a class="nav-link active" asp-area="" asp-controller="Home" asp-action="Privacy">
+                                Privacy
+                                <span class="visually-hidden">(current)</span>
+                            </a>
+                        </li>
+                        <li class="nav-item" style="font-size: 1.3rem">
+                            <a class="nav-link active" asp-area="" asp-controller="Home" asp-action="AboutUs">
+                                About Us
+                                <span class="visually-hidden">(current)</span>
+                            </a>
+                        </li>
                         <li class="nav-item mt-2" style="margin-left: 10rem; font-size:1.3rem;">
                             <form method="get" class="d-flex" asp-area="" asp-controller="Home" asp-action="Search">
                                 <input class="form-control" type="search" placeholder="Search" name="query">
                                 <button class="btn btn-secondary my-2 my-sm-0" type="submit">Search</button>
                             </form>
-
                         </li>
                     </ul>
                     @if (SignInManager.IsSignedIn(User))
@@ -148,12 +158,12 @@
 
 
 <footer class="footer sticky-footer border-top footer text-muted">
-    <div  style="color: #bcd0f7; margin-left: 3rem;">
-    &copy; Artful Adventures @releaseYear
-    @if (DateTime.UtcNow.Year != releaseYear)
-    {
-        @Html.Raw($" - {DateTime.UtcNow.Year}")
-    }
+    <div style="color: #bcd0f7; margin-left: 3rem;">
+        &copy; Artful Adventures @releaseYear
+        @if (DateTime.UtcNow.Year != releaseYear)
+        {
+            @Html.Raw($" - {DateTime.UtcNow.Year}")
+        }
     </div>
 </footer>
 <script src="~/lib/jquery/dist/jquery.min.js"></script>

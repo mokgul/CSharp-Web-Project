@@ -1,4 +1,6 @@
-﻿namespace ArtfulAdventures.Web.Controllers;
+﻿using Microsoft.AspNetCore.Authorization;
+
+namespace ArtfulAdventures.Web.Controllers;
 
 using ArtfulAdventures.Data;
 using ArtfulAdventures.Data.Models;
@@ -7,6 +9,7 @@ using ArtfulAdventures.Web.ViewModels.Message;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
+[Authorize]
 public class MessageController : Controller
 {
     private readonly ArtfulAdventuresDbContext _data;
@@ -110,7 +113,8 @@ public class MessageController : Controller
             .FirstOrDefaultAsync(m => m.Id == id);
         if (message == null)
         {
-            return RedirectToAction("Index", "Home");
+            TempData["ErrorNotFound"] = "Message does not exist.";
+            return RedirectToAction("Inbox", "Message");
         }
         message.IsRead = true;
         await _data.SaveChangesAsync();
@@ -132,6 +136,11 @@ public class MessageController : Controller
         var currentUser = User.Identity.Name;
         var message = await _data.Messages.Include(s => s.Sender).Include(r => r.Receiver).Where(s => s.Sender.UserName != currentUser)
             .OrderByDescending(t => t.Timestamp).FirstOrDefaultAsync(m => m.Id == id);
+        if(message == null)
+        {
+            TempData["ErrorNotFound"] = "Message does not exist.";
+            return RedirectToAction("Inbox", "Message");
+        }
         var secondUser = message.Sender.UserName == currentUser ? message.Receiver.UserName : message.Sender.UserName;
         var messagesHistory = await _data.Messages
             .Where(m => (m.Sender.UserName == currentUser && m.Receiver.UserName == secondUser) ||
@@ -166,6 +175,11 @@ public class MessageController : Controller
     public async Task<IActionResult> Reply(int id)
     {
         var message = await _data.Messages.Include(s => s.Sender).FirstOrDefaultAsync(x => x.Id == id);
+        if (message == null)
+        {
+            TempData["ErrorNotFound"] = "Message does not exist.";
+            return RedirectToAction("Inbox", "Message");
+        }
         var currentUser = User.Identity.Name;
         var model = new MessageReplyFormModel()
         {

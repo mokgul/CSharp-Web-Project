@@ -10,10 +10,17 @@
         @TempData["Success"]
     </div>
 }
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-danger text-black" role="alert">
+        @TempData["Error"]
+    </div>
+}
+
+
 @{
     ViewBag.Title = action == "CreateBlog" ? "Add Blog Post" : "Edit Blog Post";
 }
-
 <h2>@ViewBag.Title</h2>
 <form method="post" asp-controller="Blog" asp-action="@action" enctype="multipart/form-data">
     <div class="form-horizontal">
@@ -25,7 +32,7 @@
                 <label asp-for="@Model.Title" class="form-label">Title</label>
                 <input asp-for="@Model.Title" class="form-control" />
                 <span asp-validation-for="@Model.Title" class="text-danger"></span>
-                <small class="form-text text-muted">The title must be between @TitleMinLength and @TitleMaxLength characters long.</small>
+                <small class="form-text" style="font-size: 12px;color: #808080;">The title must be between @TitleMinLength and @TitleMaxLength characters long.</small>
             </div>
         </div>
 
@@ -38,7 +45,7 @@
 
                 <textarea asp-for="@Model.Content" class="form-control" aria-required="true" rows="15"></textarea>
                 <span asp-validation-for="@Model.Content" class="text-danger"></span>
-                <small class="form-text text-muted">The content must be between @ContentMinLength and @ContentMaxLength characters long.</small>
+                <small class="form-text" style="font-size: 12px;color: #808080;">The content must be between @ContentMinLength and @ContentMaxLength characters long.</small>
             </div>
         </div>
 

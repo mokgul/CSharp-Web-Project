@@ -1,4 +1,6 @@
-﻿namespace ArtfulAdventures.Services.Data;
+﻿using ArtfulAdventures.Services.Common;
+
+namespace ArtfulAdventures.Services.Data;
 
 using System.Linq;
 using System.Threading.Tasks;
@@ -24,6 +26,10 @@ public class FollowingService : IFollowingService
     }
     public async Task<ExploreViewModel> GetExploreViewModelAsync(string sort, int page, string username)
     {
+        if (page < 1)
+        {
+            throw new ArgumentException("Invalid page number");
+        }
         int pageSize = 20;
         int skip = (page - 1) * pageSize;
         var user = await _data.Users.Include(f => f.Following).FirstOrDefaultAsync(u => u.UserName == username);
@@ -81,6 +87,12 @@ public class FollowingService : IFollowingService
         if (string.IsNullOrWhiteSpace(sort))
         {
             return pictures;
+        }
+        var sortValidator = new ValidateSortParameter(_data);
+        bool isValid = await sortValidator.Validate(sort);
+        if (!isValid)
+        {
+            throw new ArgumentException("Invalid sort parameter!");
         }
         var owner = string.Empty;
         var tag = string.Empty;

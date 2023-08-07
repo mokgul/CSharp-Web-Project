@@ -1,8 +1,15 @@
 ﻿@model FollowViewModel
 
+@if(TempData["Error"] != null)
+{
+    <div class="alert alert-danger bg-dark text-white" role="alert">
+        @TempData["Error"]
+    </div>
+}
 @{
     ViewBag.Title = "Following";
 }
+
 <style>
     .text-purple {
         color: #bcd0f7 !important;
