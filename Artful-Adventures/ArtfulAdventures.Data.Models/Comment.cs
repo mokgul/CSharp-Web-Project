@@ -3,8 +3,11 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-using static ArtfulAdventures.Common.DataModelsValidationConstants.CommentConstants;
+using static Common.DataModelsValidationConstants.CommentConstants;
 
+/// <summary>
+/// Represents a comment on a blog post or a picture.
+/// </summary>
 public class Comment
 {
     [Key]

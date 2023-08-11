@@ -1,5 +1,8 @@
 ﻿namespace ArtfulAdventures.Web.ViewModels.Search;
 
+/// <summary>
+///  This class is used to display the search results for all entities (pictures, challenges, blogs, users).
+/// </summary>
 public class SearchViewModel
 {
     public ICollection<PictureSearchViewModel>? Pictures { get; set; }

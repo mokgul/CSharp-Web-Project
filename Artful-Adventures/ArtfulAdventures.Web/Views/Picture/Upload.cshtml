@@ -29,6 +29,8 @@
     }
 }
 
+@Html.AntiForgeryToken()
+
 <form method="post" asp-controller="Picture" asp-action="Upload" enctype="multipart/form-data"
       style="display: inline-block; flex-direction: column; align-items: center;">
     <div class="row">
@@ -93,6 +95,7 @@
 </form>
 <span asp-validation-for="@Model.HashTags" class="text-danger"></span>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+//This script is used to toggle the checkbox when the button is clicked
 <script>
     $(document).ready(function () {
         $('.btn-custom').click(function (event) {
@@ -106,6 +109,7 @@
 
 </script>
 
+//This script is used to count the characters in the description textarea
 <script>
     document.querySelector('textarea').addEventListener('input', function () {
         var charCount = this.value.length;

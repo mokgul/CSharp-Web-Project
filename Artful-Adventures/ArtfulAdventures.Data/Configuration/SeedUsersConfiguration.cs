@@ -1,17 +1,20 @@
 ﻿namespace ArtfulAdventures.Data.Configuration;
 
-using ArtfulAdventures.Data.Models;
-
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-using static ArtfulAdventures.Common.DataModelsValidationConstants.RolesConstants;
+using Models;
+using static Common.DataModelsValidationConstants.RolesConstants;
 
+/// <summary>
+/// Configuration for seeding Users and Roles to the database.
+/// </summary>
 public class SeedUsersConfiguration : IEntityTypeConfiguration<ApplicationUser>, IEntityTypeConfiguration<IdentityUserRole<Guid>>
 {
-    private IPasswordHasher<ApplicationUser> _passwordHasher = new PasswordHasher<ApplicationUser>();
-    
+    private readonly IPasswordHasher<ApplicationUser?> _passwordHasher = new PasswordHasher<ApplicationUser?>();
+
+    //Seed Users
     public void Configure(EntityTypeBuilder<ApplicationUser> builder)
     {
         builder
@@ -55,6 +58,7 @@ public class SeedUsersConfiguration : IEntityTypeConfiguration<ApplicationUser>,
             );
     }
 
+    //Seed Roles to Users
     public void Configure(EntityTypeBuilder<IdentityUserRole<Guid>> builder)
     {
         builder

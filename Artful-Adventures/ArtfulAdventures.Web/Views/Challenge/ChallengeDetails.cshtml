@@ -76,6 +76,7 @@
                         @foreach (var picture in Model.Pictures)
                         {
                             <div style="flex-basis: 20%; padding: 5px; max-height: 100%;  margin-top: 1rem;">
+                                @Html.AntiForgeryToken()
                                 <a href="@Url.Action("PictureDetails", "Picture", new { id = picture.Key })">
                                     <div style="width: 200px; height: 200px; overflow: hidden;">
                                         <img src="~/images/@picture.Value" alt="no-picture available"

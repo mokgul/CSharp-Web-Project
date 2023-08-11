@@ -2,6 +2,9 @@
 
 using ArtfulAdventures.Web.ViewModels.Comment;
 
+/// <summary>
+///  This is the view model for the blog details page.
+/// </summary>
 public class BlogDetailsViewModel
 {
     public string Id { get; set; } = null!;

@@ -2,11 +2,19 @@
 
 using FluentFTP;
 
+/// <summary>
+///   This class is used to upload files to the FTP server.
+/// </summary>
 public static class UploadToFtpServer
 {
-    public async static Task UploadFile(string fileName, string filePath)
+    /// <summary>
+    ///  This method uploads a file to the FTP server.
+    /// </summary>
+    /// <param name="fileName"> The name of the file to be uploaded. </param>
+    /// <param name="filePath"> The path to the file to be uploaded. </param>
+    public static async Task UploadFile(string fileName, string filePath)
     {
-        AsyncFtpClient client = FtpClientConfiguration.GetFtpClient();
+        var client = FtpClientConfiguration.GetFtpClient();
 
         await client.Connect();
         await client.UploadFile(filePath, fileName);

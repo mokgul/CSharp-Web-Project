@@ -3,13 +3,16 @@
 using ArtfulAdventures.Data.Models.Enums;
 using System.ComponentModel.DataAnnotations;
 
+/// <summary>
+/// Represents a skill that a <see cref="ApplicationUser"/> can have.
+/// </summary>
 public class Skill
 {
     public Skill()
     {
         ApplicationUsersSkills = new HashSet<ApplicationUserSkill>();
     }
-    public Skill(SkillType type)
+    public Skill(SkillType type) : this()
     {
         this.Type = type.ToString();
     }

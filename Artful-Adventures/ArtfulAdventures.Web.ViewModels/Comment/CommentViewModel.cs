@@ -1,5 +1,8 @@
 ﻿namespace ArtfulAdventures.Web.ViewModels.Comment;
 
+/// <summary>
+///  This view model is used to display the details of a comment.
+/// </summary>
 public class CommentViewModel
 {
     public int Id { get; set; }

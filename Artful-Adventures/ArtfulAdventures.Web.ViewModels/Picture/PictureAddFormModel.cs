@@ -2,10 +2,12 @@
 
 using System.ComponentModel.DataAnnotations;
 
-using ArtfulAdventures.Web.ViewModels.HashTag;
+using HashTag;
+using static Common.DataModelsValidationConstants.PictureConstants;
 
-using static ArtfulAdventures.Common.DataModelsValidationConstants.PictureConstants;
-
+/// <summary>
+///  This ViewModel is used in the PictureController's Add action.
+/// </summary>
 public class PictureAddFormModel
 {
     [Required]

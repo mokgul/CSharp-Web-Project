@@ -1,7 +1,13 @@
 ﻿namespace ArtfulAdventures.Common;
 
+/// <summary>
+///  This class is used to store constants for the data models.
+/// </summary>
 public static class DataModelsValidationConstants
 {
+    /// <summary>
+    ///  This class is used to store constants for the ApplicationUser data model.
+    /// </summary>
     public static class ApplicationUserConstants
     {
         public const int UrlMinLength = 3;
@@ -16,6 +22,10 @@ public static class DataModelsValidationConstants
         public const int AboutMaxLength = 200;
 
     }
+    
+    /// <summary>
+    ///  This class is used to store constants for the Blog data model.
+    /// </summary>
     public static class BlogConstants
     {
         public const int TitleMinLength = 20;
@@ -27,6 +37,9 @@ public static class DataModelsValidationConstants
         public const string DateFormat = "yyyy-MM-dd H:mm";
     }
 
+    /// <summary>
+    ///  This class is used to store constants for the Comment data model.
+    /// </summary>
     public static class CommentConstants
     {
         public const int AuthorMinLength = 5;
@@ -36,6 +49,9 @@ public static class DataModelsValidationConstants
         public const string DateFormat = "yyyy-MM-dd H:mm";
     }
 
+    /// <summary>
+    ///  This class is used to store constants for the Challenge data model.
+    /// </summary>
     public static class ChallengeConstants
     {
         public const int TitleMinLength = 20;
@@ -49,6 +65,9 @@ public static class DataModelsValidationConstants
         public const string DateFormat = "yyyy-MM-dd H:mm";
     }
 
+    /// <summary>
+    ///  This class is used to store constants for the Picture data model.
+    /// </summary>
     public static class PictureConstants
     {
         public const int UrlMinLength = 3;
@@ -58,6 +77,9 @@ public static class DataModelsValidationConstants
         public const string DateFormat = "yyyy-MM-dd H:mm";
     }
 
+    /// <summary>
+    ///  This class is used to store constants for the Message data model.
+    /// </summary>
     public static class MessageConstants
     {
         public const int SubjectMinLength = 2;
@@ -67,6 +89,9 @@ public static class DataModelsValidationConstants
         public const string DateFormat = "yyyy-MM-dd H:mm";
     }
 
+    /// <summary>
+    ///  This class is used to store constants for the Roles.
+    /// </summary>
     public static class RolesConstants
     {
         public const string AdminUserName = "admin";

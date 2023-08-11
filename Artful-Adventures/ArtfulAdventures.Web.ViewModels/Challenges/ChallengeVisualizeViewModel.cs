@@ -1,5 +1,8 @@
 ﻿namespace ArtfulAdventures.Web.ViewModels.Challenges;
 
+/// <summary>
+///  This view model is used to for each challenge when displaying all challenges.
+/// </summary>
 public class ChallengeVisualizeViewModel
 {
     public int Id { get; set; }

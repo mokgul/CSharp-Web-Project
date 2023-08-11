@@ -2,8 +2,11 @@
 
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using static ArtfulAdventures.Common.DataModelsValidationConstants.MessageConstants;
+using static Common.DataModelsValidationConstants.MessageConstants;
 
+/// <summary>
+/// Represents a message sent from one user to another.
+/// </summary>
 public class Message
     {
     public int Id { get; set; }

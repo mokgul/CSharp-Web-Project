@@ -58,9 +58,10 @@
     </div>
 </form>
 
+// JavaScript for character count
 <script>
     document.querySelector('textarea').addEventListener('input', function () {
-        var charCount = this.value.length;
+        const charCount = this.value.length;
         document.querySelector('#charCount').textContent = charCount + '/10000';
     });
 

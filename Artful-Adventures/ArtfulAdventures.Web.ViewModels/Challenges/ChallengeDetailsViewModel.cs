@@ -1,7 +1,10 @@
 ﻿namespace ArtfulAdventures.Web.ViewModels.Challenges;
 
-    public class ChallengeDetailsViewModel
-    {
+/// <summary>
+///  This view model is used to display the details of a challenge.
+/// </summary>
+public class ChallengeDetailsViewModel
+{
     public int Id { get; set; }
 
     public string Title { get; set; } = null!;
@@ -17,6 +20,4 @@
     public DateTime CreatedOn { get; set; }
 
     public Dictionary<string, string> Pictures { get; set; } = new Dictionary<string, string>();
-
-    }
-
+}

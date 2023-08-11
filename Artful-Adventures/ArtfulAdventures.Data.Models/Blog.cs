@@ -3,7 +3,11 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-using static ArtfulAdventures.Common.DataModelsValidationConstants.BlogConstants;
+using static Common.DataModelsValidationConstants.BlogConstants;
+
+/// <summary>
+/// Represents a blog post.
+/// </summary>
 
 public class Blog
 {

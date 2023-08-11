@@ -1,19 +1,25 @@
-﻿namespace ArtfulAdventures.Data.Seeding;
+﻿namespace ArtfulAdventures.Data.EnumSeeders;
 
-using ArtfulAdventures.Data.Models;
-using ArtfulAdventures.Data.Models.Enums;
+using Models;
+using Models.Enums;
 
+/// <summary>
+/// Generate a Collection of HashTags for the Enum Configuration
+/// </summary>
 public class HashTagsSeed
 {
-    public readonly ICollection<HashTag> HashTags = new HashSet<HashTag>();
+    public readonly ICollection<HashTag> HashTags;
+    
     public HashTagsSeed()
     {
+        HashTags = new List<HashTag>();
         HashTags = GenerateHashTags();
     }
 
+    //Generate HashTags
     private ICollection<HashTag> GenerateHashTags()
     {
-        int id = 0;
+        var id = 0;
         foreach (var type in Enum.GetValues(typeof(HashTagType)))
         {
             id++;

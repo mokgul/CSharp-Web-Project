@@ -1,14 +1,14 @@
 ﻿namespace ArtfulAdventures.Web.ViewModels;
 
-using ArtfulAdventures.Web.ViewModels.HashTag;
-using ArtfulAdventures.Web.ViewModels.Picture;
+using HashTag;
+using Picture;
 
-using System.Drawing;
-
+/// <summary>
+///  This class is used to visualize the Explore page.
+/// </summary>
 public class ExploreViewModel
 {
-
-    public ICollection<PictureVisualizeViewModel> Pictures { get; set; }
+    public ICollection<PictureVisualizeViewModel> Pictures { get; set; } = new List<PictureVisualizeViewModel>();
 
     public List<HashTagViewModel> HashTags { get; set; } = new List<HashTagViewModel>();
 

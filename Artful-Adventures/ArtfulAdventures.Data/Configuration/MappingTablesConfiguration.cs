@@ -1,10 +1,13 @@
 ﻿namespace ArtfulAdventures.Data.Configuration;
 
-using ArtfulAdventures.Data.Models;
-
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
+using Models;
+
+/// <summary>
+/// Configuration for the Mapping Tables of the Database (Many to Many Relationships)
+/// </summary>
 public class MappingTablesConfiguration :
     IEntityTypeConfiguration<ApplicationUserSkill>,
     IEntityTypeConfiguration<ApplicationUserPicture>,

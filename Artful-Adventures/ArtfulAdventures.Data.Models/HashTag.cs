@@ -4,13 +4,16 @@ using System.ComponentModel.DataAnnotations;
 
 using ArtfulAdventures.Data.Models.Enums;
 
+/// <summary>
+/// Represents a HashTag entity for a <see cref="Picture"/> entity.
+/// </summary>
 public class HashTag
 {
     public HashTag()
     {
         PicturesHashTags = new HashSet<PictureHashTag>();
     }
-    public HashTag(HashTagType type)
+    public HashTag(HashTagType type) : this()
     {
         this.Type = type.ToString();
     }

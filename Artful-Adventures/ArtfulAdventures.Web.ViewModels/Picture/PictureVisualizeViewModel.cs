@@ -1,7 +1,8 @@
 ﻿namespace ArtfulAdventures.Web.ViewModels.Picture;
 
-using System.ComponentModel;
-
+/// <summary>
+///  "This is a view model used for displaying pictures in the Explore page!"
+/// </summary>
 public class PictureVisualizeViewModel
 {
     public string Id { get; set; } = null!;

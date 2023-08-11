@@ -1,5 +1,8 @@
 ﻿namespace ArtfulAdventures.Web.ViewModels.Search;
 
+/// <summary>
+///  This class is used to display the search results for pictures.
+/// </summary>
 public class PictureSearchViewModel
 {
     public string Id { get; set; } = null!;

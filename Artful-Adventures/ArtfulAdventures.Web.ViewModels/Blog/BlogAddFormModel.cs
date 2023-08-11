@@ -2,10 +2,14 @@
 
 using System.ComponentModel.DataAnnotations;
 
-using static ArtfulAdventures.Common.DataModelsValidationConstants.BlogConstants;
+using static Common.DataModelsValidationConstants.BlogConstants;
 
+/// <summary>
+///  This is the model for the blog add form.
+/// </summary>
 public class BlogAddFormModel
 {
+    //this is for edit only
     public string Id { get; set; } = null!;
 
     [Required]

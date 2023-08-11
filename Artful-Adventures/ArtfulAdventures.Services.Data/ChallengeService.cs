@@ -1,16 +1,14 @@
-﻿using ArtfulAdventures.Services.Common;
-
-namespace ArtfulAdventures.Services.Data;
+﻿namespace ArtfulAdventures.Services.Data;
 
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 
 using ArtfulAdventures.Data;
 using ArtfulAdventures.Data.Models;
-using ArtfulAdventures.Services.Data.Interfaces;
-using ArtfulAdventures.Web.ViewModels.Challenges;
+using Common;
+using Interfaces;
+using Web.ViewModels.Challenges;
 using static ArtfulAdventures.Common.GeneralApplicationConstants;
-
-using Microsoft.EntityFrameworkCore;
 
 public class ChallengeService : IChallengeService
 {
@@ -21,25 +19,34 @@ public class ChallengeService : IChallengeService
         _data = data;
     }
 
-    public async Task<ChallengesViewModel> GetAllAsync(int page = 1)
+    /// <summary>
+    ///  Provides a method for getting all challenges.
+    /// </summary>
+    /// <param name="page"> Аn int for the page number. </param>
+    /// <returns> The <see cref="Task{ChallengeAddFormModel}"/>. </returns>
+    public async Task<ChallengesViewModel?> GetAllAsync(int page = 1)
     {
         if (!ValidatePage.Validate(page))
         {
-            throw new ArgumentException("Invalid page number");
+            return null;
         }
-        int pageSize = 6;
-        int skip = (page - 1) * pageSize;
-        var challenges = await _data.Challenges.Select(c => new ChallengeVisualizeViewModel()
-        {
-            Id = c.Id,
-            Title = c.Title,
-            Creator = c.Creator,
-            CreatedOn = c.CreatedOn,
-            Participants = c.Participants,
-            PictureUrl = Path.GetFileName(c.Url),
-        })
-        .OrderByDescending(x => x.CreatedOn)
-        .Skip(skip).Take(pageSize).ToListAsync();
+
+        const int pageSize = 6;
+        var skip = (page - 1) * pageSize;
+        var challenges = await _data.Challenges
+            .Select(c => new ChallengeVisualizeViewModel()
+            {
+                Id = c.Id,
+                Title = c.Title,
+                Creator = c.Creator,
+                CreatedOn = c.CreatedOn,
+                Participants = c.Participants,
+                PictureUrl = Path.GetFileName(c.Url),
+            })
+            .OrderByDescending(x => x.CreatedOn)
+            .Skip(skip)
+            .Take(pageSize)
+            .ToListAsync();
 
         var model = new ChallengesViewModel()
         {
@@ -48,43 +55,58 @@ public class ChallengeService : IChallengeService
         return model;
     }
 
-    public async Task<ChallengeDetailsViewModel> GetChallengeDetailsAsync(int id)
+    /// <summary>
+    ///  Provides a method for getting the challenge details view model.
+    /// </summary>
+    /// <param name="id"> The id of the challenge. </param>
+    /// <returns> The <see cref="Task{ChallengeAddFormModel}"/>. </returns>
+    public async Task<ChallengeDetailsViewModel?> GetChallengeDetailsAsync(int id)
     {
-        var challenge = await _data.Challenges.FindAsync(id);
+        var challenge = await _data.Challenges.Where(x => x.Id == id)
+            .Select(c => new ChallengeDetailsViewModel()
+            {
+                Id = c.Id,
+                Title = c.Title,
+                Requirements = c.Requirements,
+                Url = Path.GetFileName(c.Url),
+                CreatedOn = c.CreatedOn,
+                Creator = c.Creator,
+                Participants = c.Participants,
+            })
+            .FirstOrDefaultAsync();
         if (challenge == null)
         {
-            throw new NullReferenceException("Challenge not found");
+            return null;
         }
+
         var pictures = await _data.Pictures
             .Where(x => x.ChallengeId == id)
             .ToDictionaryAsync(x => x.Id.ToString(), x => Path.GetFileName(x.Url));
-
-        var model = new ChallengeDetailsViewModel
-        {
-            Id = challenge.Id,
-            Title = challenge.Title,
-            Requirements = challenge.Requirements,
-            Url = Path.GetFileName(challenge.Url),
-            CreatedOn = challenge.CreatedOn,
-            Creator = challenge.Creator,
-            Participants = challenge.Participants,
-            Pictures = pictures
-        };
-        return model;
+        if(pictures.Any())
+            challenge.Pictures = pictures;
+        
+        return challenge;
     }
-
-    public async Task ParticipateAsync(int id, string userId, string path)
+    
+    /// <summary>
+    ///  Provides a method for participating in a challenge.
+    /// </summary>
+    /// <param name="id"> The id of the challenge. </param>
+    /// <param name="userId"> The id of the user. </param>
+    /// <param name="path"> The path to the image. </param>
+    /// <returns> The bool for the result. </returns>
+    public async Task<bool> ParticipateAsync(int id, string userId, string path)
     {
         var challenge = await _data.Challenges.FindAsync(id);
         if (challenge == null)
         {
-            throw new NullReferenceException("Challenge not found");
+            return false;
         }
 
         var user = await _data.Users.FirstOrDefaultAsync(x => x.Id.ToString() == userId);
         if (user == null)
         {
-            throw new NullReferenceException("User not found");
+            return false;
         }
 
         var picture = new Picture
@@ -110,7 +132,6 @@ public class ChallengeService : IChallengeService
         challenge.Pictures.Add(picture);
         await _data.Pictures.AddAsync(picture);
         await _data.SaveChangesAsync();
-
+        return true;
     }
 }
-

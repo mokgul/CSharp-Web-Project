@@ -3,8 +3,11 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-using static ArtfulAdventures.Common.DataModelsValidationConstants.PictureConstants;
+using static Common.DataModelsValidationConstants.PictureConstants;
 
+/// <summary>
+/// Represents a picture entity.
+/// </summary>
 public class Picture
 {
     public Picture()

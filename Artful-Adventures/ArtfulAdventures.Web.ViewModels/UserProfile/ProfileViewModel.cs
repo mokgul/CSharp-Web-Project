@@ -1,8 +1,11 @@
 ﻿namespace ArtfulAdventures.Web.ViewModels.UserProfile;
 
-using ArtfulAdventures.Web.ViewModels.Picture;
-using ArtfulAdventures.Web.ViewModels.Skill;
+using Picture;
+using Skill;
 
+/// <summary>
+///  This is a view model for the profile.
+/// </summary>
 public class ProfileViewModel : ProfilePartialView
 {
 
@@ -10,7 +13,9 @@ public class ProfileViewModel : ProfilePartialView
 
     public string? About { get; set; }
 
- 
+    public bool IsMuted { get; set; }
+    
+    public DateTime MuteUntil { get; set; }
 
     public ICollection<PictureVisualizeViewModel>? Pictures { get; set; }
 

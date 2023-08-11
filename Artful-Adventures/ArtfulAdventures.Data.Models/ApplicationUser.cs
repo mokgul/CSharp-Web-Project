@@ -6,11 +6,14 @@ using Microsoft.AspNetCore.Identity;
 
 using static Common.DataModelsValidationConstants.ApplicationUserConstants;
 
+/// <summary>
+/// Represents a user in the system
+/// </summary>
 public class ApplicationUser : IdentityUser<Guid>
 {
     public ApplicationUser()
     {
-        this.Id = Guid.NewGuid();
+        Id = Guid.NewGuid();
         ApplicationUsersSkills = new HashSet<ApplicationUserSkill>();
         Portfolio = new HashSet<ApplicationUserPicture>();
     }

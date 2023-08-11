@@ -2,8 +2,11 @@
 
 using System.ComponentModel.DataAnnotations;
 
-using static ArtfulAdventures.Common.DataModelsValidationConstants.MessageConstants;
+using static Common.DataModelsValidationConstants.MessageConstants;
 
+/// <summary>
+///  This view model is used to send a message to another user.
+/// </summary>
 public class MessageSendFormModel
 {
     [Required]

@@ -42,6 +42,8 @@ public class Program
         builder.Services.AddScoped<IChallengeService, ChallengeService>();
         builder.Services.AddScoped<IManageContentService, ManageContentService>();
         builder.Services.AddScoped<IManageUserService, ManageUserService>();
+        builder.Services.AddScoped<ICommentService, CommentService>();
+        builder.Services.AddScoped<IMessageService, MessageService>();
 
         var app = builder.Build();
 

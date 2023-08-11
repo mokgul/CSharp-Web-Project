@@ -1,8 +1,13 @@
 ﻿namespace ArtfulAdventures.Web.Components;
-using ArtfulAdventures.Data;
+
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
+using Data;
+
+/// <summary>
+///  This component is used to display the user's unread messages in the off-canvas menu.
+/// </summary>
 public class UnreadMessagesViewComponent : ViewComponent
 {
     private readonly ArtfulAdventuresDbContext _data;
@@ -12,6 +17,10 @@ public class UnreadMessagesViewComponent : ViewComponent
         _data = data;
     }
 
+    /// <summary>
+    ///  This method is used to get the current user's unread messages.
+    /// </summary>
+    /// <returns> A view with the user's unread messages. </returns>
     public async Task<IViewComponentResult> InvokeAsync()
     {
         var currentUser = User.Identity.Name;

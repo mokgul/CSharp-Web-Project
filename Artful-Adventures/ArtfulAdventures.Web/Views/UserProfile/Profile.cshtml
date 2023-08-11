@@ -26,6 +26,12 @@ else if (TempData["Success"] != null)
         color: #bcd0f7 !important;
     }
 </style>
+@if(Model.IsMuted == true)
+{
+    <div class="alert alert-danger bg-dark text-white" role="alert">
+        User is muted until @Model.MuteUntil !
+    </div>
+}
 <section>
     <div class="container py-3">
         <div class="card mb-4 mb-lg-0" style="max-width: 20rem; background: none; border: none;">

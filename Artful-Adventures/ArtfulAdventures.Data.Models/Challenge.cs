@@ -2,8 +2,11 @@
 
 using System.ComponentModel.DataAnnotations;
 
-using static ArtfulAdventures.Common.DataModelsValidationConstants.ChallengeConstants;
+using static Common.DataModelsValidationConstants.ChallengeConstants;
 
+/// <summary>
+/// Represents a challenge in the database.
+/// </summary>
 public class Challenge
 {
     [Key]

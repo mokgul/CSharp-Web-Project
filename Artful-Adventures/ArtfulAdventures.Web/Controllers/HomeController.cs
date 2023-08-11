@@ -15,7 +15,6 @@ using ArtfulAdventures.Web.ViewModels.Search;
 
 using Microsoft.AspNetCore.Mvc;
 
-[AllowAnonymous]
 public class HomeController : Controller
 {
     private readonly ArtfulAdventuresDbContext _data;
@@ -49,8 +48,8 @@ public class HomeController : Controller
         return View();
     }
 
-    [Authorize]
     [HttpGet]
+    [Authorize]
     public async Task<IActionResult> Search(string query, int page = 1)
     {
         int pageSize = 10;

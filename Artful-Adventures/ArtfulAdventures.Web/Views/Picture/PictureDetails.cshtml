@@ -18,6 +18,9 @@
 @{
     ViewBag.Title = "Picture Details";
 }
+
+@Html.AntiForgeryToken()
+
 <div class="container">
     <div class="row">
         <!-- Section 1: Picture -->
@@ -39,16 +42,14 @@
                 </form>
             }
         </div>
-
-
-        <div class="col-md-9 d-flex justify-content-center align-items-center frosted-glass">
+        <div class="col-md-9 d-flex align-items-center frosted-glass">
             <section class="picture-view">
                 <div style="width: 100%; height: auto; overflow: hidden;">
-                    <img src="~/images/@Model.Url" alt="Picture" class="img-fluid">
-
+                    <img src="~/images/@Model.Url" alt="Picture" class="img-fluid" style="object-fit: contain; width: 100%; margin: auto;">
                 </div>
             </section>
         </div>
+
         <!-- Section 2: Profile Information -->
         <div class="col-md-3">
             <!-- Your code for section two goes here -->
@@ -204,13 +205,13 @@
                                     <form asp-area="" asp-controller="Comment" asp-action="AddCommentPicture" asp-route-pictureId="@Model.Id" method="post">
                                         <input type="hidden" name="content" id="contentInput"/>
                                         @if (Model.isCurrentUserMuted == false)
-                                                {
-                                                    <button type="submit" id="button" class="btn btn-outline-dark my-2 blog-button-white" style="color:wheat; width: 120px; margin-bottom: 1rem!important; margin-left: 3.4rem!important; margin-top: 1rem!important;">Post comment</button>
-                                                }
-                                                else
-                                                {
-                                                    <button type="submit" id="button" class="btn btn-outline-dark my-2 blog-button-white" style="color:wheat; width: 120px; margin-bottom: 1rem!important; margin-left: 3.4rem!important; margin-top: 1rem!important;" disabled>Post comment</button>
-                                                }
+                                        {
+                                            <button type="submit" id="button" class="btn btn-outline-dark my-2 blog-button-white" style="color:wheat; width: 120px; margin-bottom: 1rem!important; margin-left: 3.4rem!important; margin-top: 1rem!important;">Post comment</button>
+                                        }
+                                        else
+                                        {
+                                            <button type="submit" id="button" class="btn btn-outline-dark my-2 blog-button-white" style="color:wheat; width: 120px; margin-bottom: 1rem!important; margin-left: 3.4rem!important; margin-top: 1rem!important;" disabled>Post comment</button>
+                                        }
                                     </form>
                                 </div>
                             </div>
@@ -278,6 +279,7 @@
     }
 </style>
 
+//Script for copying the text from the text area to the hidden input
 <script>
     let button = document.getElementById("button");
     button.addEventListener("click", function () {

@@ -1,6 +1,8 @@
 ﻿namespace ArtfulAdventures.Web.ViewModels.Message;
 
-
+/// <summary>
+/// This view model is used to display the messages and their history between two users.
+/// </summary>
 public class MessageInboxViewModel
 {
     public int Id { get; set; }

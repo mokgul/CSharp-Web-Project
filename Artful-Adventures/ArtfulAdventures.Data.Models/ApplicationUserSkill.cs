@@ -3,6 +3,9 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
+/// <summary>
+/// Mapping table for <see cref="ApplicationUser"/> and <see cref="Skill"/>
+/// </summary>
 public class ApplicationUserSkill
 {
     [Required]

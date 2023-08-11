@@ -41,7 +41,7 @@ public enum SkillType
     Quick_Sketch,
     Realistic,
     Shading_Techniques,
-    Tradiotiona_lArt,
+    Traditional_Art,
     Vehicle_Design,
     Visual_Effects,
     Watercolor_Painting,

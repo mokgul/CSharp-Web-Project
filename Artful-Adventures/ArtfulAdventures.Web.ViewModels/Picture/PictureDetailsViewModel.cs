@@ -1,8 +1,11 @@
 ﻿namespace ArtfulAdventures.Web.ViewModels.Picture;
 
-using ArtfulAdventures.Web.ViewModels.Comment;
-using ArtfulAdventures.Web.ViewModels.HashTag;
+using Comment;
+using HashTag;
 
+/// <summary>
+///  PictureDetailsViewModel is used to display the details of a picture.
+/// </summary>
 public class PictureDetailsViewModel
 {
     public string Id { get; set; } = null!;

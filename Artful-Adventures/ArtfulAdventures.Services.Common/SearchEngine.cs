@@ -1,9 +1,12 @@
-using ArtfulAdventures.Data;
-using ArtfulAdventures.Data.Models;
-using Microsoft.EntityFrameworkCore;
-
 namespace ArtfulAdventures.Services.Common;
 
+using Microsoft.EntityFrameworkCore;
+using Data;
+using Data.Models;
+
+/// <summary>
+/// Search engine for the application that searches the database for the given query and returns the results as a collection of search results.
+/// </summary>
 public class SearchEngine
 {
     private readonly ArtfulAdventuresDbContext _data;
@@ -13,6 +16,11 @@ public class SearchEngine
         _data = data;
     }
 
+    /// <summary>
+    /// Searches the database for the given query and returns the results as a collection of <see cref="Blog"/>s.
+    /// </summary>
+    /// <param name="query"></param>
+    /// <returns> A collection of <see cref="Blog"/>s.</returns>
     public async Task<ICollection<Blog>> SearchBlogs(string query)
     {
         var queryWords = query.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries).Select(w => w.ToLower());
@@ -23,7 +31,13 @@ public class SearchEngine
             .ToList();
         return blogs;
     }
+    
 
+    /// <summary>
+    /// Searches the database for the given query and returns the results as a collection of <see cref="Picture"/>s.
+    /// </summary>
+    /// <param name="query"></param>
+    /// <returns> A collection of <see cref="Picture"/>s.</returns>
     public async Task<ICollection<Picture>> SearchPictures(string query)
     {
         var queryWords = query.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries).Select(w => w.ToLower());
@@ -34,7 +48,13 @@ public class SearchEngine
             .ToList();
         return pictures;
     }
+    
 
+    /// <summary>
+    /// Searches the database for the given query and returns the results as a collection of <see cref="Challenge"/>s.
+    /// </summary>
+    /// <param name="query"></param>
+    /// <returns> A collection of <see cref="Challenge"/>s.</returns>
     public async Task<ICollection<Challenge>> SearchChallenges(string query)
     {
         var queryWords = query.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries).Select(w => w.ToLower());
@@ -46,7 +66,13 @@ public class SearchEngine
 
         return challenges;
     }
+    
 
+    /// <summary>
+    /// Searches the database for the given query and returns the results as a collection of <see cref="ApplicationUser"/>s.
+    /// </summary>
+    /// <param name="query"></param>
+    /// <returns> A collection of <see cref="ApplicationUser"/>s.</returns>
     public async Task<ICollection<ApplicationUser>> SearchUsers(string query)
     {
         var queryWords = query.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries).Select(w => w.ToLower());

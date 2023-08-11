@@ -1,19 +1,24 @@
-﻿namespace ArtfulAdventures.Data.Seeding;
+﻿namespace ArtfulAdventures.Data.EnumSeeders;
 
-using ArtfulAdventures.Data.Models.Enums;
-using ArtfulAdventures.Data.Models;
+using Models;
+using Models.Enums;
 
+/// <summary>
+/// Generate Skills for the EnumConfiguration
+/// </summary>
 public class SkillsSeed
 {
-    public readonly ICollection<Skill> Skills = new HashSet<Skill>();
+    public readonly ICollection<Skill> Skills;
     public SkillsSeed()
     {
+        Skills = new List<Skill>();
         Skills = GenerateHashSkills();
     }
 
+    //Generate Skills
     private ICollection<Skill> GenerateHashSkills()
     {
-        int id = 0;
+        var id = 0;
         foreach (var type in Enum.GetValues(typeof(SkillType)))
         {
             id++;

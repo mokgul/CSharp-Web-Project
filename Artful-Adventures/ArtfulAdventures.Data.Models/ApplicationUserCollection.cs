@@ -1,10 +1,13 @@
 ﻿namespace ArtfulAdventures.Data.Models;
+
 using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
 
+/// <summary>
+/// Mapping table for Collection property of ApplicationUser
+/// </summary>
 public class ApplicationUserCollection
 {
-    //Mapping table for Collection property of ApplicationUser
     [Required]
     [ForeignKey(nameof(User))]
     public Guid UserId { get; set; }

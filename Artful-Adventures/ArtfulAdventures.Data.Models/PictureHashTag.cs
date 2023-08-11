@@ -3,6 +3,9 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
+/// <summary>
+/// Represents a many-to-many relationship between <see cref="Picture"/> and <see cref="HashTag"/>
+/// </summary>
 public class PictureHashTag
 {
     [Required]

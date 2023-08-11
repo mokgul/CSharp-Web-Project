@@ -1,13 +1,11 @@
 ﻿namespace ArtfulAdventures.Data;
 
-using System.Reflection.Emit;
-
-using ArtfulAdventures.Data.Configuration;
-using ArtfulAdventures.Data.Models;
-
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+
+using Configuration;
+using Models;
 
 public class ArtfulAdventuresDbContext : IdentityDbContext<ApplicationUser, IdentityRole<Guid>, Guid>
 {
@@ -27,14 +25,18 @@ public class ArtfulAdventuresDbContext : IdentityDbContext<ApplicationUser, Iden
     public DbSet<Picture> Pictures { get; set; } = null!;
 
     public DbSet<Skill> Skills { get; set; } = null!;
+    
 
     public DbSet<PictureHashTag> PicturesHashTags { get; set; } = null!;
 
     public DbSet<ApplicationUserSkill> ApplicationUsersSkills { get; set; } = null!;
+    
 
     public DbSet<ApplicationUserPicture> Portfolio { get; set; } = null!;
+    
 
     public DbSet<ApplicationUserCollection> Collection { get; set; } = null!;
+    
 
     public DbSet<FollowerFollowing> Follows { get; set; } = null!;
 
@@ -42,39 +44,71 @@ public class ArtfulAdventuresDbContext : IdentityDbContext<ApplicationUser, Iden
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
-        var mappingConfigurer = new MappingTablesConfiguration();
+        ConfigureMappingTables(builder);
        
-        var enumSeedConfigurer = new EnumsSeedingConfiguration();
+        ConfigureEnums(builder);
 
-        var messageConfiguration = new MessageTableConfiguration();
-
-        var roleConfiguration = new CreateRolesConfiguration();
-
-        var userConfiguration = new SeedUsersConfiguration();
-
-        //Configure the mapping tables
-        builder.ApplyConfiguration<PictureHashTag>(mappingConfigurer);
-        builder.ApplyConfiguration<ApplicationUserSkill>(mappingConfigurer);
-        builder.ApplyConfiguration<ApplicationUserPicture>(mappingConfigurer);
-        builder.ApplyConfiguration<ApplicationUserCollection>(mappingConfigurer);
+        ConfigureFollowTable(builder);
         
-        //Configure the enums
-        builder.ApplyConfiguration<HashTag>(enumSeedConfigurer);
-        builder.ApplyConfiguration<Skill>(enumSeedConfigurer);
+        ConfigureMessageTable(builder);
 
-        //Configure following table
-        builder.ApplyConfiguration<FollowerFollowing>(new FollowTableConfiguration());
+        ConfigureRoles(builder);
 
-        //Configure the message table
-        builder.ApplyConfiguration<Message>(messageConfiguration);
-
-        //Configure the roles
-        builder.ApplyConfiguration<IdentityRole<Guid>>(roleConfiguration);
-
-        //Configure the users and add roles to them
-        builder.ApplyConfiguration<ApplicationUser>(userConfiguration);
-        builder.ApplyConfiguration<IdentityUserRole<Guid>>(userConfiguration);
+        ConfigureUsers(builder);
 
         base.OnModelCreating(builder);
+    }
+
+    //Configure the mapping tables
+    private static void ConfigureMappingTables(ModelBuilder builder)
+    {
+        var mappingConfigure = new MappingTablesConfiguration();
+        
+        builder.ApplyConfiguration<PictureHashTag>(mappingConfigure);
+        builder.ApplyConfiguration<ApplicationUserSkill>(mappingConfigure);
+        builder.ApplyConfiguration<ApplicationUserPicture>(mappingConfigure);
+        builder.ApplyConfiguration<ApplicationUserCollection>(mappingConfigure);
+    }
+    
+    //Configure the enums
+    private static void ConfigureEnums(ModelBuilder builder)
+    {
+        var enumSeedConfigure = new EnumsSeedingConfiguration();
+        
+        builder.ApplyConfiguration<HashTag>(enumSeedConfigure);
+        builder.ApplyConfiguration<Skill>(enumSeedConfigure);
+    }
+    
+    //Configure following table
+    private static void ConfigureFollowTable(ModelBuilder builder)
+    {
+        var followTableConfiguration = new FollowTableConfiguration();
+        
+        builder.ApplyConfiguration<FollowerFollowing>(followTableConfiguration);
+    }
+    
+    //Configure the message table
+    private static void ConfigureMessageTable(ModelBuilder builder)
+    {
+        var messageConfiguration = new MessageTableConfiguration();
+        
+        builder.ApplyConfiguration<Message>(messageConfiguration);
+    }
+    
+    //Configure roles
+    private static void ConfigureRoles(ModelBuilder builder)
+    {
+        var roleConfiguration = new CreateRolesConfiguration();
+        
+        builder.ApplyConfiguration<IdentityRole<Guid>>(roleConfiguration);
+    }
+    
+    //Configure the users and add roles to them
+    private static void ConfigureUsers(ModelBuilder builder)
+    {
+        var userConfiguration = new SeedUsersConfiguration();
+        
+        builder.ApplyConfiguration<ApplicationUser>(userConfiguration);
+        builder.ApplyConfiguration<IdentityUserRole<Guid>>(userConfiguration);
     }
 }

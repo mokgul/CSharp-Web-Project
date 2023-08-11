@@ -1,23 +1,20 @@
-﻿using ArtfulAdventures.Services.Common;
-
-namespace ArtfulAdventures.Services.Data;
+﻿namespace ArtfulAdventures.Services.Data;
 
 using System.Collections.Generic;
-using System.Diagnostics;
+using Microsoft.EntityFrameworkCore;
 using System.IO;
-using System.Security.Claims;
 using System.Threading.Tasks;
-
+using Common;
 using ArtfulAdventures.Data;
 using ArtfulAdventures.Data.Models;
-using ArtfulAdventures.Services.Data.Interfaces;
-using ArtfulAdventures.Web.ViewModels.Comment;
-using ArtfulAdventures.Web.ViewModels.HashTag;
-using ArtfulAdventures.Web.ViewModels.Picture;
+using Interfaces;
+using Web.ViewModels.Comment;
+using Web.ViewModels.HashTag;
+using Web.ViewModels.Picture;
 
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
-
+/// <summary>
+///   This service is responsible for picture related operations.
+/// </summary>
 public class PictureService : IPictureService
 {
     private readonly ArtfulAdventuresDbContext _data;
@@ -27,6 +24,10 @@ public class PictureService : IPictureService
         _data = data;
     }
 
+    /// <summary>
+    ///  This method returns a PictureAddFormModel.
+    /// </summary>
+    /// <returns></returns>
     public async Task<PictureAddFormModel> GetPictureAddFormModelAsync()
     {
         var hashtags = await _data.HashTags.Select(h => new HashTagViewModel()
@@ -35,21 +36,27 @@ public class PictureService : IPictureService
             Name = h.Type
         }).ToListAsync();
 
-        PictureAddFormModel model = new PictureAddFormModel()
+        var model = new PictureAddFormModel()
         {
             HashTags = hashtags
         };
         return model;
     }
 
+    /// <summary>
+    ///  This method uploads a picture to the database.
+    /// </summary>
+    /// <param name="model"> Model containing the picture data. </param>
+    /// <param name="userId"> The id of the user uploading the picture. </param>
+    /// <param name="path"> The path of the picture. </param>
     public async Task UploadPictureAsync(PictureAddFormModel model, string userId, string path)
     {
-        var seletedHashTags = GetSelectedHashtags(model);
-        ApplicationUser? user = await GetUser(userId);
-        Picture picture = new Picture()
+        var selectedHashTags = GetSelectedHashtags(model);
+        var user = await GetUser(userId);
+        var picture = new Picture()
         {
             Url = path,
-            UserId = user.Id,
+            UserId = user!.Id,
             Owner = user,
             CreatedOn = DateTime.UtcNow,
             Likes = 0,
@@ -63,15 +70,15 @@ public class PictureService : IPictureService
             Picture = picture
         });
 
-        var tagIds = seletedHashTags.Select(t => t.Id).ToList();
+        var tagIds = selectedHashTags.Select(t => t.Id).ToList();
         var tags = await _data.HashTags.Where(h => tagIds.Contains(h.Id)).ToListAsync();
-        foreach (var tag in seletedHashTags)
+        foreach (var tag in selectedHashTags)
         {
             picture.PicturesHashTags.Add(new PictureHashTag()
             {
                 Picture = picture,
                 PictureId = picture.Id,
-                Tag = tags.FirstOrDefault(t => t.Id == tag.Id),
+                Tag = tags.FirstOrDefault(t => t.Id == tag.Id)!,
                 TagId = tag.Id
             });
         }
@@ -80,17 +87,13 @@ public class PictureService : IPictureService
         await _data.SaveChangesAsync();
     }
 
-    private async Task<ApplicationUser?> GetUser(string userId)
-    {
-        return await _data.Users.Include(m => m.Portfolio).FirstOrDefaultAsync(u => u.Id.ToString() == userId);
-    }
-
-    private List<HashTagViewModel> GetSelectedHashtags(PictureAddFormModel model)
-    {
-        var seletedHashTags = model.HashTags.Where(h => h.IsSelected).ToList();
-        return seletedHashTags;
-    }
-
+    /// <summary>
+    ///  This method returns a view model for a picture details page.
+    /// </summary>
+    /// <param name="id"> The id of the picture. </param>
+    /// <param name="currentUser"> The id of the current user. </param>
+    /// <returns> The <see cref="Task{PictureDetailsViewModel}"/>. </returns>
+    /// <exception cref="NullReferenceException"> Thrown if the picture is not found. </exception>
     public async Task<PictureDetailsViewModel> GetPictureDetailsAsync(string id, string currentUser)
     {
         //Get picture with comments and hashtags
@@ -98,7 +101,8 @@ public class PictureService : IPictureService
             .Include(p => p.PicturesHashTags)
             .Include(p => p.Comments)
             .FirstOrDefaultAsync(p => p.Id.ToString() == id);
-        if(picture == null)
+
+        if (picture == null)
         {
             throw new NullReferenceException("Picture not found!");
         }
@@ -111,14 +115,16 @@ public class PictureService : IPictureService
             .Include(p => p.Portfolio)
             .FirstOrDefaultAsync(u => u.Id == picture.UserId);
 
+        //Get picture hashtags
         var tagIds = picture.PicturesHashTags.Select(t => t.TagId).ToList();
         var tags = await _data.HashTags.Where(h => tagIds.Contains(h.Id)).ToListAsync();
         var hashtags = picture.PicturesHashTags.Select(h => new HashTagViewModel()
         {
             Id = h.TagId,
-            Name = tags.FirstOrDefault(t => t.Id == h.TagId).Type,
+            Name = tags.FirstOrDefault(t => t.Id == h.TagId)!.Type,
         }).ToList();
 
+        //Get picture comments
         var comments = _data.Comments.Where(c => c.PictureId.ToString() == id).Select(c => new CommentViewModel()
         {
             Id = c.Id,
@@ -128,11 +134,15 @@ public class PictureService : IPictureService
         }).ToList();
         foreach (var comment in comments)
         {
-            comment.AuthorPictureUrl = Path.GetFileName(_data.Users.FirstOrDefault(u => u.UserName == comment.Author).Url);
+            comment.AuthorPictureUrl =
+                Path.GetFileName(_data.Users.FirstOrDefault(u => u.UserName == comment.Author)!.Url);
         }
 
+        //Get current user
         var user = await _data.Users.FirstOrDefaultAsync(x => x.Id.ToString() == currentUser);
         var userMute = user!.MuteUntil != null && user!.MuteUntil > DateTime.UtcNow;
+
+        //Create view model
         var model = new PictureDetailsViewModel()
         {
             Id = picture.Id.ToString(),
@@ -151,108 +161,129 @@ public class PictureService : IPictureService
             Comments = comments,
             isCurrentUserMuted = userMute
         };
-        
+
         return model;
     }
 
+    /// <summary>
+    ///  This method provides functionality for liking a picture.
+    /// </summary>
+    /// <param name="pictureId"> The id of the picture. </param>
+    /// <returns> A boolean value indicating whether the picture was liked. </returns>
+    public async Task<bool> LikePictureAsync(string pictureId)
+    {
+        var picture = _data.Pictures.FirstOrDefault(p => p.Id.ToString() == pictureId);
+        if (picture == null)
+        {
+            return false;
+        }
+
+        picture.Likes++;
+        await _data.SaveChangesAsync();
+        return true;
+    }
+
+    /// <summary>
+    ///  This methods provides functionality for addint pictures to a user's collection.
+    /// </summary>
+    /// <param name="id"></param>
+    /// <param name="userId"></param>
+    /// <returns></returns>
     public async Task<string> AddToCollectionAsync(string id, string userId)
     {
-        var picture = _data.Pictures.FirstOrDefault(p => p.Id.ToString() == id);
-        var user = _data.Users.Include(p => p.Collection).FirstOrDefault(u => u.Id.ToString() == userId);
-        if (user!.Collection.Any(c => c.PictureId == picture!.Id))
+        var user = await _data.Users
+            .Include(p => p.Collection)
+            .FirstOrDefaultAsync(u => u.Id.ToString() == userId);
+        if (user == null)
+        {
+            return "User not found!";
+        }
+
+        if (user!.Collection.Any(c => c.PictureId.ToString() == id))
         {
             return string.Empty;
         }
+
         user!.Collection.Add(new ApplicationUserCollection()
         {
             UserId = user.Id,
             User = user,
-            PictureId = picture!.Id,
-            Picture = picture
+            PictureId = Guid.Parse(id),
+            Picture = (await _data.Pictures.FirstOrDefaultAsync(p => p.Id.ToString() == id))!
         });
         await _data.SaveChangesAsync();
         return "You added this picture to your collection.";
     }
 
-    public async Task LikePictureAsync(string pictureId)
-    {
-        var picture = _data.Pictures.FirstOrDefault(p => p.Id.ToString() == pictureId);
-        if (picture == null)
-        {
-            throw new ArgumentException("Picture not found.");
-        }
-        picture.Likes++;
-        await _data.SaveChangesAsync();
-    }
-
-    //for portfolio
-    public async Task<ICollection<PictureEditViewModel>> ManageGetAllPicturesAsync(string userId, int page = 1)
-    {
-        if(ValidatePage.Validate(page) == false)
-        {
-            throw new ArgumentException("Invalid page number.");
-        }
-        var pageSize = 9;
-        var skip = (page - 1) * pageSize;
-        var pictures = await _data.Pictures.Where(p => p.UserId.ToString() == userId).ToListAsync();
-        var model = pictures.Select(p => new PictureEditViewModel()
-        {
-            Id = p.Id.ToString(),
-            PictureUrl = Path.GetFileName(p.Url),
-            Description = p.Description,
-        }).ToList();
-        model = model.Skip(skip).Take(pageSize).ToList();
-        return model;
-    }
-
-    public async Task<ICollection<PictureEditViewModel>> ManageGetAllCollectionAsync(string userId, int page = 1)
+    /// <summary>
+    ///  This method returns a view model with pictures from a user's portfolio for management.
+    /// </summary>
+    /// <param name="userId"> The id of the user. </param>
+    /// <param name="page"> An integer representing the page number. </param>
+    /// <returns> A collection of <see cref="PictureEditViewModel"/>. </returns>
+    public async Task<ICollection<PictureEditViewModel>?> ManageGetAllPicturesAsync(string userId, int page = 1)
     {
         if (ValidatePage.Validate(page) == false)
         {
-            throw new ArgumentException("Invalid page number.");
+            return null;
         }
-        int pageSize = 9;
+
+        const int pageSize = 9;
         var skip = (page - 1) * pageSize;
-        var user = await _data.Users.Include(p => p.Collection).FirstOrDefaultAsync(u => u.Id.ToString() == userId);
-        var collection = user!.Collection.Select(p => _data.Pictures.Find(p.PictureId)).Select(c => new PictureEditViewModel()
-        {
-            Id = c.Id.ToString(),
-            PictureUrl = Path.GetFileName(c.Url),
-            Description = c.Description,
-        }).ToList();
-        var model = collection.Skip(skip).Take(pageSize).ToList();
-        return model;
+
+        var pictures = await _data.Pictures
+            .Where(p => p.UserId.ToString() == userId)
+            .Skip(skip)
+            .Take(pageSize)
+            .Select(p => new PictureEditViewModel()
+            {
+                Id = p.Id.ToString(),
+                PictureUrl = Path.GetFileName(p.Url),
+                Description = p.Description,
+            })
+            .ToListAsync();
+        return pictures;
     }
 
-    public async Task<PictureEditViewModel> GetPictureToEditAsync(string id)
+    /// <summary>
+    ///  This method provides a view model for editing a picture.
+    /// </summary>
+    /// <param name="id"> The id of the picture. </param>
+    /// <returns> A <see cref="PictureEditViewModel"/>. </returns>
+    public async Task<PictureEditViewModel?> GetPictureToEditAsync(string id)
     {
-        var picture = await _data.Pictures.FirstOrDefaultAsync(p => p.Id.ToString() == id);
-        if (picture == null)
-        {
-            throw new ArgumentException("Picture not found.");
-        }
         var hashtags = await _data.HashTags.Select(h => new HashTagViewModel()
         {
             Id = h.Id,
             Name = h.Type
         }).ToListAsync();
-        var model = new PictureEditViewModel()
-        {
-            Id = picture.Id.ToString(),
-            Description = picture.Description,
-            HashTags = hashtags
-        };
-        return model;
+
+        var picture = await _data.Pictures
+            .Where(p => p.Id.ToString() == id)
+            .Select(p => new PictureEditViewModel()
+            {
+                Id = p.Id.ToString(),
+                Description = p.Description,
+                HashTags = hashtags
+            })
+            .FirstOrDefaultAsync();
+
+        return picture ?? null;
     }
 
-    public async Task EditPictureAsync(PictureEditViewModel model)
+    /// <summary>
+    ///  This method provides functionality for editing a picture.
+    /// </summary>
+    /// <param name="model"> A <see cref="PictureEditViewModel"/>. </param>
+    /// <returns> A boolean value indicating whether the picture was edited. </returns>
+    public async Task<bool> EditPictureAsync(PictureEditViewModel model)
     {
-        var id = model.Id;
-        var picture = await _data.Pictures.FirstOrDefaultAsync(p => p.Id.ToString() == id);
+        var picture = await _data.Pictures.FirstOrDefaultAsync(p => p.Id.ToString() == model.Id);
         if (picture == null)
         {
-            throw new ArgumentException("Picture not found.");
+            return false;
         }
+
         picture!.Description = model.Description;
         var selectedHashTags = model.HashTags.Where(h => h.IsSelected).ToList();
         if (selectedHashTags.Count > 0)
@@ -266,18 +297,25 @@ public class PictureService : IPictureService
                 {
                     Picture = picture,
                     PictureId = picture.Id,
-                    Tag = tags.FirstOrDefault(t => t.Id == tag.Id),
+                    Tag = (tags.FirstOrDefault(t => t.Id == tag.Id))!,
                     TagId = tag.Id
                 });
             }
         }
-        await _data.SaveChangesAsync();
 
+        await _data.SaveChangesAsync();
+        return true;
     }
 
+    /// <summary>
+    ///  This method provides functionality for deleting a picture.
+    /// </summary>
+    /// <param name="id"> The id of the picture. </param>
+    /// <param name="userId"> The id of the user. </param>
+    /// <returns> A string representing the path to the picture in the ftp server (user for deleting the picture from the ftp server). </returns>
+    /// <exception cref="ArgumentException"> Thrown if the picture is not found. </exception>
     public async Task<string> DeletePictureAsync(string id, string userId)
     {
-        var path = string.Empty;
         var picture = await _data.Pictures
             .Include(c => c.Comments)
             .Include(cl => cl.Collection)
@@ -290,12 +328,13 @@ public class PictureService : IPictureService
         {
             throw new ArgumentException("Picture not found.");
         }
+
         picture!.Comments.Clear();
         picture.Collection.Clear();
         picture.PicturesHashTags.Clear();
         picture.Portfolio.Clear();
 
-        path = picture.Url;
+        var path = picture.Url;
 
         _data.Pictures.Remove(picture);
         await _data.SaveChangesAsync();
@@ -303,21 +342,72 @@ public class PictureService : IPictureService
         return path;
     }
 
+    /// <summary>
+    ///  This method returns a view model with pictures from a user's collection for management.
+    /// </summary>
+    /// <param name="userId"> The id of the user. </param>
+    /// <param name="page"> An integer representing the page number. </param>
+    /// <returns> A collection of <see cref="PictureEditViewModel"/>. </returns>
+    public async Task<ICollection<PictureEditViewModel>?> ManageGetAllCollectionAsync(string userId, int page = 1)
+    {
+        if (ValidatePage.Validate(page) == false)
+        {
+            return null;
+        }
+
+        const int pageSize = 9;
+        var skip = (page - 1) * pageSize;
+
+        var model = await _data.Users
+            .Where(u => u.Id.ToString() == userId)
+            .Include(p => p.Collection)
+            .Skip(skip)
+            .Take(pageSize)
+            .Select(c => c.Collection
+                .Select(col => new PictureEditViewModel()
+                {
+                    Id = col.PictureId.ToString(),
+                    PictureUrl = Path.GetFileName(col.Picture.Url),
+                    Description = col.Picture.Description,
+                })
+                .ToList()
+            )
+            .FirstOrDefaultAsync();
+
+        return model;
+    }
+
+    /// <summary>
+    ///  This method provides functionality for removing a picture from a user's collection.
+    /// </summary>
+    /// <param name="id"> The id of the picture. </param>
+    /// <param name="userId"> The id of the user. </param>
+    /// <returns> A string representing a message. </returns>
     public async Task<string> RemoveFromCollectionAsync(string id, string userId)
     {
-        var user = _data.Users.Include(c => c.Collection).FirstOrDefault(u => u.Id.ToString() == userId);
-        if (user == null)
+        var userCollection = await _data.Collection
+            .Where(u => u.UserId.ToString() == userId && u.PictureId.ToString() == id)
+            .FirstOrDefaultAsync();
+        
+        if (userCollection == null)
         {
-            throw new ArgumentException("User not found.");
+            return string.Empty;
         }
-        var picture = user.Collection.FirstOrDefault(p => p.PictureId.ToString() == id);
-        if (picture == null)
-        {
-            throw new ArgumentException("Picture not found.");
-        }
-        user.Collection.Remove(picture);
-        _data.SaveChanges();
+
+        _data.Collection.Remove(userCollection);
+        await _data.SaveChangesAsync();
         return "You removed this picture from your collection.";
     }
-}
 
+
+    private async Task<ApplicationUser?> GetUser(string userId)
+    {
+        return await _data.Users.Include(m => m.Portfolio).FirstOrDefaultAsync(u => u.Id.ToString() == userId);
+    }
+
+    private List<HashTagViewModel> GetSelectedHashtags(PictureAddFormModel model)
+    {
+        var seletedHashTags = model.HashTags.Where(h => h.IsSelected).ToList();
+        return seletedHashTags;
+    }
+}

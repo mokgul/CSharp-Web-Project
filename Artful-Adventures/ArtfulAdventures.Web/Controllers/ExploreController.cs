@@ -1,41 +1,45 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿namespace ArtfulAdventures.Web.Controllers;
 
-namespace ArtfulAdventures.Web.Controllers
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+
+using ArtfulAdventures.Services.Data.Interfaces;
+
+/// <summary>
+///  Provides functionality for the Explore page.
+/// </summary>
+[Authorize]
+public class ExploreController : Controller
 {
-    using ArtfulAdventures.Services.Data.Interfaces;
-    using ArtfulAdventures.Web.ViewModels;
+    private readonly IExploreService _exploreService;
 
-    using Microsoft.AspNetCore.Mvc;
-
-    [Authorize]
-    public class ExploreController : Controller
+    public ExploreController(IExploreService service)
     {
-        private readonly IExploreService _exploreService;
+        _exploreService = service;
+    }
 
-        public ExploreController(IExploreService service)
+    /// <summary>
+    ///  Provides a view model for the Explore page.
+    /// </summary>
+    /// <param name="sort"> A string representing the sort order. </param>
+    /// <param name="page"> An integer representing the page number. </param>
+    /// <returns> A view model for the Explore page. </returns>
+    [HttpGet]
+    public async Task<IActionResult> All(string sort, int page)
+    {
+        try
         {
-            _exploreService = service;
+            var model = await _exploreService.GetExploreViewModelAsync(sort, page);
+
+            ViewBag.Sort = sort;
+            ViewBag.CurrentPage = page;
+
+            return View(model);
         }
-
-        [HttpGet]
-        public async Task<IActionResult> All(string sort, int page)
+        catch (ArgumentException ex)
         {
-            try
-            {
-                ExploreViewModel model = await _exploreService.GetExploreViewModelAsync(sort, page);
-
-                ViewBag.Sort = sort;
-                ViewBag.CurrentPage = page;
-
-                return View(model);
-            }
-            catch (ArgumentException ex)
-            {
-                TempData["Error"] = ex.Message;
-                return RedirectToAction("All", "Explore", new{ sort="", page = 1});
-            }
-
+            TempData["Error"] = ex.Message;
+            return RedirectToAction("All", "Explore", new { sort = "", page = 1 });
         }
     }
 }
-

@@ -1,7 +1,10 @@
 ﻿namespace ArtfulAdventures.Web.ViewModels.Picture;
 
-using ArtfulAdventures.Web.ViewModels.HashTag;
+using HashTag;
 
+/// <summary>
+///  This class is used to display the picture edit view.
+/// </summary>
 public class PictureEditViewModel
 {
     public string Id { get; set; } = null!;

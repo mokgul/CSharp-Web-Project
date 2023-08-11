@@ -39,6 +39,8 @@
     }
 </style>
 
+@Html.AntiForgeryToken()
+
 <div class="container mb-4 mt-4">
     <div class="row">
         @foreach (var item in Model)

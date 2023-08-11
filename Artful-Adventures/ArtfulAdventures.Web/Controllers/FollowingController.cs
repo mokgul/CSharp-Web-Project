@@ -1,47 +1,47 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿namespace ArtfulAdventures.Web.Controllers;
 
-namespace ArtfulAdventures.Web.Controllers
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+
+using ArtfulAdventures.Services.Data.Interfaces;
+
+
+/// <summary>
+///  Provides actions for the Following page.
+/// </summary>
+[Authorize]
+public class FollowingController : Controller
 {
-    using System.Xml.Linq;
+    private readonly IFollowingService _followingService;
 
-    using ArtfulAdventures.Data;
-    using ArtfulAdventures.Services.Data.Interfaces;
-    using ArtfulAdventures.Web.Configuration;
-    using ArtfulAdventures.Web.ViewModels;
-    using ArtfulAdventures.Web.ViewModels.HashTag;
-    using ArtfulAdventures.Web.ViewModels.Picture;
-
-    using Microsoft.AspNetCore.Mvc;
-    using Microsoft.EntityFrameworkCore;
-
-    [Authorize]
-    public class FollowingController : Controller
+    public FollowingController(IFollowingService service)
     {
-        private readonly IFollowingService _followingService;
+        _followingService = service;
+    }
 
-        public FollowingController(IFollowingService service)
+    
+    /// <summary>
+    ///  Provides a view model for the Following page.
+    /// </summary>
+    /// <param name="sort"> A string representing the sort order. </param>
+    /// <param name="page"> An integer representing the page number. </param>
+    /// <returns> A view model for the Following page. </returns>
+    [HttpGet]
+    public async Task<IActionResult> All(string sort, int page)
+    {
+        try
         {
-            _followingService = service;
+            var username = User!.Identity!.Name!;
+            var model = await _followingService.GetExploreViewModelAsync(sort, page, username);
+
+            ViewBag.Sort = sort;
+            ViewBag.CurrentPage = page;
+            return View(model);
         }
-       
-        [HttpGet]
-        public async Task<IActionResult> All(string sort, int page)
+        catch (Exception ex)
         {
-            try
-            {
-                string username = User!.Identity!.Name!;
-                ExploreViewModel model = await _followingService.GetExploreViewModelAsync(sort, page, username);
-
-                ViewBag.Sort = sort;
-                ViewBag.CurrentPage = page;
-                return View(model);
-            }
-            catch (Exception ex)
-            {
-                TempData["Error"] = ex.Message;
-                return RedirectToAction("All", "Following", new { sort = "", page = 1 });
-            }
+            TempData["Error"] = ex.Message;
+            return RedirectToAction("All", "Following", new { sort = "", page = 1 });
         }
-
     }
 }

@@ -1,28 +1,34 @@
-﻿namespace ArtfulAdventures.Web.Components
+﻿namespace ArtfulAdventures.Web.Components;
+
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+
+using Data;
+
+/// <summary>
+///  This component is used to display the user's profile picture and username in the off-canvas menu.
+/// </summary>
+public class OffCanvasProfileViewComponent : ViewComponent
 {
-    using ArtfulAdventures.Data;
+    private readonly ArtfulAdventuresDbContext _data;
 
-    using Microsoft.AspNetCore.Mvc;
-    using Microsoft.EntityFrameworkCore;
-
-    public class OffCanvasProfileViewComponent : ViewComponent
+    public OffCanvasProfileViewComponent(ArtfulAdventuresDbContext data)
     {
-        private readonly ArtfulAdventuresDbContext _data;
+        _data = data;
+    }
 
-        public OffCanvasProfileViewComponent(ArtfulAdventuresDbContext data)
+    /// <summary>
+    ///  This method is used to get the current user's username and profile picture.
+    /// </summary>
+    /// <returns> A view with the user's username and profile picture. </returns>
+    public async Task<IViewComponentResult> InvokeAsync()
+    {
+        var currentUser = User!.Identity!.Name;
+        var user = await _data.Users.FirstOrDefaultAsync(x => x.UserName == currentUser);
+        var info = new string[]
         {
-            _data = data;
-        }
-
-        public async Task<IViewComponentResult> InvokeAsync()
-        {
-            var currentUser = User!.Identity!.Name;
-            var user = await _data.Users.FirstOrDefaultAsync(x => x.UserName == currentUser);
-            var info = new string[]
-            {
-                user!.UserName, Path.GetFileName(user.Url)!
-            };
-            return View(info);
-        }
+            user!.UserName, Path.GetFileName(user.Url)!
+        };
+        return View(info);
     }
 }

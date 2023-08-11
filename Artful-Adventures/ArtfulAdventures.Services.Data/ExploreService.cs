@@ -1,15 +1,18 @@
 ﻿namespace ArtfulAdventures.Services.Data;
 
 using System.Threading.Tasks;
-using ArtfulAdventures.Data;
-using ArtfulAdventures.Services.Common;
-using ArtfulAdventures.Services.Data.Interfaces;
-
-using ArtfulAdventures.Web.ViewModels;
-using ArtfulAdventures.Web.ViewModels.HashTag;
-using ArtfulAdventures.Web.ViewModels.Picture;
 using Microsoft.EntityFrameworkCore;
 
+using ArtfulAdventures.Data;
+using Common;
+using Interfaces;
+using Web.ViewModels;
+using Web.ViewModels.HashTag;
+using Web.ViewModels.Picture;
+
+/// <summary>
+///  Provides functionality for the Explore page.
+/// </summary>
 public class ExploreService : IExploreService
 {
     private readonly ArtfulAdventuresDbContext _data;
@@ -18,8 +21,14 @@ public class ExploreService : IExploreService
     {
         _data = data;
     }
-
-
+    
+    /// <summary>
+    ///  Provides a view model for the Explore page.
+    /// </summary>
+    /// <param name="sort"> A string representing the sort order. </param>
+    /// <param name="page"> An integer representing the page number. </param>
+    /// <returns> A view model for the Explore page. </returns>
+    /// <exception cref="ArgumentException"></exception>
     public async Task<ExploreViewModel> GetExploreViewModelAsync(string sort, int page = 1)
     {
         if(ValidatePage.Validate(page) == false)
@@ -27,20 +36,26 @@ public class ExploreService : IExploreService
             throw new ArgumentException("Invalid page number!");
         }
         
-        int pageSize = 20;
-        int skip = (page - 1) * pageSize;
-        var hashtags = await _data.HashTags.Include(h => h.PicturesHashTags)
-            .OrderByDescending(h => h.PicturesHashTags.Count).Select(h => new HashTagViewModel()
+        const int pageSize = 20;
+        var skip = (page - 1) * pageSize;
+        var hashtags = await _data.HashTags
+            .Include(h => h.PicturesHashTags)
+            .OrderByDescending(h => h.PicturesHashTags.Count)
+            .Select(h => new HashTagViewModel()
             {
                 Id = h.Id,
                 Name = h.Type.Replace("_", " "),
                 PicturesCount = h.PicturesHashTags.Count
-            }).Take(14).ToListAsync();
-        var dropDownMenuTags = await _data.HashTags.Select(h => new HashTagViewModel()
+            })
+            .Take(14)
+            .ToListAsync();
+        var dropDownMenuTags = await _data.HashTags
+            .Select(h => new HashTagViewModel()
         {
             Id = h.Id,
             Name = h.Type.Replace("_", " ")
-        }).ToListAsync();
+        })
+            .ToListAsync();
 
         var pictures = await _data.Pictures
             .Include(t => t.PicturesHashTags)
@@ -63,7 +78,7 @@ public class ExploreService : IExploreService
 
         pictures = await SortPicturesAsync(sort, pictures);
 
-        ExploreViewModel model = new ExploreViewModel()
+        var model = new ExploreViewModel()
         {
             HashTags = hashtags,
             TagsForDropDown = dropDownMenuTags,
@@ -72,6 +87,14 @@ public class ExploreService : IExploreService
         return model;
     }
 
+    
+    /// <summary>
+    ///  Sorts the pictures by the given parameter.
+    /// </summary>
+    /// <param name="sort"> A string representing the sort order. </param>
+    /// <param name="pictures"> A list of PictureVisualizeViewModel. </param>
+    /// <returns> A list of PictureVisualizeViewModel. </returns>
+    /// <exception cref="ArgumentException"> Thrown if the sort parameter is invalid. </exception>
     private async Task<List<PictureVisualizeViewModel>> SortPicturesAsync(string sort,
         List<PictureVisualizeViewModel> pictures)
     {

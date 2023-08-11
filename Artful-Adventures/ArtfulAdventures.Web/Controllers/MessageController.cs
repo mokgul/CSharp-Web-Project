@@ -1,32 +1,43 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿namespace ArtfulAdventures.Web.Controllers;
 
-namespace ArtfulAdventures.Web.Controllers;
-
-using ArtfulAdventures.Data;
-using ArtfulAdventures.Data.Models;
-using ArtfulAdventures.Web.ViewModels.Message;
-
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
+using System.Security.Claims;
 
+using ArtfulAdventures.Services.Data.Interfaces;
+using ViewModels.Message;
+
+
+/// <summary>
+///  This class is used to send messages between users.
+/// </summary>
 [Authorize]
 public class MessageController : Controller
 {
-    private readonly ArtfulAdventuresDbContext _data;
+    private readonly IMessageService _messageService;
 
-    public MessageController(ArtfulAdventuresDbContext data)
+    public MessageController(IMessageService messageService)
     {
-        _data = data;
+        _messageService = messageService;
     }
 
+    /// <summary>
+    ///  Gets the message send form.
+    /// </summary>
+    /// <param name="username"> The username of the receiver. </param>
+    /// <returns> The <see cref="MessageSendFormModel"/>. </returns>
     [HttpGet]
     public async Task<IActionResult> SendMessage(string username)
     {
-        var model = new MessageSendFormModel();
-        model.Receiver = username;
+        var model = await _messageService.GetSendMessageFormAsync(username);
         return View(model);
     }
 
+    /// <summary>
+    ///  Sends a message to a user.
+    /// </summary>
+    /// <param name="model"> The <see cref="MessageSendFormModel"/>. </param>
+    /// <returns> True if the message was sent successfully. </returns>
     [HttpPost]
     public async Task<IActionResult> SendMessage(MessageSendFormModel model)
     {
@@ -34,164 +45,86 @@ public class MessageController : Controller
         {
             return View(model);
         }
-        var receiver = await _data.Users.FirstOrDefaultAsync(x => x.UserName == model.Receiver);
-        if (receiver == null)
+
+        var userId = GetUserId();
+        var result = await _messageService.SendMessageAsync(model, userId);
+        if (!result)
         {
             TempData["Error"] = "User does not exist.";
             return View(model);
         }
-        var user = await _data.Users.FirstOrDefaultAsync(x => x.UserName == this.User!.Identity!.Name);
-        var message = new Message()
-        {
-            Sender = user!,
-            SenderId = user!.Id,
-            Receiver = receiver,
-            ReceiverId = receiver.Id,
-            Subject = model.Subject,
-            Content = model.Content,
-            Timestamp = DateTime.UtcNow,
-        };
-        user.SentMessages.Add(message);
-        receiver.ReceivedMessages.Add(message);
-        await _data.Messages.AddAsync(message);
-        await _data.SaveChangesAsync();
+
         TempData["Success"] = "Message sent successfully.";
         return View(model);
-        //return RedirectToAction("Inbox", "Message");
     }
 
+    /// <summary>
+    ///  Gets the message inbox of a user.
+    /// </summary>
+    /// <returns> The <see cref="MessageInbox"/>. </returns>
     [HttpGet]
     public async Task<IActionResult> Inbox()
     {
-        var currentUser = User.Identity.Name;
-        var messages = await _data.Messages
-            .Include(s => s.Sender)
-            .Include(r => r.Receiver)
-            .Where(m => m.Receiver.UserName == currentUser)
-            .ToListAsync();
-
-        var groupedMessages = messages
-            .GroupBy(m => m.Sender.UserName)
-            .Select(g => new
-            {
-                Sender = g.Key,
-                LatestMessage = g.OrderByDescending(m => m.Timestamp).FirstOrDefault(),
-                UnreadCount = g.Count(m => !m.IsRead)
-            })
-            .ToList();
-
-        var inboxMessages = groupedMessages
-            .Select(g => new MessageInboxViewModel
-            {
-                Id = g.LatestMessage.Id,
-                Subject = g.LatestMessage.Subject,
-                Content = g.LatestMessage.Content,
-                Sender = g.Sender,
-                Receiver = g.LatestMessage.Receiver.UserName,
-                Timestamp = g.LatestMessage.Timestamp,
-                IsRead = g.LatestMessage.IsRead,
-                UnreadMessages = g.UnreadCount
-            })
-            .ToList();
-
-        var model = new MessageInbox
-        {
-            Messages = inboxMessages,
-            TotalUnreadMessages = inboxMessages.Sum(m => m.UnreadMessages)
-        };
-
+        var userId = GetUserId();
+        var model = await _messageService.GetInboxAsync(userId);
         return View(model);
-
     }
 
+    
+    /// <summary>
+    ///  Provides a functionality for viewing a message.
+    /// </summary>
+    /// <param name="id"> The id of the message. </param>
+    /// <returns> The <see cref="MessageInboxViewModel"/>. </returns>
     [HttpGet]
     public async Task<IActionResult> ViewMessage(int id)
     {
-        var message = await _data.Messages
-            .Include(s => s.Sender)
-            .Include(r => r.Receiver)
-            .FirstOrDefaultAsync(m => m.Id == id);
-        if (message == null)
-        {
-            TempData["ErrorNotFound"] = "Message does not exist.";
-            return RedirectToAction("Inbox", "Message");
-        }
-        message.IsRead = true;
-        await _data.SaveChangesAsync();
-        var model = new MessageInboxViewModel
-        {
-            Id = message.Id,
-            Subject = message.Subject,
-            Content = message.Content,
-            Sender = message.Sender.UserName,
-            Receiver = message.Receiver.UserName,
-            Timestamp = message.Timestamp,
-            IsRead = message.IsRead
-        };
-        return View(model);
+        var model = await _messageService.GetInboxViewModelAsync(id, GetUserId());
+        if (model != null)
+            return View(model);
+        TempData["ErrorNotFound"] = "Message does not exist.";
+        return RedirectToAction("Inbox", "Message");
     }
+
+    
+    /// <summary>
+    ///  Provides a functionality for viewing the message history between two users.
+    /// </summary>
+    /// <param name="id"> The id of the message. </param>
+    /// <returns> A view with the message history. </returns>
     [HttpGet]
     public async Task<IActionResult> ViewMessageHistory(int id)
     {
-        var currentUser = User.Identity.Name;
-        var message = await _data.Messages.Include(s => s.Sender).Include(r => r.Receiver).Where(s => s.Sender.UserName != currentUser)
-            .OrderByDescending(t => t.Timestamp).FirstOrDefaultAsync(m => m.Id == id);
-        if(message == null)
-        {
-            TempData["ErrorNotFound"] = "Message does not exist.";
-            return RedirectToAction("Inbox", "Message");
-        }
-        var secondUser = message.Sender.UserName == currentUser ? message.Receiver.UserName : message.Sender.UserName;
-        var messagesHistory = await _data.Messages
-            .Where(m => (m.Sender.UserName == currentUser && m.Receiver.UserName == secondUser) ||
-                        (m.Sender.UserName == secondUser && m.Receiver.UserName == currentUser))
-            .Select(m => new MessageInboxViewModel
-            {
-                Id = m.Id,
-                Subject = m.Subject,
-                Content = m.Content,
-                Sender = m.Sender.UserName,
-                Receiver = m.Receiver.UserName,
-                Timestamp = m.Timestamp,
-                IsRead = m.IsRead
-            })
-            .OrderByDescending(m => m.Timestamp)
-            .ToListAsync();
-        var model = new MessageInboxViewModel()
-        {
-            Id = message.Id,
-            Subject = message.Subject,
-            Content = message.Content,
-            Sender = message.Sender.UserName,
-            Receiver = message.Receiver.UserName,
-            Timestamp = message.Timestamp,
-            IsRead = message.IsRead,
-            MessagesHistory = messagesHistory
-        };
-        return View(model);
+        var userId = GetUserId();
+        var model = await _messageService.GetMessageHistoryAsync(id, userId);
+        if (model != null)
+            return View(model);
+        TempData["ErrorNotFound"] = "Message does not exist.";
+        return RedirectToAction("Inbox", "Message");
     }
 
+    
+    /// <summary>
+    ///  Provides a functionality for replying to a message.
+    /// </summary>
+    /// <param name="id"> The id of the message. </param>
+    /// <returns> The <see cref="MessageReplyFormModel"/>. </returns>
     [HttpGet]
     public async Task<IActionResult> Reply(int id)
     {
-        var message = await _data.Messages.Include(s => s.Sender).FirstOrDefaultAsync(x => x.Id == id);
-        if (message == null)
-        {
-            TempData["ErrorNotFound"] = "Message does not exist.";
-            return RedirectToAction("Inbox", "Message");
-        }
-        var currentUser = User.Identity.Name;
-        var model = new MessageReplyFormModel()
-        {
-            Receiver = message.Sender.UserName,
-            Subject = message.Subject,
-            Content = string.Empty,
-        };
-        return View(model);
+        var model = await _messageService.GetReplyFormAsync(id, GetUserId());
+        if (model != null) return View(model);
+        TempData["ErrorNotFound"] = "Message does not exist.";
+        return RedirectToAction("Inbox", "Message");
+
     }
 
-
-
+    /// <summary>
+    ///  Provides a method for getting the user id.
+    /// </summary>
+    /// <returns> The <see cref="string"/>. </returns>
+    private string GetUserId()
+    {
+        return this.User.FindFirst(ClaimTypes.NameIdentifier)!.Value;
+    }
 }
-
-

@@ -44,7 +44,7 @@ public class ManageContentService : IManageContentService
         var model = new ChallengeCreateFormModel
         {
             CreatedOn = DateTime.UtcNow,
-            Creator = user.UserName
+            Creator = user.UserName,
         };
         return model;
     }

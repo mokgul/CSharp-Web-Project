@@ -1,6 +1,8 @@
 ﻿namespace ArtfulAdventures.Web.ViewModels.UserProfile;
 
-
+/// <summary>
+///  This is a partial view model for the profile.
+/// </summary>
 public class ProfilePartialView
 {
     public string Username { get; set; } = null!;
