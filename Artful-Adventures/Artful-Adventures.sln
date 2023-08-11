@@ -23,6 +23,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ArtfulAdventures.Services.D
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ArtfulAdventures.Services.Common", "ArtfulAdventures.Services.Common\ArtfulAdventures.Services.Common.csproj", "{EA279E6C-945E-4377-89B7-AD16990B80D8}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{2CE46C26-7812-44D0-838D-E34E182ECE04}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ArtfulAdventures.UnitTests.Controllers", "ArtfulAdventures.UnitTests.Controllers\ArtfulAdventures.UnitTests.Controllers.csproj", "{3EB9FA90-0D4C-49B2-955B-A8E36E2E8F89}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -57,6 +61,10 @@ Global
 		{EA279E6C-945E-4377-89B7-AD16990B80D8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EA279E6C-945E-4377-89B7-AD16990B80D8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{EA279E6C-945E-4377-89B7-AD16990B80D8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3EB9FA90-0D4C-49B2-955B-A8E36E2E8F89}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3EB9FA90-0D4C-49B2-955B-A8E36E2E8F89}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3EB9FA90-0D4C-49B2-955B-A8E36E2E8F89}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3EB9FA90-0D4C-49B2-955B-A8E36E2E8F89}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -68,6 +76,7 @@ Global
 		{2634BAC7-E998-4125-AD60-554C626B63C9} = {9777F8D2-4CB1-49A2-9040-2183969F30F6}
 		{9F405EC7-14D3-4C4A-A205-E102E711078E} = {50AC8374-7927-4CA7-B4C8-9938E54F37FB}
 		{EA279E6C-945E-4377-89B7-AD16990B80D8} = {50AC8374-7927-4CA7-B4C8-9938E54F37FB}
+		{3EB9FA90-0D4C-49B2-955B-A8E36E2E8F89} = {2CE46C26-7812-44D0-838D-E34E182ECE04}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {846090A0-8538-45D4-9545-AFCEC610B61C}

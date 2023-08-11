@@ -86,7 +86,23 @@ public class ExploreService : IExploreService
         };
         return model;
     }
+    
 
+    /// <summary>
+    ///  Provides a view model for the Home page.
+    /// </summary>
+    /// <returns></returns>
+    public async Task<ICollection<PictureVisualizeViewModel>> GetPicturesForHomePageAsync()
+    {
+        var model = await _data.Pictures.Select(p => new PictureVisualizeViewModel()
+        {
+            Id = p.Id.ToString(),
+            PictureUrl = Path.GetFileName(p.Url),
+        }).Take(20).ToListAsync();
+        model = FilterBrokenUrls.FilterAsync(model);
+        return model;
+    }
+    
     
     /// <summary>
     ///  Sorts the pictures by the given parameter.

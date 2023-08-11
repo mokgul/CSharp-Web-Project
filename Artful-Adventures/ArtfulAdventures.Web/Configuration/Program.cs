@@ -44,6 +44,7 @@ public class Program
         builder.Services.AddScoped<IManageUserService, ManageUserService>();
         builder.Services.AddScoped<ICommentService, CommentService>();
         builder.Services.AddScoped<IMessageService, MessageService>();
+        builder.Services.AddScoped<ISearchService, SearchService>();
 
         var app = builder.Build();
 
