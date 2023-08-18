@@ -65,7 +65,7 @@
         background-color: lightblue!important;
     }
 </style>
-//Add event listener to each row in the table to redirect to the picture details page
+ <!-- Add event listener to each row in the table to redirect to the picture details page -->
 <script>
     const rows = document.querySelectorAll('tr[picture-id]');
     rows.forEach(row => {
@@ -76,7 +76,7 @@
     });
 
 </script>
-//Add event listener to each cell in the table to show a preview of the picture
+ <!-- Add event listener to each cell in the table to show a preview of the picture -->
 <script>
     const cells = document.querySelectorAll('tr[data-picture-url] td:nth-child(3)');
     const previewContainer = document.querySelector('#picture-preview-container');
@@ -117,7 +117,7 @@
         }
     </table>
 }
-//Add event listener to each row in the table to redirect to the user profile page
+ <!-- Add event listener to each row in the table to redirect to the user profile page -->
 <script>
     const userRows = document.querySelectorAll('tr[data-username]');
     userRows.forEach(row => {
@@ -151,7 +151,7 @@
         }
     </table>
 }
-//Add event listener to each row in the table to redirect to the blog details page
+ <!-- Add event listener to each row in the table to redirect to the blog details page -->
 <script>
     const blogRows = document.querySelectorAll('tr[data-blog-id]');
     blogRows.forEach(row => {
@@ -183,7 +183,7 @@
         }
     </table>
 }
-//Add event listener to each row in the table to redirect to the challenge details page
+ <!-- Add event listener to each row in the table to redirect to the challenge details page -->
 <script>
     const challengeRows = document.querySelectorAll('tr[data-challenge-id]');
     challengeRows.forEach(row => {

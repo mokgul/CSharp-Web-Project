@@ -13,5 +13,7 @@ public class ExploreViewModel
     public List<HashTagViewModel> HashTags { get; set; } = new List<HashTagViewModel>();
 
     public List<HashTagViewModel> TagsForDropDown { get; set; } = new List<HashTagViewModel>();
+    
+    
 }
 

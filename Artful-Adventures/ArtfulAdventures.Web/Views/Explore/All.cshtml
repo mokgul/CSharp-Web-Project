@@ -64,7 +64,7 @@
                 }
         </style>
         
-        // Sort by tag
+        <!-- Sort by tag -->
         <script>
             document.getElementById('tag-input').addEventListener('input', function () {
                 var sort = this.value;
@@ -74,7 +74,7 @@
                 link.setAttribute('href', href);
             });
         </script>
-        // Sort by user
+         <!-- Sort by user -->
         <script>
             document.getElementById('user-input').addEventListener('input', function () {
                 var sort = this.value;
@@ -84,7 +84,7 @@
                 link.setAttribute('href', href);
             });
         </script>
-        // Tag suggestions
+         <!-- Tag suggestions -->
         <script>
             var hashTags = @Html.Raw(Json.Serialize(Model.TagsForDropDown));
 
